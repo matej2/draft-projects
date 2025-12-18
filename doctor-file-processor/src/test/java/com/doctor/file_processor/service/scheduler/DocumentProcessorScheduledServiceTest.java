@@ -42,7 +42,7 @@ class DocumentProcessorScheduledServiceTest {
 
         documentProcessorScheduledService.getDoctorFiles();
 
-        verify(fileProcessorService).processInvalidDocument(any());
+        verify(fileProcessorService).processInvalidDocument(any(), Set.of());
     }
 
     @Test

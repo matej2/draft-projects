@@ -39,7 +39,7 @@ public class DocumentProcessorScheduledService extends DocumentValidator<Apartme
             if (violations.isEmpty()) {
                 fileProcessorService.processValidDocument(resource);
             } else {
-                fileProcessorService.processInvalidDocument(resource);
+                fileProcessorService.processInvalidDocument(resource, violations);
             }
         }
     }

@@ -29,7 +29,7 @@ public class RateLimitFilter implements Filter {
         AccessInfo existingAccInfo = accessInfoService.findByIp(remoteAddr);
         Integer CALL_LIMIT = 5;
 
-        // Not 100%
+        // Ideally create a private token that can be used only with single IP
         if (existingAccInfo == null) {
             existingAccInfo = accessInfoService.createEntry(remoteAddr);
         }
