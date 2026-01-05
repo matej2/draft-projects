@@ -5,6 +5,7 @@ import com.doctor.file_processor.service.AccessInfoService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 
@@ -12,9 +13,11 @@ import java.io.IOException;
 public class RateLimitFilter implements Filter {
 
     private final AccessInfoService accessInfoService;
+    private final Integer rateLimit;
 
-    public RateLimitFilter(AccessInfoService accessInfoService) {
+    public RateLimitFilter(AccessInfoService accessInfoService, Integer rateLimit) {
         this.accessInfoService = accessInfoService;
+        this.rateLimit = rateLimit;
     }
 
     @Override
@@ -27,14 +30,13 @@ public class RateLimitFilter implements Filter {
         String remoteAddr = request.getRemoteAddr();
 
         AccessInfo existingAccInfo = accessInfoService.findByIp(remoteAddr);
-        Integer CALL_LIMIT = 5;
 
         // Ideally create a private token that can be used only with single IP
         if (existingAccInfo == null) {
             existingAccInfo = accessInfoService.createEntry(remoteAddr);
         }
 
-        if (existingAccInfo.getNumOfCallsLastMinute() <= CALL_LIMIT) {
+        if (existingAccInfo.getNumOfCallsLastMinute() <= rateLimit) {
             accessInfoService.updateAccessInfo(remoteAddr);
             chain.doFilter(request, response);
         } else {

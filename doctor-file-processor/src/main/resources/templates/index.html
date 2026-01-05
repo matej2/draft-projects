@@ -7,7 +7,7 @@
 </head>
 <body>
 
-Current time is <span th:text="${serverTime}" />
+Current time is <span th:text="${serverTime}"></span>
 
 <h1>Access info list</h1>
 <table>
@@ -16,13 +16,14 @@ Current time is <span th:text="${serverTime}" />
     <th>Number of calls</th>
     <tr th:each="accessInfo: ${accessInfoList}">
         <td>
-            <div th:text="${{accessInfo.getCreated()}}" />
+            <div th:text="${{accessInfo.getCreated()}}"></div>
         </td>
         <td>
-            <div th:text="${{accessInfo.getIp()}}" />
+            <div th:text="${{accessInfo.getIp()}}"></div>
         </td>
         <td>
-            <div th:text="${{accessInfo.getNumOfCallsLastMinute()}}" />
+            <div th:style="${accessInfo.getNumOfCallsLastMinute() >= rateLimit ? 'color:red' : 'color:green' }"
+                 th:text="${{accessInfo.getNumOfCallsLastMinute()}}"></div>
         </td>
 
     </tr>
