@@ -34,6 +34,10 @@ public class AccessInfoService {
         );
     }
 
+    public Iterable<AccessInfo> findAll() {
+        return accessInfoRepository.findAll();
+    }
+
     public void deleteAll() {
         accessInfoRepository.deleteAll();
     }
