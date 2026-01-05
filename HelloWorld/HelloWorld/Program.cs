@@ -1,4 +1,6 @@
 ﻿
+using HelloWorld;
+
 byte number2 = 2;
 
 int count = 10;
@@ -15,6 +17,16 @@ Console.WriteLine(isWorking);
 
 Console.WriteLine("{0} {1}", byte.MinValue, byte.MaxValue);
 
+singHappyBirthday("Jonny", 22);
+singHappyBirthday("Ann", 35);
+
+
+Console.WriteLine($"Hello {firstName} {character}");
+
+Console.WriteLine("{0} {1}", multiply(1,3), multiply(5,6));
+
+Human human = new Human();
+human.eat();
 
 Console.WriteLine("Enter values for a and b:");
 int a = Convert.ToInt32(Console.ReadLine());
@@ -38,6 +50,10 @@ guess = 0;
 guesses = 0;
 number = random.Next(min, max);
 
+String[] cars = { "BMW", "Corvette", "Mustang" };
+Console.WriteLine(cars[0]);
+Console.WriteLine(cars[1]);
+
 while (guess != number)
 {
     Console.WriteLine("Guess the number between {0} and {1}", min, max);
@@ -55,3 +71,15 @@ while (guess != number)
 }
 
 Console.WriteLine("You win. Number: {0}, num of guesses: {1}", number, guesses);
+
+
+
+static void singHappyBirthday(String name, int age)
+{
+    Console.WriteLine("Happy birthday, {0}, your age is {1}", name, age);
+}
+
+static double multiply(double x, double y)
+{
+    return x * y;
+} 
