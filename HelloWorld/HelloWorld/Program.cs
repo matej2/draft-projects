@@ -25,8 +25,11 @@ Console.WriteLine($"Hello {firstName} {character}");
 
 Console.WriteLine("{0} {1}", multiply(1,3), multiply(5,6));
 
-Human human = new Human();
+Man human = new Man();
 human.eat();
+Console.WriteLine(Human.count);
+
+
 
 Console.WriteLine("Enter values for a and b:");
 int a = Convert.ToInt32(Console.ReadLine());
