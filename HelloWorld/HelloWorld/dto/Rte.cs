@@ -4,10 +4,10 @@ using System.Text;
 
 namespace HelloWorld.dto
 {
-    internal class GpxRteDto
+    class Rte
     {
         string name;
         string desc;
-        GPXEntryDto[] rtept;
+        List<Location> rtept;
     }
 }

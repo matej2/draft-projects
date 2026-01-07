@@ -35,6 +35,13 @@ humans[0] = human1;
 humans[1] = human2;
 Console.WriteLine(humans[1]);
 
+List<String> food = new List<String>();
+
+food.Add("Apple");
+food.Add("Orange");
+
+Console.WriteLine(food[0]);
+
 
 Console.WriteLine("Enter values for a and b:");
 int a = Convert.ToInt32(Console.ReadLine());

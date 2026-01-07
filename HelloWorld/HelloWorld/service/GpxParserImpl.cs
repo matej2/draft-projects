@@ -7,22 +7,22 @@ namespace HelloWorld.service
 {
     internal class GpxParserImpl : Parser
     {
-        public GPXDto ReadGpx()
+        public Gpx ReadGpx()
         {
             throw new NotImplementedException();
         }
 
-        public GPXEntryDto ReadRte()
+        public Location ReadRte()
         {
             throw new NotImplementedException();
         }
 
-        public GPXEntryDto ReadRtept()
+        public Location ReadRtept()
         {
             throw new NotImplementedException();
         }
 
-        public GPXEntryDto ReadWpt()
+        public Location ReadWpt()
         {
             throw new NotImplementedException();
         }

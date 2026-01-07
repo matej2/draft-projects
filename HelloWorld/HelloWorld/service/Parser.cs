@@ -7,9 +7,9 @@ namespace HelloWorld.service
 {
     internal interface Parser
     {
-        GPXEntryDto ReadWpt();
-        GPXEntryDto ReadRte();
-        GPXEntryDto ReadRtept();
-        public GPXDto ReadGpx();
+        Location ReadWpt();
+        Location ReadRte();
+        Location ReadRtept();
+        public Gpx ReadGpx();
     }
 }

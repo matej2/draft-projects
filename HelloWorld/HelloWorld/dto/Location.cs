@@ -5,7 +5,7 @@ using System.Text;
 namespace HelloWorld.dto
 {
     // Use the same naming convention as in GPX file
-    internal class GPXEntryDto
+    class Location
     {
         double ele;
         DateTime time;

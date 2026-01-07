@@ -5,11 +5,11 @@ using System.Text;
 namespace HelloWorld.dto
 {
     // Use the same naming convention as in GPX file
-    internal class GPXDto
+    class Gpx
     {
         DateTime date;
-        float[,] bounds;
-        GPXEntryDto[] wpt;
-        GpxRteDto[] rte;
+        Bounds bounds;
+        List<Location> wpt;
+        List<Rte> rte;
     }
 }
