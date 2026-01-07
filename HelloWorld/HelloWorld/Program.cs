@@ -25,10 +25,15 @@ Console.WriteLine($"Hello {firstName} {character}");
 
 Console.WriteLine("{0} {1}", multiply(1,3), multiply(5,6));
 
-Man human = new Man();
-human.eat();
+Man human1 = new Man("Janez");
+Man human2 = new Man("Andrej");
+human1.eat();
 Console.WriteLine(Human.count);
 
+Human[] humans = new Human[3];
+humans[0] = human1;
+humans[1] = human2;
+Console.WriteLine(humans[1]);
 
 
 Console.WriteLine("Enter values for a and b:");
