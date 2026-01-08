@@ -1,10 +1,10 @@
 ﻿namespace HelloWorld.dto
 {
-    class Bounds
-    {
-        private float _minlat;
-        private float _minlon;
-        private float _maxlat;
-        private float _maxlon;
-    }
+    record Bounds
+    (
+        float _minlat,
+        float _minlon,
+        float _maxlat,
+        float _maxlon
+    );
 }
