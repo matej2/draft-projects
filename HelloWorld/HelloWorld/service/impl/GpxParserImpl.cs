@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HelloWorld.service
+namespace HelloWorld.service.impl
 {
     internal class GpxParserImpl : Parser
     {
