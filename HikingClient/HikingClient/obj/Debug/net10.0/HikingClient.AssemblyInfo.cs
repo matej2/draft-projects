@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HikingClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+201acac424c56ce0b575c7c7a03499ff7e24f93d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1486293f7bd935fcc53811cd7125d4c810fb747")]
 [assembly: System.Reflection.AssemblyProductAttribute("HikingClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HikingClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
