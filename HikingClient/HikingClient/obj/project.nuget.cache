@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "XUizH994kaQ=",
+  "dgSpecHash": "lMDwuTyg4Qs=",
   "success": true,
   "projectFilePath": "D:\\Projekti\\interview-projects\\HikingClient\\HikingClient\\HikingClient.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Matej\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.1\\microsoft.aspnetcore.openapi.10.0.1.nupkg.sha512",
     "C:\\Users\\Matej\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\Matej\\.nuget\\packages\\nettopologysuite\\2.0.0\\nettopologysuite.2.0.0.nupkg.sha512",
+    "C:\\Users\\Matej\\.nuget\\packages\\nettopologysuite.features\\2.0.0\\nettopologysuite.features.2.0.0.nupkg.sha512",
+    "C:\\Users\\Matej\\.nuget\\packages\\nettopologysuite.io.gpx\\1.1.1\\nettopologysuite.io.gpx.1.1.1.nupkg.sha512",
     "C:\\Users\\Matej\\.nuget\\packages\\rolandk.formats.gpx\\1.0.1\\rolandk.formats.gpx.1.0.1.nupkg.sha512"
   ],
   "logs": []

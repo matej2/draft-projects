@@ -32,3 +32,7 @@ D:\Projekti\interview-projects\HikingClient\HikingClient\obj\Debug\net10.0\refin
 D:\Projekti\interview-projects\HikingClient\HikingClient\obj\Debug\net10.0\HikingClient.pdb
 D:\Projekti\interview-projects\HikingClient\HikingClient\obj\Debug\net10.0\HikingClient.genruntimeconfig.cache
 D:\Projekti\interview-projects\HikingClient\HikingClient\obj\Debug\net10.0\ref\HikingClient.dll
+D:\Projekti\interview-projects\HikingClient\HikingClient\bin\Debug\net10.0\NetTopologySuite.dll
+D:\Projekti\interview-projects\HikingClient\HikingClient\bin\Debug\net10.0\NetTopologySuite.Features.dll
+D:\Projekti\interview-projects\HikingClient\HikingClient\bin\Debug\net10.0\NetTopologySuite.IO.GPX.dll
+D:\Projekti\interview-projects\HikingClient\HikingClient\bin\Debug\net10.0\RolandK.Formats.Gpx.dll

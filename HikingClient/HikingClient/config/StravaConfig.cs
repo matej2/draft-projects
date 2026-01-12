@@ -1,4 +1,6 @@
-﻿namespace HelloWorld.config
+﻿using System.Net.Http.Headers;
+
+namespace HelloWorld.config
 {
     internal static class StravaConfig
     {
@@ -20,6 +22,9 @@
             {
                 httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(GetUrl());
+                httpClient.DefaultRequestHeaders
+                    .Accept
+                    .Add(new MediaTypeWithQualityHeaderValue("*"));
             }
 
             return httpClient;

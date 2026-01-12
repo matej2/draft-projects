@@ -8,11 +8,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+        <PackageReference Include="NetTopologySuite.IO.GPX" Version="1.1.1" />
         <PackageReference Include="RolandK.Formats.Gpx" Version="1.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="domain\dto\" />
     </ItemGroup>
 
 </Project>
