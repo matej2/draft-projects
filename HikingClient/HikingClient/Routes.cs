@@ -11,7 +11,7 @@ public class Routes
             {
                 if (file == null || file.Length == 0)
                     return Results.BadRequest("No file uploaded");
-                using var stream = file.OpenReadStream();
+                using Stream stream = file.OpenReadStream();
                 using var reader = new StreamReader(stream);
 
                 string xml = await reader.ReadToEndAsync();

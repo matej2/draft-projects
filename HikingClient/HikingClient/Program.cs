@@ -1,4 +1,6 @@
+using HelloWorld.service.impl;
 using HikingClient;
+using HikingClient.services.impl;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
@@ -8,6 +10,10 @@ builder.Services.AddAntiforgery(options =>
 });
 
 Routes routes = new Routes();
+GpxParserImpl gpxParser = new GpxParserImpl();
+FileManager fileManager = new FileManager(gpxParser);
+
+fileManager.ReadFiles();
 
 var app = builder.Build();
 

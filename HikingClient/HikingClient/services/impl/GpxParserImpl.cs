@@ -1,27 +1,44 @@
-﻿using HelloWorld.dto;
+﻿using System.Xml.Linq;
+using HelloWorld.dto;
+using Location = HelloWorld.dto.Location;
 
 namespace HelloWorld.service.impl
 {
-    internal class GpxParserImpl : Parser
+    class GpxParserImpl : Parser
     {
-        public Gpx ReadGpx()
+        public Gpx ReadGpx(Stream gpxFileStream)
         {
-            throw new NotImplementedException();
+            using StreamReader reader = new StreamReader(gpxFileStream);
+            string xml = reader.ReadToEnd();
+            XDocument gpx = XDocument.Parse(xml);
+
+            List<Location> points = ReadWpt(gpx);
+
+            return new Gpx(new DateTime(), null, points, null);
+
         }
 
-        public Location ReadRte()
+        public List<Location> ReadWpt(XDocument gpx)
         {
-            throw new NotImplementedException();
+            List<Location> points = gpx.Root.Elements()
+                .Where(x => x.Name.LocalName == "wpt")
+                .Select<XElement, Location>(x =>
+                {
+                    return new Location(
+                        new DateTime(),
+                        x.Elements().Where(x => x.Name.LocalName == "name").FirstOrDefault()?.Value,
+                        x.Elements().Where(x => x.Name.LocalName == "desc").FirstOrDefault()?.Value,
+                        x.Elements().Where(x => x.Name.LocalName == "sym").FirstOrDefault()?.Value,
+                        x.Elements().Where(x => x.Name.LocalName == "type").FirstOrDefault()?.Value,
+                        Double.Parse(x.Attribute("lat").Value),
+                        Double.Parse(x.Attribute("lon").Value));
+
+                })
+                .ToList();
+
+            return points;
         }
 
-        public Location ReadRtept()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Location ReadWpt()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

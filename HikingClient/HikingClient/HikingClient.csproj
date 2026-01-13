@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Identity" Version="1.17.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+        <PackageReference Include="Microsoft.Graph" Version="5.100.0" />
         <PackageReference Include="NetTopologySuite.IO.GPX" Version="1.1.1" />
         <PackageReference Include="RolandK.Formats.Gpx" Version="1.0.1" />
     </ItemGroup>

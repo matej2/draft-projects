@@ -50,9 +50,17 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "Azure.Identity": {
+              "target": "Package",
+              "version": "[1.17.1, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.1, )"
+            },
+            "Microsoft.Graph": {
+              "target": "Package",
+              "version": "[5.100.0, )"
             },
             "NetTopologySuite.IO.GPX": {
               "target": "Package",

@@ -1,12 +1,11 @@
-﻿using HelloWorld.dto;
+﻿using System.Xml.Linq;
+using HelloWorld.dto;
 
 namespace HelloWorld.service
 {
     internal interface Parser
     {
-        Location ReadWpt();
-        Location ReadRte();
-        Location ReadRtept();
-        public Gpx ReadGpx();
+        List<Location> ReadWpt(XDocument gpx);
+
     }
 }
