@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  h2:
+    image: oscarfonts/h2
+    container_name: h2-db
+    ports:
+      - "8082:8082"   # H2 Web Console
+      - "1521:1521"   # H2 TCP port
+    environment:
+      H2_OPTIONS: "-ifNotExists"
+    volumes:
+      - h2-data:/opt/h2-data
+
+  app:
+    build: .
+    container_name: spring-app
+    depends_on:
+      - h2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:tcp://h2:1521/~/test
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080:8080"
+
+volumes:
+  h2-data:

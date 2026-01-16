@@ -1,0 +1,6 @@
+@HikingClient_HostAddress = http://localhost:5177
+
+GET {{HikingClient_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

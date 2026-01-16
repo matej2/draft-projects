@@ -19,7 +19,9 @@ import java.util.Date;
 public class AccessInfo {
     @Id
     private String ip;
+    // Can be byte
     private Long numOfCallsLastMinute;
+    // Not really needed
     private Date created;
 
 }
