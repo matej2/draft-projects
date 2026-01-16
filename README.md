@@ -1,6 +1,6 @@
 # About
 
-This repository includes projects that were part of interview process. Each project can be ran in a separte environment, check readme documents.
+This repository includes draft and proof-of-concept projects. Each project can be ran in a separte environment, check their readme files.
 
 ## Adding existing projects
 
