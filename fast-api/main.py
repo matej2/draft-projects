@@ -2,9 +2,18 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
+from middleware.timer import timing_middleware
 from project import router as project_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.middleware("http")(timing_middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"]
+)
+
 app.include_router(project_router)
 
 class Item(BaseModel):
