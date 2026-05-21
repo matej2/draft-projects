@@ -2,7 +2,6 @@ from decimal import Decimal
 from enum import Enum
 from typing import Optional
 
-from pip._internal.utils import datetime
 from pydantic import BaseModel, Field
 from pydantic.alias_generators import to_camel
 
