@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pydantic.v1 import BaseSettings
 
-from models import ProjectCreate, ProjectOut
+from app.models import ProjectCreate, ProjectOut
 
 
 class Storage:
@@ -17,7 +17,10 @@ class Storage:
         if self.DATA_FILE.is_file() and self.DATA_FILE.exists():
             with open(self.DATA_FILE, "r") as f:
                 content = f.read()
-                return json.loads(content)
+                if content != "":
+                    return json.loads(content)
+                else:
+                    return list()
         else:
             return list()
 
