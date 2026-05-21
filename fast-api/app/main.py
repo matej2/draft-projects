@@ -5,9 +5,9 @@ from pydantic import BaseModel
 
 from middleware.loggingmiddleware import LoggingMiddleware
 from middleware.timer import timing_middleware
-from project import router as project_router
+from project import router as project_router, lifespan
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(LoggingMiddleware)
 app.middleware("http")(timing_middleware)
@@ -36,7 +36,6 @@ def get_item(item_id: int) -> Item:
         return items[item_id]
     else:
         raise HTTPException(status_code=404, detail=f"Item {item_id} not found")
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

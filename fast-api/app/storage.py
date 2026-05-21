@@ -2,6 +2,7 @@ import json
 import logging
 from pathlib import Path
 
+from pydantic.v1 import BaseSettings
 
 from models import ProjectCreate, ProjectOut
 
@@ -26,3 +27,7 @@ class Storage:
             json_text = json.dumps(data, indent=2)
             #self.logger.info(f"Saving data to {self.DATA_FILE}: {json_text}")
             f.write(json_text)
+
+class Settings(BaseSettings):
+    test: str
+    name: str

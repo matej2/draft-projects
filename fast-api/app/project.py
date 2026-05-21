@@ -1,4 +1,5 @@
 import uuid
+from contextlib import asynccontextmanager
 from typing import List, Annotated
 
 from fastapi import APIRouter, Depends
@@ -46,3 +47,9 @@ async def create_project(project: models.ProjectCreate, storage: Annotated[Stora
     storage.save_data(projects)
     return new_project
 
+@asynccontextmanager
+async def lifespan(app):
+    # Load the ML model
+    yield
+    # Clean up the ML models and release the resources
+    print("end")
