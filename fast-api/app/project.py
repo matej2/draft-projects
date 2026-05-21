@@ -17,7 +17,7 @@ async def get_projects(storage: Annotated[Storage, Depends(Storage)]):
     issues = storage.load_data()
     return issues
 
-@router.get("/{id}", response_model=ProjectOut)
+@router.get("/{project_id}", response_model=ProjectOut)
 def get_project(project_id: str, storage: Annotated[Storage, Depends(Storage)]):
     """Retrieve a project by its id"""
     issues  = storage.load_data()
