@@ -3,9 +3,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from middleware.loggingmiddleware import LoggingMiddleware
-from middleware.timer import timing_middleware
-from project import router as project_router, lifespan
+from app.middleware.loggingmiddleware import LoggingMiddleware
+from app.middleware.timer import timing_middleware
+from app.project import router as project_router, lifespan
 
 app = FastAPI(lifespan=lifespan)
 

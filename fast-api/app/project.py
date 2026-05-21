@@ -6,19 +6,18 @@ from fastapi import APIRouter, Depends
 from starlette import status
 from starlette.exceptions import HTTPException
 
-import models
-from models import ProjectStatus
-from storage import Storage
+from app.models import ProjectStatus, ProjectOut, ProjectCreate
+from app.storage import Storage
 
 router = APIRouter(prefix="/api/v1/project")
 
-@router.get("/", response_model=List[models.ProjectOut])
+@router.get("/", response_model=List[ProjectOut])
 async def get_projects(storage: Annotated[Storage, Depends(Storage)]):
     """Retrieve all projects"""
     issues = storage.load_data()
     return issues
 
-@router.get("/{id}", response_model=models.ProjectOut)
+@router.get("/{id}", response_model=ProjectOut)
 def get_project(project_id: str, storage: Annotated[Storage, Depends(Storage)]):
     """Retrieve a project by its id"""
     issues  = storage.load_data()
@@ -27,8 +26,8 @@ def get_project(project_id: str, storage: Annotated[Storage, Depends(Storage)]):
             return issue
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
 
-@router.post("/", response_model=models.ProjectOut, status_code=status.HTTP_201_CREATED)
-async def create_project(project: models.ProjectCreate, storage: Annotated[Storage, Depends(Storage)]):
+@router.post("/", response_model=ProjectOut, status_code=status.HTTP_201_CREATED)
+async def create_project(project: ProjectCreate, storage: Annotated[Storage, Depends(Storage)]):
     """Create a new project"""
     projects = storage.load_data()
     new_project = {
