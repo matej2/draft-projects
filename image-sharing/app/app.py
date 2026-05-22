@@ -1,8 +1,11 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi.params import Depends
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db import create_db_and_tables
+from app.db import create_db_and_tables, get_async_session, Post
 from app.schemas import PostCreate
 
 @asynccontextmanager
@@ -12,63 +15,41 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-text_posts = {
-    1: {
-        "title": "Hello",
-        "content": "Description"
-    },
-    2: {
-        "title": "Getting Started",
-        "content": "This is a beginner guide to our platform."
-    },
-    3: {
-        "title": "FastAPI Tips",
-        "content": "Learn how to build APIs quickly with FastAPI."
-    },
-    4: {
-        "title": "Docker Basics",
-        "content": "An introduction to containerizing your applications."
-    },
-    5: {
-        "title": "Testing in Python",
-        "content": "Best practices for writing unit tests using unittest and pytest."
-    },
-    6: {
-        "title": "Async Programming",
-        "content": "Understanding async and await in Python."
-    },
-    7: {
-        "title": "Logging Guide",
-        "content": "How to implement structured logging in your apps."
-    },
-    8: {
-        "title": "Deployment",
-        "content": "Steps to deploy your FastAPI app using Docker and cloud services."
+
+
+@app.post("/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    caption: str = Form(""),
+    session: AsyncSession = Depends(get_async_session)
+):
+    post = Post(
+        caption=caption,
+        url= file.filename,
+        file_type=file.content_type,
+        file_name=file.filename
+    )
+
+    session.add(post);
+    await session.commit()
+
+@app.get("/feed")
+async def get_feed(session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(Post).order_by(Post.created_at.desc()))
+    posts = [row[0] for row in result.all()]
+
+    post_data = []
+    for post in posts:
+        post_data.append({
+            "id": str(post.id),
+            "caption": post.caption,
+            "url": post.url,
+            "file_type": post.file_type,
+            "file_name": post.file_name,
+        })
+    return {
+        "posts": post_data
     }
-}
-
-@app.get("/posts")
-def get_all_posts(limit: int = 10) -> list[PostCreate]:
-    if limit:
-        return list(text_posts.values())[:limit]
-    return text_posts
-
-@app.get("/posts/{post_id}")
-def get_post(post_id: int) -> PostCreate:
-    if post_id not in text_posts:
-        raise HTTPException(status_code=404, detail="Post not found")
-    return text_posts.get(post_id)
-
-@app.post("/post")
-def create_post(post: PostCreate) -> PostCreate:
-    new_post = {
-        "title": post.title,
-        "content": post.content
-    }
-    text_posts[max(text_posts.keys()) + 1] = new_post
-    return new_post
-
-
 
 
 if __name__ == '__main__':
