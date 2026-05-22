@@ -9,9 +9,12 @@ from app.storage import Storage
 client = TestClient(app)
 
 class TestProject(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.storage = Storage()
+
     def setUp(self) -> None:
-        self.storage = Storage()
-        projects = self.storage.load_data()
+        projects = list()
         self.project_id = str(uuid.uuid4())
         new_project = {
             "id": self.project_id,
@@ -46,14 +49,13 @@ class TestProject(TestCase):
         response = client.get(f"/api/v1/project/{self.project_id}")
         assert response.status_code == 200
 
-        project_list = response.json()
-        assert len(project_list) == 1
-        project = project_list[0]
+        project = response.json()
+        assert project is not None
         assert project["name"] == "Test"
         assert project["description"] == "Description"
         assert project["status"] == ProjectStatus.inactive
 
-    def test_get_projects_with_existing_project_id(self):
+    def test_get_projects_with_nonexisting_project_id(self):
 
         response = client.get(f"/api/v1/project/65")
         assert response.status_code == 404

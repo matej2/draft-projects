@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -5,7 +7,15 @@ from pydantic import BaseModel
 
 from app.middleware.loggingmiddleware import LoggingMiddleware
 from app.middleware.timer import timing_middleware
-from app.project import router as project_router, lifespan
+from app.project import router as project_router
+
+
+@asynccontextmanager
+async def lifespan(app):
+    # Load the ML model
+    yield
+    # Clean up the ML models and release the resources
+    print("end")
 
 app = FastAPI(lifespan=lifespan)
 
@@ -36,6 +46,7 @@ def get_item(item_id: int) -> Item:
         return items[item_id]
     else:
         raise HTTPException(status_code=404, detail=f"Item {item_id} not found")
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
