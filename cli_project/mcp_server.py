@@ -14,7 +14,24 @@ docs = {
 
 # TODO: Write a tool to read a doc
 # TODO: Write a tool to edit a doc
-# TODO: Write a resource to return all doc id's
+
+@mcp.resource(
+    "docs://documents",
+    mime_type="application/json",
+    description="Read the contents of a document and return it as a string.",
+)
+def list_docs() -> list[str]:
+    return list(docs.keys())
+
+@mcp.resource(
+    "docs://documents/{doc_id}",
+    mime_type="text/plain",
+    description="Read the contents of a document and return it as a string.",
+)
+def get_docs(doc_id: str) -> str:
+    if doc_id not in docs:
+        raise ValueError(f"Doc with id {doc_id} not found")
+    return docs.get(doc_id)
 # TODO: Write a resource to return the contents of a particular doc
 # TODO: Write a prompt to rewrite a doc in markdown format
 # TODO: Write a prompt to summarize a doc
