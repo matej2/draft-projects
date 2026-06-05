@@ -1,0 +1,28 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="win11toast" />
+          <option value="winrt-runtime" />
+          <option value="winrt-windows.data.xml.dom" />
+          <option value="winrt-windows.foundation" />
+          <option value="winrt-windows.globalization" />
+          <option value="winrt-windows.graphics.imaging" />
+          <option value="winrt-windows.media.core" />
+          <option value="winrt-windows.media.ocr" />
+          <option value="winrt-windows.media.playback" />
+          <option value="winrt-windows.media.speechsynthesis" />
+          <option value="winrt-windows.storage" />
+          <option value="winrt-windows.storage.streams" />
+          <option value="winrt-windows.ui.notifications" />
+          <option value="winrt.windows.foundation.collections" />
+          <option value="tzdata" />
+          <option value="pefile" />
+          <option value="pywin32-ctypes" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
