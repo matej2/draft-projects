@@ -6,6 +6,8 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 
+from model.Photo import Photo
+
 load_dotenv()
 
 app = FastAPI(title="OneDrive FastAPI")
@@ -131,12 +133,12 @@ async def get_images():
 
         items  = response.json().get("value", [])
         images = [
-            {
-                "name":         item["name"],
-                "id":           item["id"],
-                "download_url": item.get("@microsoft.graph.downloadUrl"),
-                "location": item["location"]
-            }
+            Photo(
+                item["id"],
+                item.get("createdBy", {}).get("user", {}).get("displayName"),
+                item.get("location", {}).get("latitude"),
+                item.get("location", {}).get("longitude")
+            )
             for item in items
             if item.get("file", {}).get("mimeType", "").startswith("image/")
         ]
