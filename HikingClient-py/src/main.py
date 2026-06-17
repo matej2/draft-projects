@@ -60,7 +60,7 @@ def get_msal_app(cache: msal.SerializableTokenCache) -> msal.ConfidentialClientA
 # --- Auth flow storage (in-memory, fine for single user) ---
 auth_flow_store = {}
 
-@app.get("/login", include_in_schema=False)
+@app.get("/login")
 def login():
     cache    = load_cache()
     msal_app = get_msal_app(cache)
@@ -71,7 +71,7 @@ def login():
         result = msal_app.acquire_token_silent(scopes=SCOPES, account=accounts[0])
         if result and "access_token" in result:
             save_cache(cache)
-            return RedirectResponse("/docs")  # Already authenticated, go straight to Swagger
+            return result.get("access_token")
 
     # No cache — start auth code flow
     flow = msal_app.initiate_auth_code_flow(
@@ -81,7 +81,7 @@ def login():
     auth_flow_store["flow"] = flow
     return RedirectResponse(flow["auth_uri"])
 
-@app.get("/callback", include_in_schema=False)
+@app.get("/callback")
 async def callback(request: Request):
     """Microsoft redirects here after login. Saves token to cache."""
     cache    = load_cache()
@@ -101,29 +101,9 @@ async def callback(request: Request):
             status_code=401,
             detail=f"Auth failed: {result.get('error_description')}"
         )
-
     save_cache(cache)
 
-    # Return page that injects token into Swagger UI automatically
-    token = result["access_token"]
-    return HTMLResponse(f"""
-        <html><body>
-        <p>✅ Login successful! Injecting token into Swagger UI...</p>
-        <script>
-            // Write token to localStorage so Swagger picks it up
-            localStorage.setItem("swagger_token", "{token}");
-
-            // If opened from Swagger, inject and close
-            if (window.opener) {{
-                window.opener.swaggerUIBundle.preauthorizeApiKey("oauth2", "{token}");
-                window.close();
-            }} else {{
-                // Otherwise redirect to Swagger with token in URL hash
-                window.location.href = "/docs#token={token}";
-            }}
-        </script>
-        </body></html>
-    """)
+    return result["access_token"]
 
 
 def get_token_from_cache() -> str:
