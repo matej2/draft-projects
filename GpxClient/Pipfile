@@ -8,6 +8,9 @@ fastapi = "*"
 gpxpy = "*"
 uvicorn = "*"
 python-multipart = "*"
+stravalib = "*"
+dotenv = "*"
+httpx = "*"
 
 [dev-packages]
 
