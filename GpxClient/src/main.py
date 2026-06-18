@@ -18,26 +18,26 @@ from model.Point import Point
 
 load_dotenv()
 
-app = FastAPI(title="GPX Client")
+app = FastAPI(title="GPX Client", description="[Login to strava](http://127.0.0.1:8000/strava/login)")
 STRAVA_CLIENT_ID     = int(str(os.getenv("STRAVA_CLIENT_ID")))
 STRAVA_CLIENT_SECRET = str(os.getenv("STRAVA_CLIENT_SECRET"))
 STRAVA_ACCESS_TOKEN  = str(os.getenv("STRAVA_ACCESS_TOKEN"))
 STRAVA_REDIRECT_URI  = "http://localhost:8000/strava/callback"
-STRAVA_TOKEN_FILE    = "strava_tokens.json"
+STRAVA_TOKEN_FILE    = "../strava_tokens.json"
 
 
-@app.post("/")
+@app.post("/gpx/process")
 async def process_gpx(file: UploadFile = File(...)):
     contents = await file.read()
     gpx = gpxpy.parse(contents)
 
     for track in gpx.tracks:
         for segment in track.segments:
-            return ([
+            return [
                 Point(point.latitude, point.longitude, point.elevation)
                 for point in segment.points
-            ])
-    return ()
+            ]
+    return []
 
 
 def load_strava_access_info() -> AccessInfo:
@@ -80,8 +80,7 @@ def strava_callback(code: str):
 def strava_activities():
     acc_info = load_strava_access_info()
     client = Client(access_token=acc_info.get("access_token"), refresh_token=acc_info.get("refresh_token"), token_expires=acc_info.get("expires_at", 0))
-    print(client.get_athlete())
-    print([a for a in client.get_activities()])
+    return [a for a in client.get_activities()]
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
