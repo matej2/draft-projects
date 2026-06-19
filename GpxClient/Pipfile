@@ -11,6 +11,7 @@ python-multipart = "*"
 stravalib = "*"
 dotenv = "*"
 httpx = "*"
+pymongo = "*"
 
 [dev-packages]
 
