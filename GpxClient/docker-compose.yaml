@@ -1,19 +1,41 @@
+
+version: '3.4'
+
+x-shared-config:
+  mongo-env: &mongo-env
+    MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+    MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
+
+
 services:
   web:
     build: .
     environment:
+      <<: *mongo-env
       STRAVA_CLIENT_ID: ${STRAVA_CLIENT_ID}
       STRAVA_CLIENT_SECRET: ${STRAVA_CLIENT_SECRET}
       STRAVA_ACCESS_TOKEN: ${STRAVA_ACCESS_TOKEN}
+      MONGO_BASE_URL: mongodb
+      MONGO_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASS}@mongodb:27017/?authSource=admin
     ports:
       - "5000:5000"
   mongodb:
     image: mongo:4.4
     restart: unless-stopped
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       -  ./data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      <<: *mongo-env
+
+  mongo-express:
+    image: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASS}@mongodb:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: user
+      ME_CONFIG_BASICAUTH_PASSWORD: user
+    depends_on:
+      - mongodb
+    ports:
+      - "8888:8081"
