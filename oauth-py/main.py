@@ -15,6 +15,7 @@ load_dotenv()
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+API_KEY = os.getenv("API_KEY")
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URN = "https://oauth2.googleapis.com/token"
 SCOPES = ["https://www.google.com/m8/feeds/"]
@@ -95,6 +96,18 @@ def process_gpx(code: str):
     response = requests.post(url)
     return response.json()
 
+def get_token_direct():
+    params = {
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+        "response_type": "token",
+    }
+
+    url = f"{TOKEN_URN}?{parse.urlencode(params)}"
+    response = requests.post(url)
+    print(response.json())
+
+
 @app.get("/people")
 def get_people(token: Annotated[str, Depends(get_google_token)]):
 
@@ -106,6 +119,18 @@ def get_people(token: Annotated[str, Depends(get_google_token)]):
     url = f"{API_URL}?{parse.urlencode(params)}"
 
     return requests.get(url, headers={"Authorization": f"Bearer {token}"}).json()
+
+@app.get("/calendar")
+def get_people():
+
+    params = {
+        "key": API_KEY,
+    }
+
+    url = f"https://www.googleapis.com/calendar/v3/calendars/mtj510@gmail.com/events?{parse.urlencode(params)}"
+
+    return requests.get(url).json()
+
 
 
 if __name__ == "__main__":
