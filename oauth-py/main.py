@@ -1,10 +1,14 @@
+import json
 import os
+from typing import Annotated
 from urllib import parse
 
 import requests
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import OAuth2AuthorizationCodeBearer
+from starlette import status
 from starlette.responses import RedirectResponse
 
 load_dotenv()
@@ -18,7 +22,41 @@ REDIRECT_URL = "http://localhost:5000/code/callback"
 PROMPT = "consent"
 STATE = "shfjoifspeirf"
 RESPONSE_TYPE = "code"
-app = FastAPI()
+
+API_URL = "https://people.googleapis.com/v1/people/me/connections"
+app = FastAPI(
+    title="Google Auth v Swaggerju",
+    # Nastavitev Googlovih avtorizacijskih URL-jev za Swagger UI
+    swagger_ui_oauth2_redirect_url="/docs/oauth2-redirect",
+    swagger_ui_init_oauth={
+        "clientId": CLIENT_ID,
+        "clientSecret": CLIENT_SECRET,
+        "appName": "Moja FastAPI Aplikacija",
+        "scopes": SCOPES,
+        "usePkceWithAuthorizationCodeGrant": True
+    },
+    swagger_ui_parameters={"tryItOutEnabled": True}
+)
+
+
+
+oauth2_scheme = OAuth2AuthorizationCodeBearer(
+    authorizationUrl=AUTH_URL,
+    tokenUrl=TOKEN_URN,
+    scopes={
+        SCOPES[0]: SCOPES[0],
+    }
+)
+
+# Pomožna funkcija (Dependency), ki bo varovala vaše endpointe
+async def get_google_token(token: Annotated[str, Depends(oauth2_scheme)]):
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Žeton manjka ali je neveljaven",
+        )
+    return token
+
 
 @app.get("/login")
 def process_gpx():
@@ -31,7 +69,6 @@ def process_gpx():
         "redirect_uri": REDIRECT_URL,
         "response_type": RESPONSE_TYPE,
         "state": STATE,
-        "prompt": PROMPT,
         "access_type": "offline"
     }
 
@@ -56,8 +93,19 @@ def process_gpx(code: str):
     print(url)
 
     response = requests.post(url)
+    return response.json()
 
-    print(response.text)
+@app.get("/people")
+def get_people(token: Annotated[str, Depends(get_google_token)]):
+
+    params = {
+        "personFields": "names",
+
+    }
+
+    url = f"{API_URL}?{parse.urlencode(params)}"
+
+    return requests.get(url, headers={"Authorization": f"Bearer {token}"}).json()
 
 
 if __name__ == "__main__":
