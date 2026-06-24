@@ -10,6 +10,7 @@ coverage = "*"
 msal = "*"
 httpx = "*"
 dotenv = "*"
+pymongo = "*"
 
 [dev-packages]
 
