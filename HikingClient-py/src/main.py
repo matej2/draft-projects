@@ -9,6 +9,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.security import OAuth2AuthorizationCodeBearer
 
 from model.Photo import Photo
+from service.CacheService import CacheService
 
 load_dotenv()
 
@@ -36,18 +37,9 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
     tokenUrl=f"https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
     scopes={"Files.Read": "Read OneDrive files"},
 )
+MONGO_URI = str(os.getenv("MONGO_URI"))
 
-# --- Cache ---
-def load_cache() -> msal.SerializableTokenCache:
-    cache = msal.SerializableTokenCache()
-    if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, "r") as f:
-            cache.deserialize(f.read())
-    return cache
-
-def save_cache(cache: msal.SerializableTokenCache):
-    with open(CACHE_FILE, "w") as f:
-        f.write(cache.serialize())
+cache = CacheService(MONGO_URI)
 
 def get_msal_app(cache: msal.SerializableTokenCache) -> msal.ConfidentialClientApplication:
     return msal.ConfidentialClientApplication(
@@ -62,18 +54,16 @@ auth_flow_store = {}
 
 @app.get("/login")
 def login():
-    cache    = load_cache()
-    msal_app = get_msal_app(cache)
+    saved_cache = cache.load_access_info()
+    msal_app = get_msal_app(saved_cache)
     accounts = msal_app.get_accounts()
 
-    # ✅ Return cached token if available, skip login entirely
     if accounts:
         result = msal_app.acquire_token_silent(scopes=SCOPES, account=accounts[0])
         if result and "access_token" in result:
-            save_cache(cache)
+            cache.save_access_info(saved_cache)
             return result.get("access_token")
 
-    # No cache — start auth code flow
     flow = msal_app.initiate_auth_code_flow(
         scopes=SCOPES,
         redirect_uri=REDIRECT_URI,
@@ -83,9 +73,8 @@ def login():
 
 @app.get("/callback")
 async def callback(request: Request):
-    """Microsoft redirects here after login. Saves token to cache."""
-    cache    = load_cache()
-    msal_app = get_msal_app(cache)
+    saved_cahe    = cache.load_access_info()
+    msal_app = get_msal_app(saved_cahe)
 
     flow = auth_flow_store.get("flow")
     if not flow:
@@ -101,15 +90,15 @@ async def callback(request: Request):
             status_code=401,
             detail=f"Auth failed: {result.get('error_description')}"
         )
-    save_cache(cache)
+    cache.save_access_info(saved_cahe)
 
     return result["access_token"]
 
 
 def get_token_from_cache() -> str:
     """Get valid token from cache, raise if missing."""
-    cache    = load_cache()
-    msal_app = get_msal_app(cache)
+    saved_cache    = cache.load_access_info()
+    msal_app = get_msal_app(saved_cache)
     accounts = msal_app.get_accounts()
 
     if not accounts:
@@ -119,7 +108,7 @@ def get_token_from_cache() -> str:
     if not result or "access_token" not in result:
         raise HTTPException(status_code=401, detail="Token expired. Visit /login again.")
 
-    save_cache(cache)
+    cache.save_access_info(saved_cache)
     return result["access_token"]
 
 
