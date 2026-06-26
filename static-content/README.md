@@ -1,0 +1,1 @@
+sudo chmod +x /home /home/matej /home/matej/Projekti /home/matej/Projekti/draft-projects /home/matej/Projekti/draft-projects/static-content
