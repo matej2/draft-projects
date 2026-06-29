@@ -1,9 +1,13 @@
 import asyncio
+import random
+import time
 
 import websockets
 
 async def send(websocket):
-    await websocket.send("Test from client")
+    random_number = random.randint(1, 10)
+    time.sleep(random_number)
+    await websocket.send("1")
 
 
 async def receive(websocket):
