@@ -4,7 +4,6 @@ import datetime
 import websockets
 
 domain = "localhost"
-port = 8765
 
 def get_curr_time():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -18,9 +17,9 @@ async def receive(websocket):
         print(f"{get_curr_time()} - [Client]: Connection to server lost.\n")
 
 
-async def main():
+async def main(port: int):
     uri = f"ws://{domain}:{port}"
-    print("Connecting to websocket...")
+    print(f"Connecting to websocket on {uri}...")
     delay = 5
     max_delay = 60
 

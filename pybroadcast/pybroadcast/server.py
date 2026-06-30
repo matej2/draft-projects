@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 import subprocess
 
 import typer
@@ -22,10 +23,10 @@ async def handle_connection(websocket):
     finally:
         clients.discard(websocket)
 
-def screen(last_msg: str):
+def screen(last_msg: str, port: int):
     output = f"""
 Websocket Broadcast Server
- -> running on ws://localhost:8765
+ -> running on ws://localhost:{port}
 -----------
 :r - reload
 :q - quit
@@ -39,20 +40,23 @@ Broadcast: {last_msg}
     return output
 
 
-async def broadcast_loop():
+async def broadcast_loop(port: int):
     session = PromptSession()
     last_message = ""
     with patch_stdout():
         while True:
 
             cls()
-            print(screen(last_message))
+            print(screen(last_message, port))
 
             message = await session.prompt_async("Message [or :command]: ")
 
             if message == ":q":
                 break
             if message == ":r":
+                continue
+            if re.search("^\\s*$", message):
+                last_message = "Invalid message - contains only whitespaces"
                 continue
 
             if clients:
@@ -61,17 +65,18 @@ async def broadcast_loop():
             else:
                 last_message = "No clients connected."
 
-async def start_server():
-    async with websockets.serve(handle_connection, "localhost", 8765):
-        await broadcast_loop()
+async def start_server(port: int):
+    async with websockets.serve(handle_connection, "localhost", port):
+        await broadcast_loop(port)
 
 def command(
-    option: Annotated[str, typer.Argument(help="Required. Option for broadcast. Either 'start' or 'connect'")]
+    action: Annotated[str, typer.Argument(help="Required. Action for broadcast. Either 'start' or 'connect'")],
+    port: Annotated[str, typer.Option("--port", "-p", help="Port to start server / connect to. Leave default for 8765")] = 8765
 ):
-    if option == "start":
-        asyncio.run(start_server())
-    elif option == "connect":
-        asyncio.run(main())
+    if action == "start":
+        asyncio.run(start_server(int(port)))
+    elif action == "connect":
+        asyncio.run(main(int(port)))
     else:
         print("Invalid option")
 
