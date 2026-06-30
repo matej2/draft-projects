@@ -8,6 +8,8 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from typing_extensions import Annotated
 
+from pybroadcast.client import main
+
 clients = set()
 
 def cls():
@@ -23,12 +25,13 @@ async def handle_connection(websocket):
 def screen(last_msg: str):
     output = f"""
 Websocket Broadcast Server
+ -> running on ws://localhost:8765
 -----------
 :r - reload
 :q - quit
 -----------
 Connected clients ({len(clients)}):
-{"".join([c.remote_address[0] for c in clients])} 
+{"\n".join([c.remote_address[0] for c in clients])} 
 -----------
 Broadcast: {last_msg}
 -----------
@@ -58,14 +61,19 @@ async def broadcast_loop():
             else:
                 last_message = "No clients connected."
 
-async def init():
+async def start_server():
     async with websockets.serve(handle_connection, "localhost", 8765):
-        print(f"WebSocket Server running on ws://localhost:8765.")
         await broadcast_loop()
 
-def greet(
-    ffff: Annotated[str, typer.Option("--name", "-n", help="The (last, if --title is given) name of the person to greet")] = ""
+def command(
+    option: Annotated[str, typer.Argument(help="Required. Option for broadcast. Either 'start' or 'connect'")]
 ):
-    asyncio.run(init())
+    if option == "start":
+        asyncio.run(start_server())
+    elif option == "connect":
+        asyncio.run(main())
+    else:
+        print("Invalid option")
+
 
 

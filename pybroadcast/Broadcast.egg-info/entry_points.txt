@@ -1,5 +1,5 @@
 [console_scripts]
-greet = pybroadcast.cli:app
+broadcast-server = pybroadcast.cli:app
 
 [pipx.run]
-greet = pybroadcast.cli:app
+broadcast-server = pybroadcast.cli:app

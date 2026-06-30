@@ -4,3 +4,4 @@ Version: 2020.0.0
 Requires-Dist: typer
 Requires-Dist: websockets
 Requires-Dist: typing-extensions
+Requires-Dist: prompt-toolkit

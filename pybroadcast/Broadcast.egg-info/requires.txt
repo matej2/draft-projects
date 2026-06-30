@@ -1,3 +1,4 @@
 typer
 websockets
 typing-extensions
+prompt-toolkit

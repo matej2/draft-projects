@@ -4,14 +4,15 @@ name = "Broadcast"
 dependencies = [
     "typer",
     "websockets",
-    "typing-extensions"
+    "typing-extensions",
+    "prompt-toolkit"
 ]
 
 [project.scripts]
-greet = "pybroadcast.cli:app"
+broadcast-server = "pybroadcast.cli:app"
 
 [project.entry-points."pipx.run"]
-greet = "pybroadcast.cli:app"
+broadcast-server = "pybroadcast.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["."]

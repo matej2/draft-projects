@@ -1,9 +1,9 @@
 import typer
 
-from pybroadcast.server import greet
+from pybroadcast.server import command
 
 app = typer.Typer()
-app.command()(greet)
+app.command()(command)
 
 
 if __name__ == "__main__":
