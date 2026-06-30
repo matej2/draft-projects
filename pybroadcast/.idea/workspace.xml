@@ -69,9 +69,16 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
   }
 }]]></component>
-  <component name="RunManager" selected="Python.client">
+  <component name="RunManager" selected="Python.cli">
     <configuration name="cli" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pybroadcast" />
       <option name="ENV_FILES" value="" />
@@ -140,15 +147,28 @@
       <updated>1782736367166</updated>
       <workItem from="1782736368504" duration="3234000" />
       <workItem from="1782740958049" duration="1566000" />
-      <workItem from="1782801842864" duration="6653000" />
+      <workItem from="1782801842864" duration="9098000" />
     </task>
+    <task id="LOCAL-00001" summary="Broadcast message to clients">
+      <option name="closed" value="true" />
+      <created>1782809535003</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1782809535004</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Broadcast message to clients" />
+    <option name="LAST_COMMIT_MESSAGE" value="Broadcast message to clients" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pybroadcast$cli.coverage" NAME="cli Coverage Results" MODIFIED="1782809256239" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pybroadcast" />
-    <SUITE FILE_PATH="coverage/pybroadcast$client.coverage" NAME="client Coverage Results" MODIFIED="1782807799417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pybroadcast" />
+    <SUITE FILE_PATH="coverage/pybroadcast$cli.coverage" NAME="cli Coverage Results" MODIFIED="1782812026426" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pybroadcast" />
+    <SUITE FILE_PATH="coverage/pybroadcast$client.coverage" NAME="client Coverage Results" MODIFIED="1782812322181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pybroadcast" />
   </component>
 </project>

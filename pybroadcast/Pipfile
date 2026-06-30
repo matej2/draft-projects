@@ -7,7 +7,7 @@ name = "pypi"
 typer = "*"
 typing-extensions = "*"
 websockets = "*"
-aioconsole = "*"
+prompt-toolkit = "*"
 
 [dev-packages]
 
