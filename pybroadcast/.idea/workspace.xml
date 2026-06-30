@@ -150,7 +150,7 @@
       <workItem from="1782736368504" duration="3234000" />
       <workItem from="1782740958049" duration="1566000" />
       <workItem from="1782801842864" duration="11515000" />
-      <workItem from="1782820039384" duration="4919000" />
+      <workItem from="1782820039384" duration="5247000" />
     </task>
     <task id="LOCAL-00001" summary="Broadcast message to clients">
       <option name="closed" value="true" />
@@ -192,7 +192,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782823574487</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Define port based on input option, validate message before sending">
+      <option name="closed" value="true" />
+      <created>1782825640610</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1782825640610</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,7 +212,8 @@
     <MESSAGE value="Screen, commands" />
     <MESSAGE value="Logs time output, command options" />
     <MESSAGE value="Output refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="Output refactor" />
+    <MESSAGE value="Define port based on input option, validate message before sending" />
+    <option name="LAST_COMMIT_MESSAGE" value="Define port based on input option, validate message before sending" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pybroadcast$cli.coverage" NAME="cli Coverage Results" MODIFIED="1782820742580" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pybroadcast" />

@@ -6,12 +6,8 @@ Broadcast.egg-info/dependency_links.txt
 Broadcast.egg-info/entry_points.txt
 Broadcast.egg-info/requires.txt
 Broadcast.egg-info/top_level.txt
-pybroadcast/KeyboardPrompt.py
 pybroadcast/__init__.py
 pybroadcast/__main__.py
 pybroadcast/cli.py
 pybroadcast/client.py
-pybroadcast/client_one.py
-pybroadcast/client_two.py
-pybroadcast/main.py
 pybroadcast/server.py
