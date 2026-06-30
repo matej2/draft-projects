@@ -17,4 +17,4 @@ Then you can use cli tool:
 
     broadcast-server [action] [--port|-p <port>]
 
-Project is based on [this idea](https://roadmap.sh/projects/broadcast-server)
+Project is based on this idea: https://roadmap.sh/projects/broadcast-server
