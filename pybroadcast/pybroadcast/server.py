@@ -31,7 +31,7 @@ Websocket Broadcast Server
 :q - quit
 -----------
 Connected clients ({len(clients)}):
-{"\n".join([c.remote_address[0] for c in clients])} 
+{", ".join([c.remote_address[0] for c in clients])} 
 -----------
 Broadcast: {last_msg}
 -----------

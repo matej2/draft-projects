@@ -3,6 +3,9 @@ import datetime
 
 import websockets
 
+domain = "localhost"
+port = 8765
+
 def get_curr_time():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -16,7 +19,7 @@ async def receive(websocket):
 
 
 async def main():
-    uri = "ws://localhost:8765"
+    uri = f"ws://{domain}:{port}"
     print("Connecting to websocket...")
     delay = 5
     max_delay = 60
@@ -24,7 +27,7 @@ async def main():
     while True:
         try:
             async with websockets.connect(uri) as websocket:
-                print("Connected. Ctrl + c to stop")
+                print(f"Connected to {domain}:{port}. Ctrl + c to stop")
 
                 await asyncio.gather(
                     receive(websocket),
