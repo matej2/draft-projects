@@ -27,6 +27,7 @@ async def main():
                 await asyncio.gather(
                     receive(websocket),
                 )
+                delay = 1
         except (websockets.exceptions.ConnectionClosed, ConnectionRefusedError, OSError) as e:
             print(f"[Client]: Connection failed or lost ({type(e).__name__}).")
             print(f"[Client]: Retrying in {delay} seconds...")
