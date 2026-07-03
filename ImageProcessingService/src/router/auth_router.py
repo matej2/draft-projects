@@ -9,6 +9,7 @@ from starlette import status
 from config.auth import bcrypt_context
 from domain.dto.Auth import CreateUserRequest, Token
 from domain.model.User import User
+from dto.Response import TokenResponse
 from service.DatabaseService import get_db
 from util.Auth import authenticate_user, create_access_token
 
@@ -42,9 +43,8 @@ async def login_for_access_token(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
     token = create_access_token(user.username, user.id, timedelta(minutes=20))
 
-    return {
-        "access_token": token,
-        "token_type": "bearer",
-    }
-
+    return TokenResponse(
+        token,
+        "bearer"
+    )
     

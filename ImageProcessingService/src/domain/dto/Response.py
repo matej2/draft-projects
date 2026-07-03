@@ -5,3 +5,8 @@ from dataclasses import dataclass
 class CurrentUserResponse:
     username: str
     id: str
+
+@dataclass
+class TokenResponse:
+    access_token: str
+    token_type: str
