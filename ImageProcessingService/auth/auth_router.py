@@ -4,11 +4,12 @@ from typing import Annotated
 import bcrypt
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from jose import jwt
+from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from starlette import status
 
-from auth.auth import CreateUserRequest, get_db, bcrypt_context, Token, authenticate_user, SECRET_KEY, ALGORITHM
+from auth.auth import CreateUserRequest, get_db, bcrypt_context, Token, authenticate_user, SECRET_KEY, ALGORITHM, \
+    oauth2_bearer
 from models import User
 
 router = APIRouter(
@@ -35,6 +36,28 @@ def create_access_token(username: str, user_id: str, expires_after: timedelta):
     expires_after = datetime.now(UTC) + expires_after
     encode.update({"exp": str(int(expires_after.timestamp()))})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub", "")
+        user_id: str = payload.get("id", "")
+
+        if username == "" or user_id == "":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate user"
+            )
+        return {
+            "username": username,
+            "id": user_id
+        }
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate jwt",
+        )
+
 
 
 @router.post("/token", response_model=Token)
