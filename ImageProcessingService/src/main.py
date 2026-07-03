@@ -1,3 +1,4 @@
+from email.mime import image
 from typing import Annotated
 
 import uvicorn
@@ -7,14 +8,15 @@ from starlette import status
 from domain.model.Base import Base
 from config.database import ENGINE
 from domain.model.User import User
-from router.auth_router import router
+from router.auth_router import auth_router
+from router.image_router import image_router
 from service.DatabaseService import get_current_user
 
 Base.metadata.create_all(ENGINE)
 
-
 app = FastAPI(title="GPX Client")
-app.include_router(router)
+app.include_router(auth_router)
+app.include_router(image_router)
 
 user_dependency = Annotated[User, Depends(get_current_user)]
 
