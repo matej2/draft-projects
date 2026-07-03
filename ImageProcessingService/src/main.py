@@ -4,11 +4,11 @@ import uvicorn
 from fastapi import FastAPI, Depends
 from starlette import status
 
-from auth.auth import get_current_user
 from domain.model.Base import Base
 from config.database import ENGINE
 from domain.model.User import User
 from router.auth_router import router
+from service.DatabaseService import get_current_user
 
 Base.metadata.create_all(ENGINE)
 

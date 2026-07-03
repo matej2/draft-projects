@@ -2,8 +2,8 @@ from datetime import datetime, UTC, timedelta
 
 from jose import jwt
 
+from config.auth import bcrypt_context, SECRET_KEY, ALGORITHM
 from domain.model.User import User
-from auth.auth import bcrypt_context, ALGORITHM, SECRET_KEY
 
 
 def authenticate_user(username: str, password: str, db):

@@ -6,9 +6,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from starlette import status
 
-from auth.auth import get_db
+from config.auth import bcrypt_context
 from domain.dto.Auth import CreateUserRequest, Token
 from domain.model.User import User
+from service.DatabaseService import get_db
 from util.Auth import authenticate_user, create_access_token
 
 router = APIRouter(
@@ -24,6 +25,7 @@ async def create_user(
         create_user_request: CreateUserRequest):
     create_user_request = User(
         username = create_user_request.username,
+        hashed_password=bcrypt_context.hash(create_user_request.password)
     )
 
     db.add(create_user_request)
