@@ -1,0 +1,23 @@
+from typing import Annotated
+
+import uvicorn
+from fastapi import FastAPI, Depends
+from starlette import status
+
+from auth.auth import get_current_user
+from auth.auth_router import router
+from database import engine, Base
+from src.domain.model.User import User
+
+app = FastAPI(title="GPX Client")
+app.include_router(router)
+
+user_dependency = Annotated[User, Depends(get_current_user)]
+
+@app.get("/", status_code=status.HTTP_200_OK)
+async def user(current_user: user_dependency):
+    return current_user
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000)
+
