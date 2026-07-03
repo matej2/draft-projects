@@ -5,9 +5,13 @@ from fastapi import FastAPI, Depends
 from starlette import status
 
 from auth.auth import get_current_user
-from auth.auth_router import router
-from database import engine, Base
-from src.domain.model.User import User
+from domain.model.Base import Base
+from config.database import ENGINE
+from domain.model.User import User
+from router.auth_router import router
+
+Base.metadata.create_all(ENGINE)
+
 
 app = FastAPI(title="GPX Client")
 app.include_router(router)
