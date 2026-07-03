@@ -33,7 +33,7 @@ async def create_user(
 def create_access_token(username: str, user_id: str, expires_after: timedelta):
     encode = {"sub": username, "id": user_id}
     expires_after = datetime.now(UTC) + expires_after
-    encode.update({"exp": str(expires_after)})
+    encode.update({"exp": str(int(expires_after.timestamp()))})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
@@ -45,7 +45,7 @@ async def login_for_access_token(
 
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
-    token = create_access_token(user.username, user.hashed_password, timedelta(minutes=20))
+    token = create_access_token(user.username, user.id, timedelta(minutes=20))
 
     return {
         "access_token": token,
