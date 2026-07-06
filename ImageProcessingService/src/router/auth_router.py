@@ -11,7 +11,6 @@ from router.common_dependencies import db_dependency, form_dependency
 from util.Auth import authenticate_user, create_access_token
 
 auth_router = APIRouter(
-    prefix="/",
     tags=["auth"]
 )
 

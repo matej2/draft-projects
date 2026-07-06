@@ -16,3 +16,8 @@ class TokenResponse:
     user: UserResponse
     access_token: str
     token_type: str
+
+@dataclass
+class ImageResponse:
+    id: int
+    content: bytes
