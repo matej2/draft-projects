@@ -1,9 +1,12 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from sqlalchemy import select, asc, desc
 from starlette import status
 
 from dto.Response import ImageResponse
 from model.Image import Image
 from router.common_dependencies import db_dependency
+from router.pagination import pagination_dependency, get_offset_for_page, SortEnum, pagination_query, \
+    get_order_for_pagination
 
 image_router = APIRouter(
     prefix="/images",
@@ -24,7 +27,7 @@ async def process_gpx(
     db.commit()
     return ImageResponse(id=image.id, content=b"")
 
-@image_router.post("/{image_id}",
+@image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
                    response_model = ImageResponse)
 async def process_gpx(
@@ -38,3 +41,21 @@ async def process_gpx(
         content=image_result.content
     )
     return image_response
+
+
+
+@image_router.get("/",
+                   status_code=status.HTTP_200_OK)
+async def process_gpx(
+        db: db_dependency,
+        pagination: pagination_dependency
+):
+    result_list = []
+
+    order = get_order_for_pagination(pagination)
+    query = pagination_query(Image, pagination).order_by(order(Image.id))
+
+    for i in db.execute(query):
+        result_list.append(ImageResponse(id=i[0].id, content=i[0].content))
+
+    return result_list
