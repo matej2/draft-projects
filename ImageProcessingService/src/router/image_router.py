@@ -24,13 +24,15 @@ async def process_gpx(
         db: db_dependency,
         file: UploadFile = File(...)):
     contents = await file.read()
+    file_path = Path(str(file.filename))
     image = Image(
-        extension=Path(str(file.filename)).suffix.lower(),
-        content=contents
+        extension=file_path.suffix.lower(),
+        content=contents,
+        name=file_path.stem
     )
     db.add(image)
     db.commit()
-    return ImageResponse(id=image.id, content="", extension=None)
+    return ImageResponse(id=image.id, content="", extension=None, name=None)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
@@ -63,7 +65,8 @@ async def list_images(
         ImageResponse(
             id=row[0].id,
             content=(base64.b64encode(row[0].content).decode('ascii') if row[0].content is not None else None),
-            extension=row[0].extension
+            extension=row[0].extension,
+            name=row[0].name
         )
         for row in db.execute(query)
     ]
@@ -86,6 +89,7 @@ async def transform_image(
 
     image_response = ImageResponse(
         id=image_result.id,
-        content=image_result.content
+        content=image_result.content,
+        name=image_result.name
     )
     return image_response
