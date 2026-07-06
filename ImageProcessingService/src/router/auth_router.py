@@ -4,14 +4,14 @@ from fastapi import APIRouter, HTTPException
 from starlette import status
 
 from config.auth import bcrypt_context
-from domain.dto.Auth import CreateUserRequest, Token
+from domain.dto.Auth import CreateUserRequest
 from domain.model.User import User
-from dto.Response import TokenResponse
+from dto.Response import TokenResponse, UserResponse
 from router.common_dependencies import db_dependency, form_dependency
 from util.Auth import authenticate_user, create_access_token
 
 auth_router = APIRouter(
-    prefix="/auth",
+    prefix="/",
     tags=["auth"]
 )
 
@@ -28,7 +28,7 @@ async def create_user(
     db.commit()
 
 
-@auth_router.post("/token", response_model=Token)
+@auth_router.post("/login", response_model=TokenResponse)
 async def login_for_access_token(
         form_data: form_dependency,
         db: db_dependency):
@@ -38,7 +38,10 @@ async def login_for_access_token(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
     token = create_access_token(user.username, user.id, timedelta(minutes=20))
 
+    user_response = UserResponse(user.username)
+
     return TokenResponse(
+        user_response,
         token,
         "bearer"
     )
