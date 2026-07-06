@@ -27,7 +27,7 @@ T = TypeVar("T")
 def get_order_for_pagination(pagination: Pagination):
     return desc if pagination.order == SortEnum.DESC else asc
 
-def pagination_query(clazz: Type[T], pagination: Pagination) -> Select:
+def select_and_paginate_query(clazz: Type[T], pagination: Pagination) -> Select:
 
     return (select(clazz)
             .limit(pagination.per_page)

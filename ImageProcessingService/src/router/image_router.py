@@ -5,7 +5,7 @@ from starlette import status
 from dto.Response import ImageResponse
 from model.Image import Image
 from router.common_dependencies import db_dependency
-from router.pagination import pagination_dependency, get_offset_for_page, SortEnum, pagination_query, \
+from router.pagination import pagination_dependency, get_offset_for_page, SortEnum, select_and_paginate_query, \
     get_order_for_pagination
 
 image_router = APIRouter(
@@ -50,12 +50,12 @@ async def process_gpx(
         db: db_dependency,
         pagination: pagination_dependency
 ):
-    result_list = []
-
     order = get_order_for_pagination(pagination)
-    query = pagination_query(Image, pagination).order_by(order(Image.id))
+    query = select_and_paginate_query(Image, pagination).order_by(order(Image.id))
 
-    for i in db.execute(query):
-        result_list.append(ImageResponse(id=i[0].id, content=i[0].content))
+    result_list  = [
+        ImageResponse(id=row[0].id, content=row[0].content)
+        for row in db.execute(query)
+    ]
 
     return result_list
