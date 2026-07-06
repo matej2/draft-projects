@@ -1,23 +1,22 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
+from typing import Optional
 
 
-@dataclass
-class CurrentUserResponse:
+class CurrentUserResponse(BaseModel):
     username: str
     id: str
 
-@dataclass
-class UserResponse:
+class UserResponse(BaseModel):
     username: str
 
 
-@dataclass
-class TokenResponse:
+class TokenResponse(BaseModel):
     user: UserResponse
     access_token: str
     token_type: str
 
-@dataclass
-class ImageResponse:
+class ImageResponse(BaseModel):
     id: int
-    content: bytes
+    content: Optional[str] = None
+    extension: Optional[str] = None
+

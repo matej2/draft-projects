@@ -16,8 +16,8 @@ class Pagination(BaseModel):
     order: SortEnum
 
 def pagination_params(
-        page: int = Query(qe=1, required=False, default=1),
-        per_page: int = Query(qe=2, le=100, required=False, default=10),
+        page: int = Query(ge=1, required=False, default=1),
+        per_page: int = Query(ge=2, le=100, required=False, default=10),
         order: SortEnum = SortEnum.ASC
 ):
     return Pagination(page=page, per_page=per_page, order=order)

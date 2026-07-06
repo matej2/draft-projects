@@ -5,7 +5,7 @@ from jose import jwt, JWTError
 from starlette import status
 
 from config.auth import SECRET_KEY, ALGORITHM, oauth2_bearer, SessionLocal
-from dto.Response import CurrentUserResponse
+from domain.dto.Response import CurrentUserResponse
 
 
 def get_db():

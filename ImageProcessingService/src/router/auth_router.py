@@ -6,7 +6,7 @@ from starlette import status
 from config.auth import bcrypt_context
 from domain.dto.Auth import CreateUserRequest
 from domain.model.User import User
-from dto.Response import TokenResponse, UserResponse
+from domain.dto.Response import TokenResponse, UserResponse
 from router.common_dependencies import db_dependency, form_dependency
 from util.Auth import authenticate_user, create_access_token
 
