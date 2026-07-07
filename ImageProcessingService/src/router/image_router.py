@@ -2,11 +2,11 @@ import base64
 import io
 from pathlib import Path
 
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from fastapi.openapi.models import Response
+from fastapi import APIRouter, UploadFile, File, HTTPException, Response
 from sqlalchemy import update
 from starlette import status
 from PIL import Image as PILImage
+
 from domain.dto.Request import image_transform_dependency
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
@@ -28,29 +28,26 @@ async def process_gpx(
     contents = await file.read()
     file_path = Path(str(file.filename))
     image = Image(
-        extension=file_path.suffix.lower(),
+        type=str(file.content_type),
         content=contents,
         name=file_path.stem
     )
     db.add(image)
     db.commit()
-    return ImageResponse(id=image.id, content="", extension=None, name=None)
+    return ImageResponse(id=image.id, type=str(file.content_type), name=file_path.stem)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
-                   response_model = ImageResponse)
-async def process_gpx(
+                   response_class = Response)
+async def get_image(
         image_id: int,
         db: db_dependency):
     image_result = db.query(Image).filter(Image.id == image_id).first()
     if not image_result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    image_response = ImageResponse(
-        id=image_result.id,
-        content=image_result.content,
-        extension=image_result.extension
-    )
-    return image_response
+
+
+    return Response(content=image_result.content, media_type=str(image_result.type))
 
 
 
@@ -66,8 +63,7 @@ async def list_images(
     result_list  = [
         ImageResponse(
             id=row[0].id,
-            content=(base64.b64encode(row[0].content).decode('ascii') if row[0].content is not None else None),
-            extension=row[0].extension,
+            type=row[0].type,
             name=row[0].name
         )
         for row in db.execute(query)

@@ -7,5 +7,5 @@ class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    extension = Column(String)
+    type = Column(String)
     content = Column(LargeBinary)

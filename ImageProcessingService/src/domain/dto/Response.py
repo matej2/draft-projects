@@ -17,7 +17,6 @@ class TokenResponse(BaseModel):
 
 class ImageResponse(BaseModel):
     id: int
-    content: Optional[str] = None
-    extension: Optional[str] = None
+    type: Optional[str] = None
     name: Optional[str] = None
 
