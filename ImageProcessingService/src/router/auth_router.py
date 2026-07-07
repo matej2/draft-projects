@@ -14,7 +14,7 @@ auth_router = APIRouter(
     tags=["auth"]
 )
 
-@auth_router.post("/", status_code=status.HTTP_201_CREATED)
+@auth_router.post("/register", status_code=status.HTTP_201_CREATED)
 async def create_user(
         db: db_dependency,
         create_user_request: CreateUserRequest):
@@ -37,11 +37,11 @@ async def login_for_access_token(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
     token = create_access_token(user.username, user.id, timedelta(minutes=20))
 
-    user_response = UserResponse(user.username)
+    user_response = UserResponse(username=user.username)
 
     return TokenResponse(
-        user_response,
-        token,
-        "bearer"
+        user=user_response,
+        access_token=token,
+        token_type="bearer"
     )
     

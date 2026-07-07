@@ -4,7 +4,7 @@ from typing import Optional
 
 class CurrentUserResponse(BaseModel):
     username: str
-    id: str
+    id: int
 
 class UserResponse(BaseModel):
     username: str

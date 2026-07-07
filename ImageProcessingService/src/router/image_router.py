@@ -10,7 +10,7 @@ from PIL import Image as PILImage
 from domain.dto.Request import image_transform_dependency
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
-from router.common_dependencies import db_dependency
+from router.common_dependencies import db_dependency, form_dependency, oauth2bearer_dependency
 from router.pagination import pagination_dependency, select_and_paginate_query, \
     get_order_for_pagination
 
@@ -22,8 +22,9 @@ image_router = APIRouter(
 @image_router.post("/",
                    status_code=status.HTTP_201_CREATED,
                    response_model=ImageResponse)
-async def process_gpx(
+async def upload_image(
         db: db_dependency,
+        oauth2_bearer: oauth2bearer_dependency,
         file: UploadFile = File(...)):
     contents = await file.read()
     file_path = Path(str(file.filename))
@@ -41,6 +42,7 @@ async def process_gpx(
                    response_class = Response)
 async def get_image(
         image_id: int,
+        oauth2_bearer: oauth2bearer_dependency,
         db: db_dependency):
     image_result = db.query(Image).filter(Image.id == image_id).first()
     if not image_result:
@@ -55,6 +57,7 @@ async def get_image(
                    status_code=status.HTTP_200_OK)
 async def list_images(
         db: db_dependency,
+        oauth2_bearer: oauth2bearer_dependency,
         pagination: pagination_dependency
 ) -> list[ImageResponse]:
     order = get_order_for_pagination(pagination)
@@ -76,6 +79,7 @@ async def list_images(
 async def transform_image(
         image_id: int,
         db: db_dependency,
+        oauth2_bearer: oauth2bearer_dependency,
         transform: image_transform_dependency):
     image_result = db.query(Image).filter(Image.id == image_id).first()
     if not image_result:
