@@ -3,8 +3,10 @@ import io
 from pathlib import Path
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi.openapi.models import Response
+from sqlalchemy import update
 from starlette import status
-
+from PIL import Image as PILImage
 from domain.dto.Request import image_transform_dependency
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
@@ -74,8 +76,7 @@ async def list_images(
     return result_list
 
 @image_router.post("/{image_id}/transform",
-                   status_code=status.HTTP_200_OK,
-                   response_model = ImageResponse)
+                   status_code=status.HTTP_200_OK)
 async def transform_image(
         image_id: int,
         db: db_dependency,
@@ -84,12 +85,15 @@ async def transform_image(
     if not image_result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    img_byte_arr = io.BytesIO()
 
+    loaded_image = PILImage.open(io.BytesIO(image_result.content))
+    loaded_image.resize((transform.resize.width, transform.resize.height))
+    img_bytes = loaded_image.tobytes()
 
-    image_response = ImageResponse(
-        id=image_result.id,
-        content=image_result.content,
-        name=image_result.name
+    stmt = (
+        update(Image)
+        .where(Image.id == image_result.id)
+        .values(content=img_bytes)
     )
-    return image_response
+    updated_images = db.execute(stmt)
+    return image_result.id
