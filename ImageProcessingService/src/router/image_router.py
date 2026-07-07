@@ -83,13 +83,19 @@ async def transform_image(
 
 
     loaded_image = PILImage.open(io.BytesIO(image_result.content))
-    loaded_image.resize((transform.resize.width, transform.resize.height))
-    img_bytes = loaded_image.tobytes()
+    img_format = loaded_image.format or "JPEG"
+
+    resized_image = loaded_image.resize((transform.resize.width, transform.resize.height))
+
+    buffer = io.BytesIO()
+    resized_image.save(buffer, format=img_format)
+    compressed_bytes = buffer.getvalue()
 
     stmt = (
         update(Image)
         .where(Image.id == image_result.id)
-        .values(content=img_bytes)
+        .values(content=compressed_bytes)
     )
     updated_images = db.execute(stmt)
-    return image_result.id
+    db.commit()
+    return updated_images
