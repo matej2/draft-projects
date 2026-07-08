@@ -16,7 +16,7 @@ from router.pagination import pagination_dependency, select_and_paginate_query, 
 
 image_router = APIRouter(
     prefix="/images",
-    tags=["image"]
+    tags=["images"]
 )
 
 @image_router.post("/",

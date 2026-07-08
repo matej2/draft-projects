@@ -10,6 +10,7 @@ from config.database import ENGINE
 from domain.model.User import User
 from router.auth_router import auth_router
 from router.image_router import image_router
+from router.page_router import page_router
 from service.DatabaseService import get_current_user
 
 Base.metadata.create_all(ENGINE)
@@ -17,6 +18,7 @@ Base.metadata.create_all(ENGINE)
 app = FastAPI(title="GPX Client")
 app.include_router(auth_router)
 app.include_router(image_router)
+app.include_router(page_router)
 
 user_dependency = Annotated[User, Depends(get_current_user)]
 

@@ -11,6 +11,7 @@ passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
 sqlalchemy = "*"
 bcrypt = "==4.3.0"
+jinja2 = "*"
 
 [dev-packages]
 
