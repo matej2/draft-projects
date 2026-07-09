@@ -6,6 +6,7 @@ from starlette import status
 from starlette.templating import Jinja2Templates
 
 from src.config.DirectoryConfig import DirectoryConfig
+from src.wiki.auth import AuthProvider
 
 app = FastAPI(title="GPX Client")
 #app.include_router(auth_router)
@@ -14,6 +15,7 @@ image_env_dependency = Annotated[Jinja2Templates, Depends(DirectoryConfig.get_ji
 
 @app.get("/", status_code=status.HTTP_200_OK)
 async def user(templates: image_env_dependency, request: Request):
+    AuthProvider.get_wikipedia_client()
     return templates.TemplateResponse(
         request=request,
         name="index.html",
