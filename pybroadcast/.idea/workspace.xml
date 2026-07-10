@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="d59abbc6-f0a7-4a87-85d1-33c0cb64d750" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../hike-map/.idea/hike-map.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../oauth-py/.idea/oauth-py.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/pybroadcast.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pybroadcast/KeyboardPrompt.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pybroadcast/client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../pybroadcast2/.idea/py-broadcast.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/interview-projects.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/interview-projects.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HikingClient-py/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../HikingClient-py/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HikingPinpoints/.idea/HikingPinpoints.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../HikingPinpoints/.idea/HikingPinpoints.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ImageProcessingService/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageProcessingService/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../call_antropic_api/Untitled.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../call_antropic_api/Untitled.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../cli_project/.idea/cli_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../cli_project/.idea/cli_project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../hike-map/.idea/hike-map.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../hike-map/.idea/hike-map.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../image-sharing/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../image-sharing/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/.idea/py-broadcast.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/client_one.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/client_two.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../py-broadcast/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../oauth-py/.idea/oauth-py.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../oauth-py/.idea/oauth-py.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/home/matej/Projekti/draft-projects/pybroadcast" value="3FoLErDO4idQeN0DQxc7g6cLKFn" />
+    </persistenceIdMap>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -56,6 +51,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Docker.Dockerfile.executor": "Run",
+    "Docker.docker-compose.yaml.pybroadcast: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.cli.executor": "Run",
     "Python.client.executor": "Run",
@@ -66,6 +64,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
     "git-widget-placeholder": "master",
     "last_opened_file_path": "/home/matej/Projekti/draft-projects/pybroadcast",
     "nodejs_package_manager_path": "npm",
@@ -80,7 +79,12 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected="Python.server_cli">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Docker.docker-compose.yaml: Compose Deployment">
     <configuration name="cli" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pybroadcast" />
       <option name="ENV_FILES" value="" />
@@ -131,12 +135,64 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-image" temporary="true">
+      <deployment type="docker-image" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yaml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yaml.pybroadcast: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="pybroadcast" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yaml: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yaml.pybroadcast: Compose Deployment" />
+        <item itemvalue="Docker.Dockerfile" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PY-261.25134.203" />
-        <option value="bundled-python-sdk-245168a56dbd-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.25134.203" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PY-261.26222.68" />
+        <option value="bundled-python-sdk-50341a9f1f9c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.26222.68" />
       </set>
     </attachedChunks>
   </component>
@@ -150,7 +206,14 @@
       <workItem from="1782736368504" duration="3234000" />
       <workItem from="1782740958049" duration="1566000" />
       <workItem from="1782801842864" duration="11515000" />
-      <workItem from="1782820039384" duration="6055000" />
+      <workItem from="1782820039384" duration="6817000" />
+      <workItem from="1782892704173" duration="2239000" />
+      <workItem from="1782907531591" duration="55000" />
+      <workItem from="1783497304596" duration="507000" />
+      <workItem from="1783497891847" duration="969000" />
+      <workItem from="1783504349577" duration="2320000" />
+      <workItem from="1783603873289" duration="5410000" />
+      <workItem from="1783665992901" duration="3132000" />
     </task>
     <task id="LOCAL-00001" summary="Broadcast message to clients">
       <option name="closed" value="true" />
@@ -208,7 +271,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782825895096</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added content to readme">
+      <option name="closed" value="true" />
+      <created>1782826527677</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1782826527677</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,7 +293,8 @@
     <MESSAGE value="Output refactor" />
     <MESSAGE value="Define port based on input option, validate message before sending" />
     <MESSAGE value="Removed unused code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed unused code" />
+    <MESSAGE value="Added content to readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added content to readme" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pybroadcast$cli.coverage" NAME="cli Coverage Results" MODIFIED="1782820742580" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pybroadcast" />
