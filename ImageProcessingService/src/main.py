@@ -1,12 +1,11 @@
-from email.mime import image
 from typing import Annotated
 
 import uvicorn
 from fastapi import FastAPI, Depends
 from starlette import status
 
-from domain.model.Base import Base
 from config.database import ENGINE
+from domain.model.Base import Base
 from domain.model.User import User
 from router.auth_router import auth_router
 from router.image_router import image_router

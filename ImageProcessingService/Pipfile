@@ -12,6 +12,7 @@ python-multipart = "*"
 sqlalchemy = "*"
 bcrypt = "==4.3.0"
 jinja2 = "*"
+numpy = "*"
 
 [dev-packages]
 
