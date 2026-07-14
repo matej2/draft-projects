@@ -3,7 +3,7 @@ from starlette import status
 from starlette.templating import Jinja2Templates
 
 from domain.model.Image import Image
-from dto.Response import ImageResponse
+from domain.dto.Response import ImageResponse
 from router.common_dependencies import image_env_dependency, db_dependency, get_images_env, get_absolute_project_path
 from router.pagination import select_and_paginate_query, Pagination, SortEnum, get_order_for_pagination
 
