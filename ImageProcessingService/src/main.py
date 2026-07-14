@@ -1,3 +1,20 @@
+"""Entry point for the FastAPI app.
+
+This file ensures the `src` directory (its containing package) is on
+sys.path so imports like `from config.database import ...` work regardless
+of how the process was started (e.g. `uvicorn src.main:app` vs
+`uvicorn main:app --app-dir src`).
+"""
+
+import os
+import sys
+
+# Ensure `src` (the directory containing this file) is on sys.path so
+# imports that assume `config` is top-level (i.e. `src/config`) will work.
+src_dir = os.path.dirname(__file__)
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
 from typing import Annotated
 
 import uvicorn
