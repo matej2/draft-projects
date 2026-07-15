@@ -1,5 +1,3 @@
 FROM apache/kafka:4.3.1
-ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-ENV KAFKA_NUM_PARTITIONS=3
-ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 
-ENTRYPOINT ["sh", "-c", "cd /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test-topic"]
+
+ENTRYPOINT ["sh", "-c", "(until /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic images --if-not-exists 2>/dev/null; do sleep 2; done &) ; exec /etc/kafka/docker/run"]

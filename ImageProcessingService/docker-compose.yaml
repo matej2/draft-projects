@@ -18,7 +18,9 @@ services:
     ports:
       - "27017:27017"
   broker:
-    image: apache/kafka:4.3.1
+    build:
+      context: .
+      dockerfile: ./Dockerfile-kafka
     container_name: broker
     ports:
       - "9092:9092"
@@ -33,7 +35,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     volumes:
       - kafka_kraft:/var/lib/kafka/data
 

@@ -1,11 +1,10 @@
+import base64
 import json
 import os
-import base64
 
 from confluent_kafka import Producer
-from pydantic import BaseModel
 
-from domain.model.Image import Image
+from dto.Request import ImageUploadRequest
 
 # Get Kafka broker address from environment variable or use default
 # When running in Docker container, use 'broker:9092'
@@ -26,7 +25,7 @@ def delivery_report(err, msg):
         print(f"Delivery OK: {msg.value().decode('utf-8')}", flush=True)
         print(f"Partition {msg.partition()} on topic {msg.topic()}, offset {msg.offset()}", flush=True)
 
-def produce_message(image: BaseModel):
+def produce_message(image: ImageUploadRequest):
     try:
         data = image.model_dump()
 
