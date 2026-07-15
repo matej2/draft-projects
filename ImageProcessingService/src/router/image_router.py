@@ -1,5 +1,6 @@
 import base64
 import io
+import uuid
 from pathlib import Path
 
 from fastapi import APIRouter, UploadFile, File, HTTPException, Response
@@ -8,7 +9,7 @@ from starlette import status
 from PIL import Image as PILImage
 
 from broker.producer import produce_message
-from domain.dto.Request import image_transform_dependency
+from domain.dto.Request import image_transform_dependency, ImageUploadRequest
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
 from router.common_dependencies import db_dependency, form_dependency, oauth2bearer_dependency
@@ -28,13 +29,14 @@ async def upload_image(
         file: UploadFile = File(...)):
     contents = await file.read()
     file_path = Path(str(file.filename))
-    image = Image(
+    image = ImageUploadRequest(
+        id=uuid.uuid4().int,
         type=str(file.content_type),
         content=contents,
-        name=file_path.stem
+        name=str(file_path.stem)
     )
     produce_message(image)
-    return ImageResponse(id=int(image.id), type=str(file.content_type), name=file_path.stem)
+    return ImageResponse(id=image.id, type=str(file.content_type), name=file_path.stem)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,

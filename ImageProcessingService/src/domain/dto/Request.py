@@ -14,6 +14,12 @@ class ImageCrop(ImageSize):
 class ImageTransformRequest(BaseModel):
     resize: ImageSize
 
+class ImageUploadRequest(BaseModel):
+    id: int
+    type: str
+    content: bytes
+    name: str
+
 
 def get_image_transform(width: int, height: int) -> ImageTransformRequest:
     size = ImageSize(width=width, height=height)
