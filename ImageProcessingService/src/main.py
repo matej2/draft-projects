@@ -9,8 +9,6 @@ of how the process was started (e.g. `uvicorn src.main:app` vs
 import os
 import sys
 
-from producer import produce_message
-
 # Ensure `src` (the directory containing this file) is on sys.path so
 # imports that assume `config` is top-level (i.e. `src/config`) will work.
 src_dir = os.path.dirname(__file__)
@@ -45,6 +43,5 @@ async def user(current_user: user_dependency):
     return current_user
 
 if __name__ == "__main__":
-    produce_message()
-    #uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
 

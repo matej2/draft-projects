@@ -1,8 +1,9 @@
 import json
-import uuid
 import os
 
 from confluent_kafka import Producer
+
+from domain.model.Image import Image
 
 # Get Kafka broker address from environment variable or use default
 # When running in Docker container, use 'broker:9092'
@@ -21,19 +22,14 @@ def delivery_report(err, msg):
         print(f"Message delivery failed: {err}", flush=True)
     else:
         print(f"Delivery OK: {msg.value().decode('utf-8')}", flush=True)
+        print(f"Partition {msg.partition()} on topic {msg.topic()}, offset {msg.offset()}", flush=True)
 
-def produce_message():
+def produce_message(image: Image):
     try:
-        order = {
-            "order_id": str(uuid.uuid4()),
-            "user": "John"
-        }
-
-        # Encode to byte format
-        value = json.dumps(order).encode("utf-8")
+        value = json.dumps(image).encode("utf-8")
 
         producer.produce(
-            topic="orders",
+            topic="images",
             value=value,
             callback=delivery_report)
         producer.flush()

@@ -7,6 +7,7 @@ from sqlalchemy import update
 from starlette import status
 from PIL import Image as PILImage
 
+from broker.producer import produce_message
 from domain.dto.Request import image_transform_dependency
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
@@ -23,7 +24,6 @@ image_router = APIRouter(
                    status_code=status.HTTP_201_CREATED,
                    response_model=ImageResponse)
 async def upload_image(
-        db: db_dependency,
         oauth2_bearer: oauth2bearer_dependency,
         file: UploadFile = File(...)):
     contents = await file.read()
@@ -33,9 +33,8 @@ async def upload_image(
         content=contents,
         name=file_path.stem
     )
-    db.add(image)
-    db.commit()
-    return ImageResponse(id=image.id, type=str(file.content_type), name=file_path.stem)
+    produce_message(image)
+    return ImageResponse(id=int(image.id), type=str(file.content_type), name=file_path.stem)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
