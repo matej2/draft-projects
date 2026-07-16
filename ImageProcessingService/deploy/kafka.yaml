@@ -15,31 +15,17 @@ spec:
         app: kafka
     spec:
       containers:
-      - name: webapp
-        image: webapp:v1.0.0
+      - name: kafka
+        image: kafka:v1.0.0
         imagePullPolicy: Never
-        ports:
-        - containerPort: 27017
         env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mongo-secret
-              key: mongo-user
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongo-secret
-              key: mongo-password
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
+          value: 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-service
+  name: kafka-service
 spec:
   selector:
     app: kafka
-  ports:
-    - protocol: TCP
-      port: 27017
-      targetPort: 27017
