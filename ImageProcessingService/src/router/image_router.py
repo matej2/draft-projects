@@ -13,6 +13,7 @@ from broker.producer import produce_message
 from domain.dto.Request import image_transform_dependency, ImageUploadRequest
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
+from factory.ImageFactory import create_image_upload_request
 from router.common_dependencies import db_dependency, form_dependency, oauth2bearer_dependency
 from router.pagination import pagination_dependency, select_and_paginate_query, \
     get_order_for_pagination
@@ -34,15 +35,15 @@ async def upload_image(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid file type")
 
     contents = await file.read()
-    file_path = Path(str(file.filename))
-    image = ImageUploadRequest(
-        id=uuid.uuid4().int,
-        type=str(file.content_type),
-        content=contents,
-        name=str(file_path.stem)
+    file_path = str(Path(str(file.filename)).stem)
+    content_type = str(file.content_type)
+    image = create_image_upload_request(
+        content_type,
+        contents,
+        file_path
     )
     produce_message(image)
-    return ImageResponse(id=image.id, type=str(file.content_type), name=file_path.stem)
+    return ImageResponse(id=image.id, type=content_type, name=file_path.stem)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
