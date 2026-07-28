@@ -8,7 +8,6 @@ from router.common_dependencies import image_env_dependency, db_dependency, get_
 from router.pagination import select_and_paginate_query, Pagination, SortEnum, get_order_for_pagination
 
 page_router = APIRouter(
-    prefix="/web",
     tags=["web"]
 )
 
