@@ -30,7 +30,35 @@ services:
 
     volumes:
       - kafka_kraft:/var/lib/kafka/data
+  es-1:
+    image: elasticsearch:7.8.1
+    ports:
+    - "9100:9100"
+    - "9200:9200"
+    volumes:
+    - "data-es1:/usr/share/elasticsearch/data"
+  es-2:
+    image: elasticsearch:7.8.1
+    ports:
+    - "9300:9300"
+    - "9400:9400"
+    volumes:
+    - "data-es2:/usr/share/elasticsearch/data"
+  es-3:
+    image: elasticsearch:7.8.1
+    ports:
+    - "9500:9500"
+    - "9600:9600"
+    volumes:
+    - "data-es3:/usr/share/elasticsearch/data"
+  kibana:
+    image: kibana:9.4.3
+    ports:
+    - "5601:5601"
 
 volumes:
   kafka_kraft:
+  data-es1:
+  data-es2:
+  data-es3:
 
