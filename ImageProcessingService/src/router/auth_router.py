@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from fastapi import APIRouter, HTTPException
@@ -13,6 +14,8 @@ from util.Auth import authenticate_user, create_access_token
 auth_router = APIRouter(
     tags=["auth"]
 )
+
+access_token_expires_in = float(str(os.getenv("AUTH_ACCESS_TOKEN_EXPIRES_IN_MIN")))
 
 @auth_router.post("/register", status_code=status.HTTP_201_CREATED)
 async def create_user(
@@ -35,7 +38,7 @@ async def login_for_access_token(
 
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
-    token = create_access_token(user.username, user.id, timedelta(minutes=20))
+    token = create_access_token(user.username, user.id, timedelta(minutes=access_token_expires_in))
 
     user_response = UserResponse(username=user.username)
 

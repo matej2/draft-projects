@@ -1,5 +1,6 @@
 import base64
 import io
+import os
 import uuid
 from pathlib import Path
 
@@ -21,12 +22,17 @@ image_router = APIRouter(
     tags=["images"]
 )
 
+valid_content_types = str(os.getenv("IMAGE_VALID_CONTENT_TYPES"))
+
 @image_router.post("/",
                    status_code=status.HTTP_201_CREATED,
                    response_model=ImageResponse)
 async def upload_image(
         oauth2_bearer: oauth2bearer_dependency,
         file: UploadFile = File(...)):
+    if file.content_type not in valid_content_types:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid file type")
+
     contents = await file.read()
     file_path = Path(str(file.filename))
     image = ImageUploadRequest(
