@@ -17,6 +17,7 @@ from factory.ImageFactory import create_image_upload_request
 from router.common_dependencies import db_dependency, form_dependency, oauth2bearer_dependency
 from router.pagination import pagination_dependency, select_and_paginate_query, \
     get_order_for_pagination
+from service.ImageProcessorService import image_processor_dependency
 
 image_router = APIRouter(
     prefix="/images",
@@ -43,7 +44,7 @@ async def upload_image(
         file_path
     )
     produce_message(image)
-    return ImageResponse(id=image.id, type=content_type, name=file_path.stem)
+    return ImageResponse(id=image.id, type=content_type, name=file_path)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
@@ -88,20 +89,13 @@ async def transform_image(
         image_id: int,
         db: db_dependency,
         oauth2_bearer: oauth2bearer_dependency,
-        transform: image_transform_dependency):
+        transform: image_transform_dependency,
+        image_processor: image_processor_dependency):
     image_result = db.query(Image).filter(Image.id == image_id).first()
     if not image_result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-
-    loaded_image = PILImage.open(io.BytesIO(image_result.content))
-    img_format = loaded_image.format or "JPEG"
-
-    resized_image = loaded_image.resize((transform.resize.width, transform.resize.height))
-
-    buffer = io.BytesIO()
-    resized_image.save(buffer, format=img_format)
-    compressed_bytes = buffer.getvalue()
+    compressed_bytes = image_processor_dependency.resize_image(image_result.content)
 
     stmt = (
         update(Image)
