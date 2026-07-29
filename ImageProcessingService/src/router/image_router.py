@@ -46,8 +46,7 @@ async def upload_image(
                    status_code=status.HTTP_200_OK,
                    response_class = Response)
 async def get_image(
-        image_id: int,
-        oauth2_bearer: oauth2bearer_dependency,
+        image_id: str,
         db: db_dependency):
     image_result = db.query(Image).filter(Image.id == image_id).first()
     if not image_result:
@@ -62,7 +61,6 @@ async def get_image(
                    status_code=status.HTTP_200_OK)
 async def list_images(
         db: db_dependency,
-        oauth2_bearer: oauth2bearer_dependency,
         pagination: pagination_dependency
 ) -> list[ImageResponse]:
     order = get_order_for_pagination(pagination)
@@ -83,7 +81,7 @@ async def list_images(
 @image_router.post("/{image_id}/transform",
                    status_code=status.HTTP_200_OK)
 async def transform_image(
-        image_id: int,
+        image_id: str,
         db: db_dependency,
         oauth2_bearer: oauth2bearer_dependency,
         transform: image_transform_dependency,
