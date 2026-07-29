@@ -22,7 +22,7 @@ def delivery_report(err, msg):
     if err:
         print(f"Message delivery failed: {err}", flush=True)
     else:
-        print(f"Delivery OK: {msg.value().decode('utf-8')}", flush=True)
+        print("Delivery OK", flush=True)
         print(f"Partition {msg.partition()} on topic {msg.topic()}, offset {msg.offset()}", flush=True)
 
 def produce_message(image: ImageUploadRequest):

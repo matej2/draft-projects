@@ -6,6 +6,7 @@ from starlette import status
 
 from config.auth import SECRET_KEY, ALGORITHM, oauth2_bearer, SessionLocal
 from domain.dto.Response import CurrentUserResponse
+from domain.model.Image import Image
 
 
 def get_db():
@@ -37,3 +38,13 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
             detail="Could not validate jwt",
         )
 
+def save_using_session(image: Image):
+    with SessionLocal() as db:
+        try:
+            db.add(image)
+            db.commit()
+            db.refresh(image)
+            print(f"Saved image: {image.id}")
+        except Exception as e:
+            db.rollback()
+            print(f"Error: {e}")

@@ -3,6 +3,9 @@ import os
 
 from confluent_kafka import Consumer
 
+from factory.ImageFactory import create_image_from_json_dict
+from service.DatabaseService import save_using_session
+
 kafka_broker = os.getenv("KAFKA_BROKER", "localhost:9092")
 
 consumer_config = {
@@ -27,8 +30,10 @@ def subscribe():
                 print("Consumer error: {}".format(msg.error()))
 
             value = msg.value().decode("utf-8")
-            order = json.loads(value)
-            print(order)
+            json_image = json.loads(value)
+
+            image = create_image_from_json_dict(json_image)
+            save_using_session(image)
     except KeyboardInterrupt:
         print("\nClosing Kafka Consumer")
     finally:

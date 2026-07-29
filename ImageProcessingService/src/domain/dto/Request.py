@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Annotated
 
 from fastapi import Depends
@@ -15,7 +16,6 @@ class ImageTransformRequest(BaseModel):
     resize: ImageSize
 
 class ImageUploadRequest(BaseModel):
-    id: int
     type: str
     content: bytes
     name: str

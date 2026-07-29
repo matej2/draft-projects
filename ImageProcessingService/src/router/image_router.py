@@ -1,20 +1,16 @@
-import base64
-import io
 import os
-import uuid
 from pathlib import Path
 
 from fastapi import APIRouter, UploadFile, File, HTTPException, Response
 from sqlalchemy import update
 from starlette import status
-from PIL import Image as PILImage
 
 from broker.producer import produce_message
-from domain.dto.Request import image_transform_dependency, ImageUploadRequest
+from domain.dto.Request import image_transform_dependency
 from domain.dto.Response import ImageResponse
 from domain.model.Image import Image
 from factory.ImageFactory import create_image_upload_request
-from router.common_dependencies import db_dependency, form_dependency, oauth2bearer_dependency
+from router.common_dependencies import db_dependency, oauth2bearer_dependency
 from router.pagination import pagination_dependency, select_and_paginate_query, \
     get_order_for_pagination
 from service.ImageProcessorService import image_processor_dependency
@@ -44,7 +40,7 @@ async def upload_image(
         file_path
     )
     produce_message(image)
-    return ImageResponse(id=image.id, type=content_type, name=file_path)
+    return ImageResponse(type=content_type, name=file_path, content=contents)
 
 @image_router.get("/{image_id}",
                    status_code=status.HTTP_200_OK,
@@ -76,7 +72,8 @@ async def list_images(
         ImageResponse(
             id=row[0].id,
             type=row[0].type,
-            name=row[0].name
+            name=row[0].name,
+            content=row[0].content
         )
         for row in db.execute(query)
     ]
