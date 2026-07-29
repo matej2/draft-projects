@@ -3,8 +3,9 @@
 This is an example microservice API that demonstrates: 
 - programming principles
 - containerization config
-- use of message brokers
+- use of message brokers (producing and subscribing to messages)
 - design and arhitecture
+- transferring and handling of raw byte data
 
 # Development process
 
