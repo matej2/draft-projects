@@ -10,6 +10,8 @@ Run docker container Linux Alpine:
 
     docker run -d nginx:alpine
 
+After creating it, ssh into container.
+
 
 ## Requirements
 
@@ -26,6 +28,10 @@ You can add or remove users sudo permisisons by adding or removing it from the "
 
     usermod -aG [GROUP] -p [PASSWORD] [USERNAME]
 
+    or
+
+    addgroup [username] [group]
+
 It is not recommended to add sudo permissions to another user. If you want, you can create a new group for users:
 
     groupadd -g 10000 [GROUP]
@@ -40,9 +46,9 @@ The same information is also available in `/etc/passwd` and `/etc/group`. When p
 
 So according to these instructions, I did setup a user using the following commands:
 
-1. sudo adduser john
-2. groupadd -g 10000 nosudo
-3. usermod -aG  
+1. sudo adduser john --quiet
+2. addgroup nonsudo
+3. addgroup john nonsudo
 
 
 
