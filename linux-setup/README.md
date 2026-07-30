@@ -47,6 +47,9 @@ This command will prompt us for the new password. It will also issue a warning i
 
 We can add or remove users sudo permisisons by adding or removing it from the "sudo" group:
 
+    usermod -a -G nonsudo john
+
+    or
 
     addgroup [username] [group] // Alpine
 
@@ -84,6 +87,8 @@ SSH Configuration: Generate an SSH key pair on your local machine, add the publi
 *Notes*
 
 First we need to install open-ssh server:
+
+    apt install openssh-server
 
     apt-get install -y openssh-server
 
