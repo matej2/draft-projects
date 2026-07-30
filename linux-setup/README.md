@@ -10,12 +10,18 @@ First, we need to install Docker
 
 Run docker container Linux Alpine:
 
-    docker run -d nginx:alpine
+
+    docker run -p 22:22 -d --name alpine nginx:alpine
+
+    docker run -p 22:22 -td --name ubuntu ubuntu
 
 After creating it, ssh into container:
 
     docker exec -it [container-id] /bin/sh
 
+Or execute a specific command:
+
+   docker exec -it [container-id] [command]
 
 ## Requirements
 
@@ -27,7 +33,9 @@ You are required to perform the following tasks on a fresh Ubuntu server:
 
 Creating an user is done using the following command:
 
-    adduser [USERNAME]
+    adduser [USERNAME] // Alpine
+
+    useradd -r [USERNAME] // Ubuntu
 
 
 We can then change the users pasword using this command:
@@ -39,15 +47,16 @@ This command will prompt us for the new password. It will also issue a warning i
 
 We can add or remove users sudo permisisons by adding or removing it from the "sudo" group:
 
-    usermod -aG [GROUP] -p [PASSWORD] [USERNAME]
+
+    addgroup [username] [group] // Alpine
 
     or
 
-    addgroup [username] [group]
+    groupadd -U [USER] [GROUP]
 
 It is not recommended to add sudo permissions to another user. In such cases, its better to create a new group for users:
 
-    groupadd -g 10000 [GROUP]
+    groupadd [GROUP]
 
     or
 
@@ -97,7 +106,36 @@ Then, inside the container, we need to add the contents of public key to `author
 
 Firewall Configuration: Set up UFW (Uncomplicated Firewall) to allow only SSH (port 22) by default. You should understand how to add additional rules when needed.
 
+*Notes*
+
+Before we begin, we should make sure we have a clean start with iptables:
+
+    ### Have a clean start with iptables
+  iptables -F; iptables -X
+  echo 'y' | ufw reset
+  echo 'y' | ufw enable
+  ufw default deny incoming
+  ufw default deny forward
+
 System Updates: Update all system packages and configure automatic security updates using unattended-upgrades.
+
+*Notes*
+
+First we need to update indexes:
+
+    apk update
+
+then we can continue with upgrade:
+
+    apk upgrade
+
+In other linux distros where apt is used, the process for upgrading packages is similar:
+
+    sudo apt update
+    sudo apt-get update
+
+    sudo apt upgrade
+    sudo apt-get upgrade
 
 Basic Hardening: Install and configure Fail2Ban to protect against brute-force SSH attacks.
 
