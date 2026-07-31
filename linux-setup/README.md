@@ -201,6 +201,14 @@ Relavant config:
 
 - IgnoreIP: We can set ip list that the service will ignore. For example, a machine that the admin will use to connect to server.
 
+- Bantime: Amount of time to ban host
+
+- Findtime: Host is banned if a certain number of retries in reached in findtime
+
+- Maxretry: Number of failures
+
+- [...] sections: SSHD is very important module to protect. Is is advised to only enable config that is appliable to our case - only enable for services that are running on our server.
+
 Server Configuration: Set the correct timezone and a meaningful hostname for your server.
 
 Service Management: Demonstrate basic systemctl commands to check the status of services, start/stop them, and enable them at boot.
