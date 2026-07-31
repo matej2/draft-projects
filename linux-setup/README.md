@@ -113,20 +113,28 @@ Firewall Configuration: Set up UFW (Uncomplicated Firewall) to allow only SSH (p
 
 *Notes*
 
+Installation of UFW:
+
+    apt install ufw
+
 Before we begin, we should make sure we have a clean start with iptables:
 
     ### Have a clean start with iptables
-  iptables -F; iptables -X
-  echo 'y' | ufw reset
-  echo 'y' | ufw enable
-  ufw default deny incoming
-  ufw default deny forward
+    iptables -F; iptables -X
+    echo 'y' | ufw reset
+    echo 'y' | ufw enable
+    ufw default deny incoming
+    ufw default deny forward
+
+We can then allow traffic on specific ports:
+
+    ufw allow ssh
 
 System Updates: Update all system packages and configure automatic security updates using unattended-upgrades.
 
 *Notes*
 
-First we need to update indexes:
+First we need to update package indexes:
 
     apk update
 
@@ -142,7 +150,56 @@ In other linux distros where apt is used, the process for upgrading packages is 
     sudo apt upgrade
     sudo apt-get upgrade
 
+We can setup unattended upgrades by installing the following package:
+
+    apt install unattended-upgrades
+
+Configuration files are found in directory:
+
+    cd /etc/apt/apt.conf.d
+
+Here we can further configure unattended upgrades by editing the config file:
+
+    vi 50unattended-upgrades
+
+The most common config options you want to set are:
+
+- Allowed origins: Here we have the option to enable updates of different types. By default, only security updates are enabled. We can uncomment certain origins to allow other types of upgrades.
+
+- AutoFixInterruptedDpkg: If a package installation comes to an unclean dpkg exit, this command will try to automatically fix configuration.
+
+- Remove-unused-dependencies: This option removes unused dependencies after an upgrade.
+
+- Auto-reboot: Restarts the machine if an update requires it. Auto-reboot-withUsers enables restarts even if users have active sessions. Automatic-reboot-time sopecifies a specific time for restart
+
+- Mail: Sends email notifications regarding upgrades. We can set email address where these emails are sent to. Besides that, we also need to configure SMTP server on our machine.
+
+Finally restart the service:
+
+    sudo systemctl restart unattended-upgrades
+
+    sudo systemctl status unattended-upgrades
+
+    unattended-upgrade --debug // or start manually
+
 Basic Hardening: Install and configure Fail2Ban to protect against brute-force SSH attacks.
+
+*Notes*
+
+Fail2ban is used to protect SSH against attachs. If a user makes too many wrong passwords attempts, this service will create a firewall rule to block this IP. After some time, it will release IP from firewall.
+
+Configuration is located in this directory:
+
+    cd /etc/fail2ban
+
+First we need to make copies of configuration files. This ensures the contents will not be overritten:
+
+    cp fail2ban.conf fail2ban.local
+    cp jail.conf jail.local
+
+Relavant config:
+
+- IgnoreIP: We can set ip list that the service will ignore. For example, a machine that the admin will use to connect to server.
 
 Server Configuration: Set the correct timezone and a meaningful hostname for your server.
 
