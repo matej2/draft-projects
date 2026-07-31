@@ -211,8 +211,57 @@ Relavant config:
 
 Server Configuration: Set the correct timezone and a meaningful hostname for your server.
 
+*Notes*
+
+Time and timezone can be set using:
+
+    sudo timedatectl set-time "2012-10-30 18:17:16"
+    sudo timedatectl set-timezone UTC
+    timedatectl list-timezones
+    timedatectl status
+
+
 Service Management: Demonstrate basic systemctl commands to check the status of services, start/stop them, and enable them at boot.
 
+*Notes*
+
+List every loaded service that is running, active, or failed in the system:
+
+    sudo systemctl list-units --type=service --all
+
+    sudo systemctl [service] start
+
+    sudo systemctl [service] status
+
 Log Inspection: Use journalctl to view system logs and locate common log files in /var/log/.
+
+*Notes*
+
+We can use basic command to view logs:
+
+    journalctl
+
+Logs can be further filtered by providing additional flags:
+
+    journalctl -before="yesterday"
+    journalctl -after="1 hour ago"
+
+Searching can be done using grep flag:
+
+    journalctl -grep="error message"
+
+Output logs with error level:
+
+    journalctl -p
+
+Displays logs from specific modules:
+
+    journalctl -unit=Unit
+
+We can also limit the size of logs that are stored, so that the system does not run our of disk space:
+
+    journalctl -vacuum-size=256M
+    journalctl -vacuum-files=5
+    journalctl -vacuum-time=4days
 
 
