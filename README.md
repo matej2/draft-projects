@@ -22,6 +22,6 @@ Now we have all reqired (but unrelated) git histories locally. We need to merge 
 
 [.](https://roadmap.sh/projects/broadcast-server)
 [.](https://roadmap.sh/projects/image-processing-service)
-	    
+[.](https://roadmap.sh/projects/linux-server-setup)	    
 	    
 	    
