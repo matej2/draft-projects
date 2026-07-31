@@ -4,24 +4,10 @@ Inspired by [roadmap.sh project](https://roadmap.sh/projects/linux-server-setup)
 
 ## Prerequsites
 
-Instructions originally specify that we should use VPS. However you can also do this on Linux docker container or WLS. The following instructions assume we are using Docker.
-
-First, we need to install Docker
-
-Run docker container Linux Alpine:
+Instructions originally specify that we should use VPS. You may use any VPS or physical machine. These commands were executed in Ubuntu.
 
 
-    docker run -p 22:22 -d --name alpine nginx:alpine
-
-    docker run -p 22:22 -td --name ubuntu ubuntu
-
-After creating it, ssh into container:
-
-    docker exec -it [container-id] /bin/sh
-
-Or execute a specific command:
-
-   docker exec -it [container-id] [command]
+Each section includes instructions, followed by notes. Notes contain actual commands and further detail, related to original instructions.
 
 ## Requirements
 
@@ -260,8 +246,10 @@ Displays logs from specific modules:
 
 We can also limit the size of logs that are stored, so that the system does not run our of disk space:
 
-    journalctl -vacuum-size=256M
+    journalctl -vacuum-size=256
+
     journalctl -vacuum-files=5
     journalctl -vacuum-time=4days
 
 
+You can view log files in `/var/log/` directory.
