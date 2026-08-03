@@ -11,6 +11,10 @@ msal = "*"
 httpx = "*"
 dotenv = "*"
 pymongo = "*"
+gpsphoto = "*"
+exifread = "*"
+pillow = "*"
+piexif = "*"
 
 [dev-packages]
 pip-audit = "*"
