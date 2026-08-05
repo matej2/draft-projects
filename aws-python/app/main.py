@@ -9,6 +9,8 @@ def handle_requests(event, context):
             "statusCode": 404,
             "body": "Not found"
         }
+
+    personId = event["queryStringParameters"]["personId"]
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(os.environ.get("TABLE_NAME"))
     response = table.get_item(key={"key": "visit_count"})
@@ -23,6 +25,9 @@ def handle_requests(event, context):
 
     return {
         "statusCode": 200,
-        "body": "Hello world",
-        "visit_count": new_visit_count
+        "body": json.dumps({
+            "personId": personId + " from Lambda",
+            "message": "Hello world"
+        }),
+        "visit_count": new_visit_count,
     }

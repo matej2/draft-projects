@@ -1,14 +1,23 @@
 
 # Stack blueprint
 
-Build a simple Python app that will return hello world text.
+This is a sample Python app that we use to deploy to AWS. It returns visitor count and a user id.
 
-Deployment should be done on Lambda services. Set up stack deployment using python script. Add github CD script that should deploy on every push to branch master.
+We do deployment on Lambda service. Database is set up in DynamoDB. Besides that, there is also a Github CD configuration to deploy code on every push to master. 
 
-Github CD script uses secrets that are read from env variables. Add the following values in "Secrets and variables" section:
+This config uses secrets that are read from env variables. The following values are required in "Secrets and variables" section:
 
 - BETA_AWS_ACCESS_KEY_ID
 - BETA_AWS_SECRET_ACCESS_KEY
+
+There is a non-root user in IAM that is set up so that it can only deploy app to Lambda. Besides that another user is configured to access DynamoDB.
+
+Deployment can be done using either:
+
+- stack deployment script found in `aws_python/aws_python_stack.py`
+- running command `SAM deploy`
+
+
 
 
 
