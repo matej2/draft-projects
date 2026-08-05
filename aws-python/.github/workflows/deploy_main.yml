@@ -1,0 +1,52 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-size: 20 # Installs Node.js, which is required to run AWS CDK
+
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: Install pip
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v5
+        with:
+          path: ./.venv
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if: steps.cache.outputs.cache-hit != 'true'
+
+
+      - name: Deploy CDK stack
+        working-directory: ./
+        run: npx cdk deploy --require-approval never
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BETA_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BETA_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-southeast-2"
