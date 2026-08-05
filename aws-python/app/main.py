@@ -1,6 +1,28 @@
+import os
+
+import boto3
+
 def handle_requests(event, context):
-    print(event)
+    path = event["path"]
+    if path != "/":
+        return {
+            "statusCode": 404,
+            "body": "Not found"
+        }
+    dynamodb = boto3.resource("dynamodb")
+    table = dynamodb.Table(os.environ.get("TABLE_NAME"))
+    response = table.get_item(key={"key": "visit_count"})
+
+    if "Item" in response:
+        visit_count = response["Item"]["visit_count"]
+    else:
+        visit_count = 0
+
+    new_visit_count= visit_count + 1
+    table.put_item(Item={"visit_count": new_visit_count})
 
     return {
-        "statusCode": 200, "body": "Hello world"
+        "statusCode": 200,
+        "body": "Hello world",
+        "visit_count": new_visit_count
     }

@@ -3,7 +3,8 @@ from aws_cdk import (
     Stack,
     # aws_sqs as sqs,
     aws_lambda as _lambda,
-aws_apigateway as apigw
+    aws_apigateway as apigw,
+    aws_dynamodb as dynamodb
 )
 from constructs import Construct
 
@@ -20,13 +21,27 @@ class AwsPythonStack(Stack):
         #     visibility_timeout=Duration.seconds(300),
         # )
 
+        table = dynamodb.Table(
+            self,
+            "VisitorsTable",
+            partition_key={
+                "name": "key",
+                "type": dynamodb.AttributeType.STRING
+            },
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+        )
+
         fn = _lambda.Function(
             self,
             "MyFunction",
             runtime=_lambda.Runtime.PYTHON_3_14,
             handler="main.handle_requests",
-            code=_lambda.Code.from_asset("app")
+            code=_lambda.Code.from_asset("app"),
+            environment={
+                "TABLE_NAME": table.table_name,
+            }
         )
+        table.grant_read_data(fn)
 
         fn_url =  fn.add_function_url(
             auth_type=_lambda.FunctionUrlAuthType.NONE,
