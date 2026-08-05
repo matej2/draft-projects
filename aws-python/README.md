@@ -17,7 +17,7 @@ Deployment can be done using either:
 - stack deployment script found in `aws_python/aws_python_stack.py`
 - running command `SAM deploy`
 
-
+After running deploy, we can see our deployed stack in CloudFormation (service to manage resources). We can also go directly to Lambda service and see if instance was created
 
 
 
