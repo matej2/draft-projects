@@ -7,15 +7,32 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function 
     Properties:
+      Arhitectures: x86_64
+      MemorySize: 128
+      Timeout: 3
       CodeUri: app/
       Handler: main.handle_requests
       Runtime: python3.14
       Events:
         HelloWorld:
-          Type: Api 
+          Type: HttpApi  
           Properties:
             Path: /helloWorld 
-            Method: get
+            Method: GET
+
+  HelloWorldTable:
+    Type: AWS::Serverless::SimpleTable
+    PrimaryKey:
+      Name: Id
+      Type: String
+    ReadCapacityUnits: 1
+    WriteCapacityUnits: 1
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      RouteSettings:
+        "GET /pahelloWorldth":
 
 Outputs:
   HelloWorldApi:
