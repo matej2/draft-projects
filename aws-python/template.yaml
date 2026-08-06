@@ -4,22 +4,6 @@ Description: >
   sam-app
 
 Resources:
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function 
-    Properties:
-      Arhitectures: x86_64
-      MemorySize: 128
-      Timeout: 3
-      CodeUri: app/
-      Handler: main.handle_requests
-      Runtime: python3.14
-      Events:
-        HelloWorld:
-          Type: HttpApi  
-          Properties:
-            Path: /helloWorld 
-            Method: GET
-
   HelloWorldTable:
     Type: AWS::Serverless::SimpleTable
     PrimaryKey:
@@ -27,6 +11,25 @@ Resources:
       Type: String
     ReadCapacityUnits: 1
     WriteCapacityUnits: 1
+
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      MemorySize: 128
+      Timeout: 3
+      CodeUri: app/
+      Handler: main.handle_requests
+      Runtime: python3.14
+      Environment:
+        Variables:
+          TABLE_NAME: !ref HelloWorldTable
+      Events:
+        HelloWorld:
+          Type: HttpApi  
+          Properties:
+            Path: /helloWorld 
+            Method: GET
+
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
