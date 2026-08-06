@@ -19,7 +19,7 @@ Deployment can be done using either:
 
 After running deploy, we can see our deployed stack in CloudFormation (service to manage resources). We can also go directly to Lambda service and see if instance was created.
 
-For 
+For permision management we can use policy (inline, managed). However its much simpler to use connectors. For each source service we can define destination and type of connection.
 
 
 
