@@ -29,6 +29,13 @@ After running deploy, we can see our deployed stack in CloudFormation (service t
 
 For permission management we use connectors. For each source service we can define destination and type of connection (write, read). If we want more granular and controlled permision management we can use policy (inline, managed)
 
+## Network
+
+Virtual private cloud is used to configure what is private and what is internet facing. We can configure private an public subnet. Services inside private subnets can still reach outside internet (example for updates) if you set NAT. 
+
+Use security groups to more granually define which services can talk to each other.
+
+
 
 ## Commands
 
