@@ -35,6 +35,9 @@ Virtual private cloud is used to configure what is private and what is internet 
 
 Use security groups to more granually define which services can talk to each other.
 
+## Logging
+
+Furthermore, we can setup CloudTrail to track who did what - API calls, user actions, logins. 
 
 
 ## Commands
