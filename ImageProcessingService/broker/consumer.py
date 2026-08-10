@@ -2,6 +2,7 @@ import json
 import os
 
 from confluent_kafka import Consumer
+from opensearchpy import OpenSearch
 
 from factory.ImageFactory import create_image_from_json_dict
 from service.DatabaseService import save_using_session
@@ -14,6 +15,17 @@ consumer_config = {
     "group.id": "order-tracker",
     "auto.offset.reset": "earliest",
 }
+
+host = 'localhost'
+port = 9200
+auth = ('admin', 'admin') # For testing only. Don't store credentials in code.
+
+# Create the client with SSL/TLS enabled, but hostname verification disabled.
+client = OpenSearch(
+    hosts = [{'host': host, 'port': port}],
+    http_compress = True, # enables gzip compression for request bodies
+    http_auth = auth,
+)
 
 def subscribe():
     consumer = Consumer(consumer_config)
@@ -34,6 +46,7 @@ def subscribe():
 
             image = create_image_from_json_dict(json_image)
             save_using_session(image)
+
     except KeyboardInterrupt:
         print("\nClosing Kafka Consumer")
     finally:

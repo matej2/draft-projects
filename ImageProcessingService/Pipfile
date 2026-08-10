@@ -16,6 +16,7 @@ numpy = "*"
 confluent-kafka = "*"
 uvicorn = "*"
 python-dotenv = "*"
+opensearch-dsl = "*"
 
 [dev-packages]
 

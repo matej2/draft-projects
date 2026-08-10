@@ -8,6 +8,7 @@ services:
       - "8000:8000"
     environment:
       KAFKA_BROKER: broker:9092
+      OPENSEARCH_URL: opensearch-node
     depends_on:
       - broker
       - mongodb
@@ -56,10 +57,40 @@ services:
     image: kibana:9.4.3
     ports:
     - "5601:5601"
+  opensearch:
+    container_name: opensearch-node
+    image: opensearchproject/opensearch:3.8.0
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=ChangeMe!123
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data # Creates volume called opensearch-data1 and mounts it to the container
+    networks:
+      - opensearch-net
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601 # Map host port 5601 to container port 5601
+    expose:
+      - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch-node:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
+      OPENSEARCH_USERNAME: admin
+      OPENSEARCH_PASSWORD: ChangeMe!123
+    networks:
+      - opensearch-net
 
 volumes:
   kafka_kraft:
   data-es1:
   data-es2:
   data-es3:
+  opensearch-data1:
 
+networks:
+  opensearch-net:

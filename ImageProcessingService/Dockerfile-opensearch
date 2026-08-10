@@ -1,0 +1,3 @@
+FROM opensearchproject/opensearch:3.8.0
+ENV discovery.type=single-node
+ENV OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>
