@@ -8,8 +8,8 @@ from starlette import status
 from broker.producer import produce_message
 from domain.dto.Request import image_transform_dependency
 from domain.dto.Response import ImageResponse
+from domain.factory.ImageFactory import create_image_upload_request
 from domain.model.Image import Image
-from factory.ImageFactory import create_image_upload_request
 from router.common_dependencies import db_dependency, oauth2bearer_dependency
 from router.pagination import pagination_dependency, select_and_paginate_query, \
     get_order_for_pagination

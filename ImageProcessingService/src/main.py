@@ -10,6 +10,9 @@ import os
 import sys
 
 from dotenv import load_dotenv
+
+from broker.consumer import subscribe
+
 load_dotenv()
 
 # Ensure `src` (the directory containing this file) is on sys.path so
@@ -46,6 +49,6 @@ async def user(current_user: user_dependency):
     return current_user
 
 if __name__ == "__main__":
-
     uvicorn.run(app, host="0.0.0.0", port=5000)
+    subscribe()
 

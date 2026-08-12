@@ -4,26 +4,31 @@ import os
 
 from confluent_kafka import Producer
 
-from dto.Request import ImageUploadRequest
+from domain.dto.Request import ImageUploadRequest
+from util.LoggingUtil import LoggingUtil
 
 # Get Kafka broker address from environment variable or use default
 # When running in Docker container, use 'broker:9092'
 # When running on host machine, use 'localhost:9092'
-kafka_broker = os.getenv("KAFKA_BROKER", "localhost:9092")
+kafka_broker_url = os.getenv("KAFKA_BROKER_URL", "localhost")
+kafka_broker_port = os.getenv("KAFKA_BROKER_PORT", "9092")
+kafka_broker = f"{kafka_broker_url}:{kafka_broker_port}"
 
 producer_config = {
     "bootstrap.servers": kafka_broker,
     "socket.timeout.ms": 10000,  # 10 second timeout
 }
 
+logger = LoggingUtil.get_logger(__name__)
+
 producer = Producer(producer_config)
 
 def delivery_report(err, msg):
     if err:
-        print(f"Message delivery failed: {err}", flush=True)
+        logger.error(f"Message delivery failed: {err}")
     else:
-        print("Delivery OK", flush=True)
-        print(f"Partition {msg.partition()} on topic {msg.topic()}, offset {msg.offset()}", flush=True)
+        logger.info("Delivery OK")
+        logger.debug(f"Partition {msg.partition()} on topic {msg.topic()}, offset {msg.offset()}")
 
 def produce_message(image: ImageUploadRequest):
     try:
@@ -39,9 +44,9 @@ def produce_message(image: ImageUploadRequest):
             value=value,
             callback=delivery_report)
         producer.flush()
-        print("Message produced successfully!", flush=True)
+        logger.info("Message produced successfully!")
     except Exception as e:
-        print(f"Error producing message: {e}", flush=True)
+        logger.error(f"Error producing message: {e}")
 
 
 if __name__ == "__main__":

@@ -1,23 +1,18 @@
 
 services:
   web:
+    container_name: web
     build:
       context: .
       dockerfile: ./Dockerfile-app
     ports:
       - "8000:8000"
     environment:
-      KAFKA_BROKER: broker:9092
-      OPENSEARCH_URL: opensearch-node
+      KAFKA_BROKER_URL: broker
+      KAFKA_BROKER_PORT: 29092
+      OPENSEARCH_URL: opensearch
     depends_on:
       - broker
-      - mongodb
-  mongodb:
-    build:
-      context: .
-      dockerfile: ./Dockerfile-mongo
-    ports:
-      - "27017:27017"
   broker:
     build:
       context: .
@@ -27,61 +22,72 @@ services:
       - "9092:9092"
       - "9093:9093"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker:29092,EXTERNAL://localhost:9092
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_PROCESS_ROLES: broker,controller
 
     volumes:
       - kafka_kraft:/var/lib/kafka/data
-  es-1:
-    image: elasticsearch:7.8.1
-    ports:
-    - "9100:9100"
-    - "9200:9200"
-    volumes:
-    - "data-es1:/usr/share/elasticsearch/data"
-  es-2:
-    image: elasticsearch:7.8.1
-    ports:
-    - "9300:9300"
-    - "9400:9400"
-    volumes:
-    - "data-es2:/usr/share/elasticsearch/data"
-  es-3:
-    image: elasticsearch:7.8.1
-    ports:
-    - "9500:9500"
-    - "9600:9600"
-    volumes:
-    - "data-es3:/usr/share/elasticsearch/data"
   kibana:
     image: kibana:9.4.3
     ports:
     - "5601:5601"
   opensearch:
-    container_name: opensearch-node
     image: opensearchproject/opensearch:3.8.0
     environment:
       - discovery.type=single-node
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=ChangeMe!123
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD}
     ports:
       - "9200:9200"
       - "9600:9600"
     volumes:
-      - opensearch-data1:/usr/share/opensearch/data # Creates volume called opensearch-data1 and mounts it to the container
+      - opensearch-data:/usr/share/opensearch/data # Creates volume called opensearch-data and mounts it to the container
     networks:
       - opensearch-net
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
-    container_name: opensearch-dashboards
     ports:
       - 5601:5601 # Map host port 5601 to container port 5601
     expose:
       - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
     environment:
-      OPENSEARCH_HOSTS: '["https://opensearch-node:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
+      OPENSEARCH_HOSTS: '["https://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
       OPENSEARCH_USERNAME: admin
-      OPENSEARCH_PASSWORD: ChangeMe!123
+      OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD}
+    networks:
+      - opensearch-net
+  logstash:
+    image: opensearchproject/logstash-oss-with-opensearch-output-plugin:latest
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    environment:
+      - OPENSEARCH_PASSWORD=${OPENSEARCH_PASSWORD}
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+      - "5044:5044"   # Beats input, used by Filebeat
+    depends_on:
+      - opensearch
+    networks:
+      - opensearch-net
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.15.3
+    container_name: filebeat
+    user: root   # required to read /var/run/docker.sock and container logs
+    command: [ "--strict.perms=false" ]
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat-data:/usr/share/filebeat/data   # persists the registry (resume position)
+    mem_limit: 256m
+    depends_on:
+      - logstash
     networks:
       - opensearch-net
 
@@ -90,7 +96,8 @@ volumes:
   data-es1:
   data-es2:
   data-es3:
-  opensearch-data1:
+  opensearch-data:
+  filebeat-data:
 
 networks:
   opensearch-net:

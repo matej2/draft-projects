@@ -6,6 +6,8 @@ This is an example microservice API that demonstrates:
 - use of message brokers (producing and subscribing to messages)
 - design and arhitecture
 - transferring and handling of raw byte data
+- producing logs
+- processing logs using Filebeat and Logstash, sending logs to Opensearch
 
 # Development process
 

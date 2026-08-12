@@ -1,7 +1,7 @@
 import base64
 
 from domain.model.Image import Image
-from dto.Request import ImageUploadRequest
+from domain.dto.Request import ImageUploadRequest
 
 
 def create_image_upload_request(content_type: str, content: bytes, name: str):
