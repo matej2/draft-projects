@@ -25,6 +25,13 @@ Expense can fall into one or more categories. Category includes name and descrip
 
 Result of this application would be to provide an insight in recurring and non-recurring costs and provide future cost predictions with a certain percentage probability. Besides that it should also provide a way to optimize costs by restructuring them or removing unnecessary purchases.
 
+## Data seeding
+
+After considering business case, I decided to with CommandLineRunner. It defines a seeding method that check if each frequency is present and if its not, adds it.   
+This method is async and it runs in a separate transaction.
+
+Data seeding will use a separate account.
+
 ## TODO: Authentication
 
 ## TODO: Profile setup, deploy configuration, docker

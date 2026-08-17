@@ -8,8 +8,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "expense")
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
