@@ -23,10 +23,14 @@ public class ExpenseTrackingService {
         this.frequencyRepository = frequencyRepository;
     }
     public synchronized List<Expense> getExpense() {
+        Frequency frequency = this.frequencyRepository.findByNumber((short)12).getFirst();
+
         Expense newExpense = new Expense(
                 "nakup",
                 15,
-                new Date()
+                new Date(),
+                frequency
+
         );
         this.expenseRepository.save(newExpense);
 
