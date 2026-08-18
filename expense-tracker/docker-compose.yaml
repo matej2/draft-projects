@@ -5,10 +5,13 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: mydatabase
+      APP_PASS: apppass
+      SEED_PASS: seedpass
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ./src/main/resources/db/init:/docker-entrypoint-initdb.d
   pgweb:
     container_name: pgweb
     restart: always

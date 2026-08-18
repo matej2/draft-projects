@@ -25,12 +25,20 @@ Expense can fall into one or more categories. Category includes name and descrip
 
 Result of this application would be to provide an insight in recurring and non-recurring costs and provide future cost predictions with a certain percentage probability. Besides that it should also provide a way to optimize costs by restructuring them or removing unnecessary purchases.
 
+## Database user permissions
+
+Database access permissions are designed with principle of least privilege in mind. Because 
+
 ## Data seeding
 
 After considering business case, I decided to with CommandLineRunner. It defines a seeding method that check if each frequency is present and if its not, adds it.   
 This method is async and it runs in a separate transaction.
 
-Data seeding will use a separate account.
+Data seeding will use a separate database account.
+
+Data seeing is done using docker entrypoint shell scripts. 
+
+Scripts are designed that they
 
 ## TODO: Authentication
 

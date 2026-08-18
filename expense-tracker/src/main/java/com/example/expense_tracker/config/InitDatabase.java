@@ -26,7 +26,7 @@ public class InitDatabase implements CommandLineRunner {
     @Async
     @Transactional
     public void run(String... args) {
-
+/*
         List<Frequency> frequencyList =  new ArrayList<>();
         if (this.myRepository.findByNumber((short) 1).isEmpty())
             frequencyList.add(new Frequency((short) 1, "Yearly"));
@@ -38,6 +38,6 @@ public class InitDatabase implements CommandLineRunner {
             frequencyList.add(new Frequency((short) 365, "Daily"));
 
         this.myRepository.saveAll(frequencyList);
-
+*/
     }
 }
