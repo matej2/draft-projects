@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "expense")
@@ -17,16 +18,16 @@ public class Expense {
     private Integer id;
     String note;
     Integer cost;
-    Date date;
+    LocalDate expense_date;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "frequency_id", nullable = false)
+    @JoinColumn(name = "frequency", nullable = false)
     @JsonIgnoreProperties("expenseList")
     public Frequency frequency;
 
-    public Expense(String note, Integer cost, Date date, Frequency frequency) {
+    public Expense(String note, Integer cost, LocalDate date, Frequency frequency) {
         this.note = note;
         this.cost = cost;
-        this.date = date;
+        this.expense_date = date;
         this.frequency = frequency;
     }
 }

@@ -6,6 +6,7 @@ import com.example.expense_tracker.repository.ExpenseRepository;
 import com.example.expense_tracker.repository.FrequencyRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
@@ -28,7 +29,7 @@ public class ExpenseTrackingService {
         Expense newExpense = new Expense(
                 "nakup",
                 15,
-                new Date(),
+                LocalDate.now(),
                 frequency
 
         );

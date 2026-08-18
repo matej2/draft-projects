@@ -2,16 +2,17 @@ services:
   db:
     image: postgres:18.6
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: mydatabase
       APP_PASS: apppass
       SEED_PASS: seedpass
+      PGDATA: /var/lib/postgresql/data
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql
-      - ./src/main/resources/db/init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/migration/01-create-tables.sql:/docker-entrypoint-initdb.d/01-create-tables.sql
   pgweb:
     container_name: pgweb
     restart: always
@@ -21,7 +22,7 @@ services:
     links:
       - db:db
     environment:
-      - PGWEB_DATABASE_URL=postgres://user:mysecretpassword@db:5432/mydatabase?sslmode=disable
+      - PGWEB_DATABASE_URL=postgres://admin:mysecretpassword@db:5432/mydatabase?sslmode=disable
     depends_on:
       - db
   app:

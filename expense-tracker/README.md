@@ -27,7 +27,9 @@ Result of this application would be to provide an insight in recurring and non-r
 
 ## Database user permissions
 
-Database access permissions are designed with principle of least privilege in mind. Because 
+Database access permissions are designed with principle of least privilege in mind. I decided to use FlyWay. It requires to disable Hibernate, so I defined all DDL statements in a single file, along with permission definition. This file is then copied in database container.
+
+We can further verify that permissions were properly created by executing `\ddp` command inside psql interface.
 
 ## Data seeding
 
