@@ -19,7 +19,7 @@ public class Frequency {
     private Integer id;
     public short number;
     public String description;
-    @OneToMany(mappedBy = "frequency", fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToMany(mappedBy = "frequency_id", fetch = FetchType.LAZY, orphanRemoval = false)
     @JsonIgnoreProperties("frequency")
     private List<Expense> expenseList = new ArrayList<>();
 

@@ -21,6 +21,6 @@ VALUES
     (365, 'Daily');
 
 -- Config for app_user
-CREATE USER app_user WITH PASSWORD '${APP_PASS}';
+CREATE USER app_user WITH PASSWORD '${app_user}';
 GRANT USAGE ON SCHEMA public TO app_user;
 GRANT SELECT, INSERT ON expense TO app_user;
