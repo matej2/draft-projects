@@ -22,7 +22,7 @@ public class ExpenseTrackingController {
     }
 
     @GetMapping("/")
-    public Principal home(Principal principal) {
+    public String home(Principal principal) {
         return principal.getName();
     }
 
