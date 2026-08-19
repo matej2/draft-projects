@@ -18,6 +18,42 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: 'https://dev-123456.oktapreview.com/oauth2/default/'
+      authorizationserver:
+        client:
+          my-client-1:
+            registration:
+              client-id: "abcd"
+              client-secret: "{noop}secret1"
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - "https://my-client-1.com/login/oauth2/code/abcd"
+                - "https://my-client-1.com/authorized"
+              scopes:
+                - "openid"
+                - "profile"
+                - "email"
+                - "phone"
+                - "address"
+            require-authorization-consent: true
+            token:
+              authorization-code-time-to-live: 5m
+              access-token-time-to-live: 10m
+              access-token-format: "reference"
+              reuse-refresh-tokens: false
+              refresh-token-time-to-live: 30m
+        provider:
+          my-oauth-provider:
+            authorization-uri: 'https://my-auth-server.com/oauth2/authorize'
+            token-uri: 'https://my-auth-server.com/oauth2/token'
+            user-info-uri: 'https://my-auth-server.com/userinfo'
+            user-info-authentication-method: header
+            jwk-set-uri: 'https://my-auth-server.com/oauth2/jwks'
+            user-name-attribute: name
+
 logging:
   level:
     org:
