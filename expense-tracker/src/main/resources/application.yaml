@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: expense-tracker
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/mydatabase'
+    username: app_user
+    password: '${app_user}'
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: 'https://dev-123456.oktapreview.com/oauth2/default/'
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+rsa:
+  private-key: 'classpath:certs/private.pem'
+  public-key: 'classpath:certs/public.pem'
