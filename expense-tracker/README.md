@@ -44,4 +44,12 @@ Scripts are designed that they
 
 ## TODO: Authentication
 
+Generate a keypair file: openssl genrs -out keypair.pen 2048
+
+Use keypair to generate public key: openssl rsa -in keypair.pen -pubout -out public.pem
+
+Use keypair to generate privatekey: openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
+
+After this you can remove keypair file.
+
 ## TODO: Profile setup, deploy configuration, docker
