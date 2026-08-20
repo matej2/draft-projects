@@ -12,7 +12,7 @@ public class ExpenseMapper {
         Expense expense = new Expense();
         expense.setNote(expenseRequest.note());
         expense.setCost(expenseRequest.cost());
-        expense.setExpense_date(expenseRequest.expense_date());
+        expense.setExpenseDate(expenseRequest.expense_date());
 
         return expense;
     }
@@ -22,7 +22,7 @@ public class ExpenseMapper {
                 expense.getId(),
                 expense.getNote(),
                 expense.getCost(),
-                expense.getExpense_date(),
+                expense.getExpenseDate(),
                 expense.getFrequency_id().getId()
         );
     }
