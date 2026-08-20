@@ -41,6 +41,22 @@ public class ExpenseTrackingService {
                 .toList();
     }
 
+    // In real world scenario I would use mapper that would update only defined properties
+    // For simplicity purposes I override whole record
+    public synchronized void updateExpense(Integer id, ExpenseRequest expenseRequest) {
+        Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expenseRequest);
+
+        mappedExpense.setId(id);
+        mappedExpense.setFrequency_id(this.getFrequency(expenseRequest.frequency_id()));
+
+        this.expenseRepository.save(mappedExpense);
+    }
+
+    private Expense getExpense(Integer id) {
+        return this.expenseRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Expense not found"));
+
+    }
+
     // TODO: Extract into new service or update existing
     public synchronized List<Frequency> getFrequency() {
         return this.frequencyRepository.findAll();

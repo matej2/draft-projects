@@ -19,6 +19,7 @@ public class ExpenseMapper {
 
     public static ExpenseResponse toExpenseResponse(Expense expense) {
         return new ExpenseResponse(
+                expense.getId(),
                 expense.getNote(),
                 expense.getCost(),
                 expense.getExpense_date(),

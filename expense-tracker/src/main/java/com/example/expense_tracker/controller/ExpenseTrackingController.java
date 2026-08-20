@@ -39,6 +39,12 @@ public class ExpenseTrackingController {
         this.expenseTrackingService.addExpense(expenseRequest);
     }
 
+    @PutMapping("/expense/{id}")
+    public void saveExpense(@PathVariable Integer id, @Valid @RequestBody ExpenseRequest expenseRequest) {
+        this.expenseTrackingService.updateExpense(id, expenseRequest);
+    }
+
+
     @GetMapping("/frequency")
     public List<Frequency> getExpenseFrequency(){
         return this.expenseTrackingService.getFrequency();

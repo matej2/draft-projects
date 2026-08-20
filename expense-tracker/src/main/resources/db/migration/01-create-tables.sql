@@ -25,5 +25,5 @@ CREATE USER app_user WITH PASSWORD '${app_user}';
 GRANT USAGE ON SCHEMA public TO app_user;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO app_user;
 
-GRANT SELECT, INSERT ON expense TO app_user;
+GRANT SELECT, INSERT, UPDATE ON expense TO app_user;
 GRANT SELECT ON frequency TO app_user;
