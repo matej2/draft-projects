@@ -14,8 +14,8 @@ public class AuthController {
     private static final Logger LOG  = LoggerFactory.getLogger(AuthController.class);
     private final TokenService tokenservice;
 
-    public AuthController(TokenService tokenservice, TokenService tokenservice1) {
-        this.tokenservice = tokenservice1;
+    public AuthController(TokenService tokenservice) {
+        this.tokenservice = tokenservice;
     }
 
     @PostMapping("/token")

@@ -3,7 +3,6 @@ package com.example.expense_tracker.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -11,23 +10,15 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "expense")
 @Data
-@NoArgsConstructor
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    String note;
-    Integer cost;
-    LocalDate expenseDate;
+    private String note;
+    private Integer cost;
+    private LocalDate expenseDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "frequency", nullable = false)
     @JsonIgnoreProperties("expenseList")
-    public Frequency frequency;
-
-    public Expense(String note, Integer cost, LocalDate date, Frequency frequency) {
-        this.note = note;
-        this.cost = cost;
-        this.expenseDate = date;
-        this.frequency = frequency;
-    }
+    private Frequency frequency;
 }

@@ -4,7 +4,6 @@ import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
 import com.example.expense_tracker.domain.entity.Frequency;
-import com.example.expense_tracker.domain.mapper.ExpenseMapper;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +15,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class ExpenseTrackingController {
     private final ExpenseTrackingService expenseTrackingService;
-    private final ExpenseMapper expenseMapper;
 
     public ExpenseTrackingController(
-            ExpenseTrackingService expenseTrackingService,
-            ExpenseMapper expenseMapper) {
+            ExpenseTrackingService expenseTrackingService) {
         this.expenseTrackingService = expenseTrackingService;
-        this.expenseMapper = expenseMapper;
     }
 
     @GetMapping("/")
