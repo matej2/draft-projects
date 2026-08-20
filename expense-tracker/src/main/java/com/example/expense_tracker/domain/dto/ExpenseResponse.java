@@ -6,6 +6,6 @@ public record ExpenseResponse(
     Integer id,
     String note,
     Integer cost,
-    LocalDate expense_date,
+    LocalDate expenseDate,
     Integer frequency
 ){}

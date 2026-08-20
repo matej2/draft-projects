@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS expense (
     note varchar(100),
     cost integer,
     expense_date date,
-    frequency_id integer references frequency(id)
+    frequency integer references frequency(id)
 );
 
 INSERT INTO

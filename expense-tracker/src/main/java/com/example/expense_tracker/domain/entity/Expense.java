@@ -20,14 +20,14 @@ public class Expense {
     Integer cost;
     LocalDate expenseDate;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "frequency_id", nullable = false)
+    @JoinColumn(name = "frequency", nullable = false)
     @JsonIgnoreProperties("expenseList")
-    public Frequency frequency_id;
+    public Frequency frequency;
 
     public Expense(String note, Integer cost, LocalDate date, Frequency frequency) {
         this.note = note;
         this.cost = cost;
         this.expenseDate = date;
-        this.frequency_id = frequency;
+        this.frequency = frequency;
     }
 }

@@ -28,9 +28,9 @@ public class ExpenseTrackingService {
     }
 
     public synchronized void addExpense(ExpenseRequest expense){
-        Frequency frequency = this.getFrequency(expense.frequency_id());
+        Frequency frequency = this.getFrequency(expense.frequencyId());
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expense);
-        mappedExpense.setFrequency_id(frequency);
+        mappedExpense.setFrequency(frequency);
 
         this.expenseRepository.save(mappedExpense);
     }
@@ -47,16 +47,10 @@ public class ExpenseTrackingService {
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expenseRequest);
 
         mappedExpense.setId(id);
-        mappedExpense.setFrequency_id(this.getFrequency(expenseRequest.frequency_id()));
+        mappedExpense.setFrequency(this.getFrequency(expenseRequest.frequencyId()));
 
         this.expenseRepository.save(mappedExpense);
     }
-
-    private Expense getExpense(Integer id) {
-        return this.expenseRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Expense not found"));
-
-    }
-
     // TODO: Extract into new service or update existing
     public synchronized List<Frequency> getFrequency() {
         return this.frequencyRepository.findAll();
