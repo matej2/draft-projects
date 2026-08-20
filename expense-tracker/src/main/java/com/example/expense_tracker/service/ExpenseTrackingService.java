@@ -10,6 +10,7 @@ import com.example.expense_tracker.repository.ExpenseRepository;
 import com.example.expense_tracker.repository.FrequencyRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -51,6 +52,14 @@ public class ExpenseTrackingService {
 
         this.expenseRepository.save(mappedExpense);
     }
+
+
+    public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate) {
+        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate);
+
+        return filteredExpense.stream().map(ExpenseMapper::toExpenseResponse).toList();
+    }
+
     // TODO: Extract into new service or update existing
     public synchronized List<Frequency> getFrequency() {
         return this.frequencyRepository.findAll();

@@ -1,5 +1,6 @@
 package com.example.expense_tracker.controller;
 
+import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
 import com.example.expense_tracker.domain.entity.Frequency;
@@ -44,6 +45,10 @@ public class ExpenseTrackingController {
         this.expenseTrackingService.updateExpense(id, expenseRequest);
     }
 
+    @GetMapping("/expense/filter")
+    public List<ExpenseResponse> filterExpense(@Valid @RequestBody ExpenseFilterRequest expenseFilterRequest){
+        return this.expenseTrackingService.getExpenseByDate(expenseFilterRequest.startDate(), expenseFilterRequest.endDate());
+    }
 
     @GetMapping("/frequency")
     public List<Frequency> getExpenseFrequency(){
