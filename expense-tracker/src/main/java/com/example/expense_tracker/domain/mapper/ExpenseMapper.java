@@ -1,6 +1,7 @@
 package com.example.expense_tracker.domain.mapper;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
+import com.example.expense_tracker.domain.dto.ExpenseResponse;
 import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
 import com.example.expense_tracker.service.ExpenseTrackingService;
@@ -25,5 +26,14 @@ public class ExpenseMapper {
         expense.setFrequency_id(frequency);
 
         return expense;
+    }
+
+    public ExpenseResponse toExpenseResponse(Expense expense) {
+        return new ExpenseResponse(
+                expense.getNote(),
+                expense.getCost(),
+                expense.getExpense_date(),
+                expense.getFrequency_id().getId()
+        );
     }
 }
