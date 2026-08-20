@@ -2,7 +2,6 @@ package com.example.expense_tracker.controller;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
-import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
 import com.example.expense_tracker.service.ExpenseTrackingService;
@@ -32,15 +31,12 @@ public class ExpenseTrackingController {
 
     @GetMapping("/expenses")
     public List<ExpenseResponse> getExpense(){
-        List<Expense> expenseList =  this.expenseTrackingService.getExpense();
-
-        return expenseList.stream().map(this.expenseMapper::toExpenseResponse).toList();
+        return this.expenseTrackingService.getExpense();
     }
 
     @PostMapping("/expense")
     public void saveExpense(@Valid @RequestBody ExpenseRequest expenseRequest) {
-        Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expenseRequest);
-        this.expenseTrackingService.addExpense(mappedExpense);
+        this.expenseTrackingService.addExpense(expenseRequest);
     }
 
     @GetMapping("/frequency")
