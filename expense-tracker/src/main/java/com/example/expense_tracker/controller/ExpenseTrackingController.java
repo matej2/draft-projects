@@ -4,7 +4,10 @@ import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
 import com.example.expense_tracker.domain.dto.FrequencyResponse;
+import com.example.expense_tracker.domain.dto.exception.ErrorResponse;
 import com.example.expense_tracker.service.ExpenseTrackingService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -15,6 +18,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "400",
+                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404",
+                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+})
 public class ExpenseTrackingController {
     private final ExpenseTrackingService expenseTrackingService;
 
