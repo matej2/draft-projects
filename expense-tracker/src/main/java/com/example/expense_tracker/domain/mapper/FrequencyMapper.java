@@ -7,7 +7,7 @@ import com.example.expense_tracker.domain.entity.Frequency;
 import java.util.List;
 
 public class FrequencyMapper {
-    public FrequencyResponse toFrequencyResponse(Frequency frequency) {
+    public static FrequencyResponse toResponse(Frequency frequency) {
         List<ExpenseResponse> expenseResponse = frequency.getExpenseList().stream()
                 .map(ExpenseMapper::toExpenseResponse)
                 .toList();

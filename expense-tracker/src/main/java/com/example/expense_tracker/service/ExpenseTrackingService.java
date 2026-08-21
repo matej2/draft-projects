@@ -2,9 +2,11 @@ package com.example.expense_tracker.service;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
+import com.example.expense_tracker.domain.dto.FrequencyResponse;
 import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
+import com.example.expense_tracker.domain.mapper.FrequencyMapper;
 import com.example.expense_tracker.exception.ResourceNotFoundException;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import com.example.expense_tracker.repository.FrequencyRepository;
@@ -29,7 +31,7 @@ public class ExpenseTrackingService {
     }
 
     public synchronized void addExpense(ExpenseRequest expense){
-        Frequency frequency = this.getFrequency(expense.frequencyId());
+        Frequency frequency = this.getFrequencyOrThrow(expense.frequencyId());
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expense);
         mappedExpense.setFrequency(frequency);
 
@@ -48,7 +50,7 @@ public class ExpenseTrackingService {
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expenseRequest);
 
         mappedExpense.setId(id);
-        mappedExpense.setFrequency(this.getFrequency(expenseRequest.frequencyId()));
+        mappedExpense.setFrequency(this.getFrequencyOrThrow(expenseRequest.frequencyId()));
 
         this.expenseRepository.save(mappedExpense);
     }
@@ -61,11 +63,11 @@ public class ExpenseTrackingService {
     }
 
     // TODO: Extract into new service or update existing
-    public synchronized List<Frequency> getFrequency() {
-        return this.frequencyRepository.findAll();
+    public synchronized List<FrequencyResponse> getFrequency() {
+        return this.frequencyRepository.findAll().stream().map(FrequencyMapper::toResponse).toList();
     }
 
-    public synchronized Frequency getFrequency(Integer id) {
+    private Frequency getFrequencyOrThrow(Integer id) {
         return this.frequencyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Expense not found"));
     }
 }
