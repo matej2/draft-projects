@@ -42,14 +42,18 @@ Data seeing is done using docker entrypoint shell scripts.
 
 Scripts are designed that they
 
-## TODO: Authentication
+## Authentication
 
 Generate a keypair file: openssl genrs -out keypair.pen 2048
 
-Use keypair to generate public key: openssl rsa -in keypair.pen -pubout -out public.pem
+Use keypair to generate public key: `openssl rsa -in keypair.pen -pubout -out public.pem`
 
-Use keypair to generate privatekey: openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
+Use keypair to generate privatekey: `openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem`
 
 After this you can remove keypair file.
+
+## JWT token authentication
+
+Previously generated keypair is used to sign and validate JWT. A custom user detail class is used to hold data about user. 
 
 ## TODO: Profile setup, deploy configuration, docker
