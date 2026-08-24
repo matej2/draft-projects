@@ -2,6 +2,7 @@ package com.example.expense_tracker.controller;
 
 import com.example.expense_tracker.domain.dto.AuthenticationRequest;
 import com.example.expense_tracker.domain.dto.AuthenticationResponse;
+import com.example.expense_tracker.domain.dto.RegisterRequest;
 import com.example.expense_tracker.service.AuthenticationService;
 import com.example.expense_tracker.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RequestBody request
+            @RequestBody RegisterRequest request
     ) {
         return ResponseEntity.ok(authService.register(request));
     }

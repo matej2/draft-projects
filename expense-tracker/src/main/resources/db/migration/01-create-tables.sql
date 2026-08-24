@@ -12,6 +12,24 @@ CREATE TABLE IF NOT EXISTS expense (
     frequency integer references frequency(id)
 );
 
+CREATE TABLE IF NOT EXISTS registereduser (
+    id serial primary key,
+    firstname varchar(100),
+    lastname varchar(100),
+    email varchar(100),
+    password varchar(100),
+    role varchar(100)
+);
+
+CREATE TABLE IF NOT EXISTS token (
+    id serial primary key,
+    token varchar(255),
+    token_type varchar(100),
+    revoked boolean,
+    expired boolean,
+    user_id integer references registereduser(id)
+);
+
 INSERT INTO
     frequency (number, description)
 VALUES
@@ -27,3 +45,5 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO app_user;
 
 GRANT SELECT, INSERT, UPDATE ON expense TO app_user;
 GRANT SELECT ON frequency TO app_user;
+GRANT SELECT, INSERT ON registereduser TO app_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON token to app_user;
