@@ -3,10 +3,9 @@ services:
     image: postgres:18.6
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWOR}
       POSTGRES_DB: mydatabase
-      APP_PASS: apppass
-      SEED_PASS: seedpass
+      APP_PASS: ${APP_PASS}
       PGDATA: /var/lib/postgresql/data
     ports:
       - "5432:5432"
@@ -22,7 +21,7 @@ services:
     links:
       - db:db
     environment:
-      - PGWEB_DATABASE_URL=postgres://admin:mysecretpassword@db:5432/mydatabase?sslmode=disable
+      - PGWEB_DATABASE_URL=postgres://admin:${POSTGRES_PASSWOR}@db:5432/mydatabase?sslmode=disable
     depends_on:
       - db
   app:
