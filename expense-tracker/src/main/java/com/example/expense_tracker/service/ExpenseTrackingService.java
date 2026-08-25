@@ -2,36 +2,25 @@ package com.example.expense_tracker.service;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
-import com.example.expense_tracker.domain.dto.FrequencyResponse;
 import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
-import com.example.expense_tracker.domain.mapper.FrequencyMapper;
-import com.example.expense_tracker.exception.ResourceNotFoundException;
 import com.example.expense_tracker.repository.ExpenseRepository;
-import com.example.expense_tracker.repository.FrequencyRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
-    private final FrequencyRepository frequencyRepository;
     private final ExpenseMapper expenseMapper;
-
-    public ExpenseTrackingService(
-            ExpenseRepository expenseRepository,
-            FrequencyRepository frequencyRepository, ExpenseMapper expenseMapper
-    ) {
-        this.expenseRepository = expenseRepository;
-        this.frequencyRepository = frequencyRepository;
-        this.expenseMapper = expenseMapper;
-    }
+    private final FrequencyService  frequencyService;
 
     public synchronized void addExpense(ExpenseRequest expense){
-        Frequency frequency = this.getFrequencyOrThrow(expense.frequencyId());
+        Frequency frequency = this.frequencyService.getFrequencyOrThrow(expense.frequencyId());
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expense);
         mappedExpense.setFrequency(frequency);
 
@@ -50,7 +39,7 @@ public class ExpenseTrackingService {
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expenseRequest);
 
         mappedExpense.setId(id);
-        mappedExpense.setFrequency(this.getFrequencyOrThrow(expenseRequest.frequencyId()));
+        mappedExpense.setFrequency(this.frequencyService.getFrequencyOrThrow(expenseRequest.frequencyId()));
 
         this.expenseRepository.save(mappedExpense);
     }
@@ -62,12 +51,5 @@ public class ExpenseTrackingService {
         return filteredExpense.stream().map(ExpenseMapper::toExpenseResponse).toList();
     }
 
-    // TODO: Extract into new service or update existing
-    public synchronized List<FrequencyResponse> getFrequency() {
-        return this.frequencyRepository.findAll().stream().map(FrequencyMapper::toResponse).toList();
-    }
 
-    private Frequency getFrequencyOrThrow(Integer id) {
-        return this.frequencyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Expense not found"));
-    }
 }

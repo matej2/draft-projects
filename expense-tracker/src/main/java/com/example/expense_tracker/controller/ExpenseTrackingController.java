@@ -6,11 +6,13 @@ import com.example.expense_tracker.domain.dto.ExpenseResponse;
 import com.example.expense_tracker.domain.dto.FrequencyResponse;
 import com.example.expense_tracker.domain.dto.exception.ErrorResponse;
 import com.example.expense_tracker.service.ExpenseTrackingService;
+import com.example.expense_tracker.service.FrequencyService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,13 +26,11 @@ import java.util.List;
         @ApiResponse(responseCode = "404",
                 content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
 })
+@RequiredArgsConstructor
 public class ExpenseTrackingController {
     private final ExpenseTrackingService expenseTrackingService;
+    private final FrequencyService frequencyService;
 
-    public ExpenseTrackingController(
-            ExpenseTrackingService expenseTrackingService) {
-        this.expenseTrackingService = expenseTrackingService;
-    }
 
     @GetMapping("/")
     public String home(Principal principal) {
@@ -77,6 +77,6 @@ public class ExpenseTrackingController {
             @ApiResponse(responseCode = "200", description = "Frequency found"),
     })
     public List<FrequencyResponse> getExpenseFrequency(){
-        return this.expenseTrackingService.getFrequency();
+        return this.frequencyService.getFrequency();
     }
 }
