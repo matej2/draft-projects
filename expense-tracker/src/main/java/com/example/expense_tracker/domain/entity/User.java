@@ -1,5 +1,6 @@
 package com.example.expense_tracker.domain.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,11 +32,13 @@ public class User implements UserDetails {
     private Role role;
 
     @Override
+    @Nonnull
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
+    @Nonnull
     public String getUsername() {
         return email;
     }
