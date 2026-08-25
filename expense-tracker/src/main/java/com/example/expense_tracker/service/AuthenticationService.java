@@ -34,6 +34,9 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
 
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return new AuthenticationResponse(null);
+        }
         userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);
