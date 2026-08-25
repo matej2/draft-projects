@@ -21,4 +21,7 @@ public class Expense {
     @JoinColumn(name = "frequency", nullable = false)
     @JsonIgnoreProperties("expenseList")
     private Frequency frequency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category", nullable = false)
+    private Category category;
 }

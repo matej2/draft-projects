@@ -14,5 +14,6 @@ public record ExpenseRequest(
    @NotNull
    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
    LocalDate expenseDate,
-   Integer frequencyId
+   Integer frequencyId,
+   Integer categoryId
 ) {}

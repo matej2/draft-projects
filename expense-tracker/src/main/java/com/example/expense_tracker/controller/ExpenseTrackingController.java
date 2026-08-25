@@ -1,10 +1,8 @@
 package com.example.expense_tracker.controller;
 
-import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
-import com.example.expense_tracker.domain.dto.ExpenseRequest;
-import com.example.expense_tracker.domain.dto.ExpenseResponse;
-import com.example.expense_tracker.domain.dto.FrequencyResponse;
+import com.example.expense_tracker.domain.dto.*;
 import com.example.expense_tracker.domain.dto.exception.ErrorResponse;
+import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.FrequencyService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +28,7 @@ import java.util.List;
 public class ExpenseTrackingController {
     private final ExpenseTrackingService expenseTrackingService;
     private final FrequencyService frequencyService;
+    private final CategoryService  categoryService;
 
 
     @GetMapping("/")
@@ -78,5 +77,10 @@ public class ExpenseTrackingController {
     })
     public List<FrequencyResponse> getExpenseFrequency(){
         return this.frequencyService.getFrequency();
+    }
+
+    @GetMapping("/category")
+    public List<CategoryResponse> getCategories() {
+        return this.categoryService.getAllCategories();
     }
 }

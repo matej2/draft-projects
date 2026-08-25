@@ -2,6 +2,7 @@ package com.example.expense_tracker.service;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
+import com.example.expense_tracker.domain.entity.Category;
 import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
@@ -18,11 +19,15 @@ public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
     private final FrequencyService  frequencyService;
+    private final CategoryService  categoryService;
 
     public synchronized void addExpense(ExpenseRequest expense){
         Frequency frequency = this.frequencyService.getFrequencyOrThrow(expense.frequencyId());
+        Category category = this.categoryService.getCategory(expense.categoryId());
+
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expense);
         mappedExpense.setFrequency(frequency);
+        mappedExpense.setCategory(category);
 
         this.expenseRepository.save(mappedExpense);
     }
