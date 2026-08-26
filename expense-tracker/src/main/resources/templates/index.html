@@ -55,7 +55,8 @@
         </div>
 
         <div>
-            <input type="submit" value="Submit" /> <input type="reset" value="Reset" />        </div>
+            <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+        </div>
 
     </form>
 
@@ -65,6 +66,8 @@
         <tr>
             <th>Note</th>
             <th>Cost</th>
+            <th>Total cost in a year</th>
+
         </tr>
         </thead>
         <tbody>
@@ -74,6 +77,9 @@
             </td>
             <td>
                 <div th:text="${{accessInfo.cost()}}"></div>
+            </td>
+            <td>
+                <div th:text="${{accessInfo.totalCost()}}"></div>
             </td>
 
         </tr>

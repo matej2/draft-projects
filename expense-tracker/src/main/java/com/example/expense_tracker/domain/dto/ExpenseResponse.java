@@ -7,5 +7,6 @@ public record ExpenseResponse(
     String note,
     Integer cost,
     LocalDate expenseDate,
-    Integer frequency
+    Integer frequency,
+    Integer totalCost
 ){}

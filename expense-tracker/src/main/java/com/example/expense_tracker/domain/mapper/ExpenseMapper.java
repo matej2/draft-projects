@@ -18,12 +18,16 @@ public class ExpenseMapper {
     }
 
     public static ExpenseResponse toExpenseResponse(Expense expense) {
+        // Calculate total cost in a year
+        Integer totalCost = expense.getCost() * expense.getFrequency().getNumber();
+
         return new ExpenseResponse(
                 expense.getId(),
                 expense.getNote(),
                 expense.getCost(),
                 expense.getExpenseDate(),
-                expense.getFrequency().getId()
+                expense.getFrequency().getId(),
+                totalCost
         );
     }
 }
