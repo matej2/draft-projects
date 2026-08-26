@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,13 +30,14 @@ public class ExpenseTrackingController {
     private final ExpenseTrackingService expenseTrackingService;
     private final FrequencyService frequencyService;
     private final CategoryService  categoryService;
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddlAuto;
 
 
     @GetMapping("/")
     public String home(Principal principal) {
-        return principal.getName();
+        return ddlAuto;
     }
-
     @GetMapping("/expenses")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense found"),
