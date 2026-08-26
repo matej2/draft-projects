@@ -36,11 +36,12 @@ We can further verify that permissions were properly created by executing `\ddp`
 After considering business case, I decided to with CommandLineRunner. It defines a seeding method that check if each frequency is present and if its not, adds it.   
 This method is async and it runs in a separate transaction.
 
-Data seeding will use a separate database account.
+I later decided to implement a separation of concerns by completely separating this process. 
 
-Data seeing is done using docker entrypoint shell scripts. 
+I created a shell script that would create tables and insert data and create user. The user that is created is granted only the necessary permissions that are required for main application.
 
-Scripts are designed that they
+This user is then referenced in application when we initialize database connection. Specifically, this is done by specifying a reference to environment variable that defines password for that user.
+
 
 ## Authentication
 
@@ -54,6 +55,17 @@ After this you can remove keypair file.
 
 ## JWT token authentication
 
-Previously generated keypair is used to sign and validate JWT. A custom user detail class is used to hold data about user. 
+Previously generated keypair is used to sign and validate JWT. A custom user detail class is used to hold data about user.
+
+# Docker deployment
+
+Dockerfile defines multi stage build pharse. In first stage it installs maven and downloads dependencies. Second stage builds the application. It copies source and runs build command. The third stage runs the application. It copies jar files from previous image and runs it.
+
+
+Docker compose file was modified to run this image. Configuration adds environment variables for datasource (url, username and password), specifies ddl auto (validate) and ads dependency on database config container.
+
+Dot env file was added to provide values for passwords when running locally - these values can be set elsewhere when running in CD jobs. Docker compose will use these files to initialize database, add users and connect to database.
+
+
 
 ## TODO: Profile setup, deploy configuration, docker
