@@ -51,7 +51,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**").permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers("/api/**").authenticated()
+                                // For simplicity, we allow every other request to not be authenticated
+                                .anyRequest().permitAll())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
