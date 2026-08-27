@@ -5,4 +5,4 @@ public record RegisterRequest(
         String lastName,
         String email,
         String password
-) {}
+) implements DataTransferObject {}

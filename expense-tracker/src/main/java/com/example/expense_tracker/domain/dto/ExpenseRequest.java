@@ -19,4 +19,4 @@ public record ExpenseRequest(
    @NotNull
    Integer categoryId,
    Integer ownerId
-) {}
+) implements DataTransferObject {}

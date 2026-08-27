@@ -10,4 +10,4 @@ public record ExpenseResponse(
     Integer frequency,
     Float totalCost,
     Integer owner
-){}
+) {}

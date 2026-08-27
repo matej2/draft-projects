@@ -9,4 +9,4 @@ public record ExpenseFilterRequest(
         LocalDate startDate,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate endDate
-){}
+) implements DataTransferObject {}

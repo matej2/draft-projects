@@ -1,12 +1,9 @@
 package com.example.expense_tracker.domain.mapper;
 
-import com.example.expense_tracker.domain.dto.CategoryResponse;
 import com.example.expense_tracker.domain.entity.Category;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class CategoryMapper {
-    public static CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getName());
-    }
+@Mapper(componentModel = "spring")
+public interface CategoryMapper extends GenericMapper<Category, UserRequestDto, UserResponseDto> {
+    // MapStruct automatically generates all implementation code here
 }
