@@ -5,9 +5,12 @@ import com.example.expense_tracker.domain.dto.ExpenseResponse;
 import com.example.expense_tracker.domain.entity.Category;
 import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
+import com.example.expense_tracker.domain.entity.User;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +23,7 @@ public class ExpenseTrackingService {
     private final ExpenseMapper expenseMapper;
     private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
+    private final UserDetailService userDetailService;
 
     public synchronized void addExpense(ExpenseRequest expense){
         Frequency frequency = this.frequencyService.getFrequencyOrThrow(expense.frequencyId());
@@ -28,6 +32,11 @@ public class ExpenseTrackingService {
         Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expense);
         mappedExpense.setFrequency(frequency);
         mappedExpense.setCategory(category);
+
+        Authentication authenticationContext  =  SecurityContextHolder.getContext().getAuthentication();
+        if (authenticationContext != null && authenticationContext.getPrincipal() instanceof User authenticatedUser) {
+            mappedExpense.setOwner(authenticatedUser);
+        }
 
         this.expenseRepository.save(mappedExpense);
     }

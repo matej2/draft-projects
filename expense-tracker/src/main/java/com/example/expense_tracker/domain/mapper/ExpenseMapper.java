@@ -27,7 +27,8 @@ public class ExpenseMapper {
                 expense.getCost(),
                 expense.getExpenseDate(),
                 expense.getFrequency().getId(),
-                totalCost
+                totalCost,
+                1
         );
     }
 }

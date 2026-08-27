@@ -38,7 +38,7 @@ public class WebController {
 
         model.addAllAttributes(attributes);
 
-        model.addAttribute("expenseRequest",new ExpenseRequest(null, null, null, null, null));
+        model.addAttribute("expenseRequest",new ExpenseRequest(null, null, null, null, null, null));
         return "index";
     }
 

@@ -9,7 +9,6 @@ import com.example.expense_tracker.domain.entity.Token;
 import com.example.expense_tracker.domain.entity.TokenType;
 import com.example.expense_tracker.domain.entity.User;
 import com.example.expense_tracker.repository.TokenRepository;
-import com.example.expense_tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository userRepository;
+    private final UserDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -34,10 +33,10 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
 
-        if (userRepository.findByEmail(request.email()).isPresent()) {
+        if (userDetailService.findByEmail(request.email()) != null) {
             return new AuthenticationResponse(null);
         }
-        userRepository.save(user);
+        userDetailService.addUser(user);
 
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(
@@ -53,7 +52,7 @@ public class AuthenticationService {
                         request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.email()).orElseThrow();
+        User user = userDetailService.findByEmail(request.email());
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

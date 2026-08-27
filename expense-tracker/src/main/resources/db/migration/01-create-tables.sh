@@ -2,6 +2,27 @@
 set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+
+    -- TABLES: JWT
+
+    CREATE TABLE IF NOT EXISTS registereduser (
+        id serial primary key,
+        firstname varchar(100),
+        lastname varchar(100),
+        email varchar(100),
+        password varchar(100),
+        role varchar(100)
+    );
+
+    CREATE TABLE IF NOT EXISTS token (
+        id serial primary key,
+        token varchar(255),
+        token_type varchar(100),
+        revoked boolean,
+        expired boolean,
+        user_id integer references registereduser(id)
+    );
+
     -- TABLES: Domain
 
     CREATE TABLE IF NOT EXISTS frequency (
@@ -22,28 +43,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         cost integer,
         expense_date date,
         frequency integer references frequency(id),
-        category integer references category(id)
-    );
-
-
-    -- TABLES: JWT
-
-    CREATE TABLE IF NOT EXISTS registereduser (
-        id serial primary key,
-        firstname varchar(100),
-        lastname varchar(100),
-        email varchar(100),
-        password varchar(100),
-        role varchar(100)
-    );
-
-    CREATE TABLE IF NOT EXISTS token (
-        id serial primary key,
-        token varchar(255),
-        token_type varchar(100),
-        revoked boolean,
-        expired boolean,
-        user_id integer references registereduser(id)
+        category integer references category(id),
+        owner integer references registereduser(id)
     );
 
     -- Read only data

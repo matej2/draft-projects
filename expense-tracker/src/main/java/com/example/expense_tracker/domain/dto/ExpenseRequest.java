@@ -17,5 +17,6 @@ public record ExpenseRequest(
    @NotNull
    Integer frequencyId,
    @NotNull
-   Integer categoryId
+   Integer categoryId,
+   Integer ownerId
 ) {}
