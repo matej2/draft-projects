@@ -29,23 +29,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    /*
-    @Bean
-    public InMemoryUserDetailsManager user() {
-        return new InMemoryUserDetailsManager(
-                User
-                        .withUsername("john")
-                        .password("{noop}password")
-                        .authorities("read")
-                        .build()
-        );
-    }
-    */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        //auth.requestMatchers("/auth/**").permitAll().anyRequest().authenticated()
-        //.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-        //.httpBasic(Customizer.withDefaults())
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
