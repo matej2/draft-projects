@@ -10,7 +10,7 @@ public record ExpenseRequest(
    String note,
    @NotNull
    @Positive
-   Integer cost,
+   Float cost,
    @NotNull
    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
    LocalDate expenseDate,

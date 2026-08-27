@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public record ExpenseResponse(
     Integer id,
     String note,
-    Integer cost,
+    Float cost,
     LocalDate expenseDate,
     Integer frequency,
-    Integer totalCost,
+    Float totalCost,
     Integer owner
 ){}

@@ -15,7 +15,7 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String note;
-    private Integer cost;
+    private Float cost;
     private LocalDate expenseDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "frequency", nullable = false)
