@@ -27,3 +27,19 @@ rsa:
   private-key: 'classpath:certs/private.pem'
   public-key: 'classpath:certs/public.pem'
 debug: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
