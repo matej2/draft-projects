@@ -1,0 +1,1 @@
+Grafana: Export Dashboard json V2: http://localhost:3000/apis/dashboard.grafana.app/v2/namespaces/default/dashboards/<uid>

@@ -13,12 +13,17 @@ services:
     restart: unless-stopped
     command:
     - "--config.file=/config/prometheus.yaml"
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
   grafana:
     image: grafana/grafana:13.0
     ports: 
     - "3000:3000"
     volumes:
     - grafana-data:/var/lib/grafana
+    - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    - ./provisioning/dashboards-json:/etc/grafana/provisioning/dashboards-json
+    - ./provisioning/datasources:/etc/grafana/provisioning/datasources
     restart: unless-stopped
 
 
