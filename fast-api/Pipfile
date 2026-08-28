@@ -9,6 +9,7 @@ httpx = "*"
 fastapi = {extras = ["all"], version = "*"}
 starlette = "*"
 coverage = "*"
+prometheus-fastapi-instrumentator = "*"
 
 [dev-packages]
 

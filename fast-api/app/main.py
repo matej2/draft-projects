@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from app.middleware.loggingmiddleware import LoggingMiddleware
 from app.middleware.timer import timing_middleware
 from app.project import router as project_router
+from prometheus_fastapi_instrumentator import Instrumentator
 
 
 @asynccontextmanager
@@ -24,6 +25,8 @@ app.middleware("http")(timing_middleware)
 app.add_middleware(CORSMiddleware,allow_origins=["*"])
 
 app.include_router(project_router)
+
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 class Item(BaseModel):
     text: str = None
