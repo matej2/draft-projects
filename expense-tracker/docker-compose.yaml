@@ -24,8 +24,7 @@ services:
       - PGWEB_DATABASE_URL=postgres://postgres_user:${POSTGRES_PASSWORD}@db:5432/mydatabase?sslmode=disable
     depends_on:
       - db
-  app:
-    container_name: web
+  expense-manager:
     build:
       context: .
       dockerfile: ./Dockerfile
