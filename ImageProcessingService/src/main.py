@@ -34,6 +34,8 @@ from router.auth_router import auth_router
 from router.image_router import image_router
 from router.page_router import page_router
 from service.DatabaseService import get_current_user
+from prometheus_fastapi_instrumentator import Instrumentator
+
 
 Base.metadata.create_all(ENGINE)
 
@@ -41,6 +43,8 @@ app = FastAPI(title="GPX Client")
 app.include_router(auth_router)
 app.include_router(image_router)
 app.include_router(page_router)
+
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 user_dependency = Annotated[User, Depends(get_current_user)]
 

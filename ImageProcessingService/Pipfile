@@ -17,6 +17,7 @@ confluent-kafka = "*"
 uvicorn = "*"
 python-dotenv = "*"
 opensearch-dsl = "*"
+prometheus-fastapi-instrumentator = "*"
 
 [dev-packages]
 
