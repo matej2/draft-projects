@@ -8,10 +8,11 @@
 <body>
 
 <div class="container mt-4">
+    <a href="#" th:href="@{/login}">Login</a>
 
     <h1>New expense</h1>
 
-    <form action="#" th:action="@{/submitExpense}"
+    <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"
     th:object="${expenseRequest}" method="POST">
 
         <div>
@@ -22,7 +23,7 @@
 
         <div>
             <label for="cost">Cost (€):</label>
-            <input type="number" id="cost" th:field="*{cost}" min="1" required />
+            <input type="number" step="0.01" id="cost" th:field="*{cost}" min="1" required />
             <span th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" style="color: red;"></span>
         </div>
 
