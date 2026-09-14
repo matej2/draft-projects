@@ -8,6 +8,9 @@ import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.FrequencyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,15 @@ public class WebController {
 
         model.addAllAttributes(attributes);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Boolean isAuthenticated = true;
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            isAuthenticated = false;
+        }
+
+        model.addAttribute("isAuthenticated", isAuthenticated);
+
         model.addAttribute("expenseRequest",new ExpenseRequest(null, null, null, null, null, null));
         return "index";
     }
@@ -50,4 +62,5 @@ public class WebController {
         this.expenseTrackingService.addExpense(expenseRequest);
         return "redirect:/";
     }
+
 }
