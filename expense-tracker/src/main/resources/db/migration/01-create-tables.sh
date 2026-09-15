@@ -75,7 +75,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO app_user;
 
     -- Permission grants: Domain
-    GRANT SELECT, INSERT, UPDATE ON expense TO app_user;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON expense TO app_user;
     GRANT SELECT ON frequency TO app_user;
     GRANT SELECT ON category TO app_user;
 

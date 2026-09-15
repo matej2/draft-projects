@@ -18,6 +18,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: 'https://dev-123456.oktapreview.com/oauth2/default/'
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 logging:
   level:
     org:

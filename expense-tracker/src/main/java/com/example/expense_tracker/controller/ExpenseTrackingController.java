@@ -73,6 +73,11 @@ public class ExpenseTrackingController {
         return this.expenseTrackingService.getExpenseByDate(expenseFilterRequest.startDate(), expenseFilterRequest.endDate());
     }
 
+    @DeleteMapping("/expense/{id}")
+    public void deleteExpense(@PathVariable Integer id) {
+        this.expenseTrackingService.deleteExpense(id);
+    }
+
     @GetMapping("/frequency")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Frequency found"),
