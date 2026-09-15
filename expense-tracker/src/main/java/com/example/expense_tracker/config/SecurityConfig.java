@@ -1,5 +1,6 @@
 package com.example.expense_tracker.config;
 
+import com.example.expense_tracker.filter.JwtAuthenticationFilter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

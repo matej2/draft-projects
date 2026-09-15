@@ -24,7 +24,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         User user = User.builder()
                 .firstname(request.firstName())
                 .lastname(request.lastName())
@@ -34,14 +34,9 @@ public class AuthenticationService {
                 .build();
 
         if (userDetailService.findByEmail(request.email()) != null) {
-            return new AuthenticationResponse(null);
+            return;
         }
         userDetailService.addUser(user);
-
-        String jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(
-                jwtToken
-        );
     }
 
 
