@@ -43,3 +43,7 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+app:
+  client-id: my-mobile-app
+  client-secret: ${CLIENT_SECRET}  # from env var
