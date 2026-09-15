@@ -1,6 +1,7 @@
 package com.example.expense_tracker.repository;
 
 import com.example.expense_tracker.domain.entity.Expense;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
-    List<Expense>findByExpenseDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Expense>findByExpenseDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

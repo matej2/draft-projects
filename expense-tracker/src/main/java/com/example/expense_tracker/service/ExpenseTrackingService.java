@@ -9,6 +9,7 @@ import com.example.expense_tracker.domain.entity.User;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,8 @@ public class ExpenseTrackingService {
         this.expenseRepository.save(mappedExpense);
     }
 
-    public synchronized List<ExpenseResponse> getExpense() {
-        return this.expenseRepository.findAll().stream()
+    public synchronized List<ExpenseResponse> getExpense(Pageable pageable) {
+        return this.expenseRepository.findAll(pageable).stream()
                 .map(ExpenseMapper::toExpenseResponse)
                 .toList();
     }
@@ -59,8 +60,8 @@ public class ExpenseTrackingService {
     }
 
 
-    public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate) {
-        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate);
+    public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate, pageable);
 
         return filteredExpense.stream().map(ExpenseMapper::toExpenseResponse).toList();
     }

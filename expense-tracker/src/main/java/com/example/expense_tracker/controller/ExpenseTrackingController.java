@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -38,12 +40,16 @@ public class ExpenseTrackingController {
     public String home(Principal principal) {
         return ddlAuto;
     }
-    @GetMapping("/expenses")
+
+    @PostMapping("/expenses")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense found"),
     })
-    public List<ExpenseResponse> getExpense(){
-        return this.expenseTrackingService.getExpense();
+    public List<ExpenseResponse> getExpense(@Nullable @RequestBody ExpenseFilterRequest expenseFilterRequest, Pageable pageable){
+        if (expenseFilterRequest == null) {
+            return this.expenseTrackingService.getExpense(pageable);
+        }
+        return this.expenseTrackingService.getExpenseByDate(expenseFilterRequest.startDate(), expenseFilterRequest.endDate(), pageable);
     }
 
     @PostMapping("/expense")
@@ -62,15 +68,6 @@ public class ExpenseTrackingController {
     @PutMapping("/expense/{id}")
     public void updateExpense(@PathVariable Integer id, @Valid @RequestBody ExpenseRequest expenseRequest) {
         this.expenseTrackingService.updateExpense(id, expenseRequest);
-    }
-
-    @GetMapping("/expense/filter")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Expense updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Expense id does not exist")
-    })
-    public List<ExpenseResponse> filterExpense(@Valid @RequestBody ExpenseFilterRequest expenseFilterRequest){
-        return this.expenseTrackingService.getExpenseByDate(expenseFilterRequest.startDate(), expenseFilterRequest.endDate());
     }
 
     @DeleteMapping("/expense/{id}")
