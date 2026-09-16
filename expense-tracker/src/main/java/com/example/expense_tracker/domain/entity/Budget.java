@@ -11,7 +11,6 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Float monthlyLimit;
-    private Byte month;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
     private Category category;

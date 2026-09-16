@@ -1,9 +1,7 @@
 package com.example.expense_tracker.domain.dto;
 
-import java.util.List;
-
 public record BudgetStatusResponse(
-        List<CategoryBudget> categoryBudgetList,
+        CurrentCategoryBudgetResponse currentCategoryBudgetResponse,
         String name,
         Float targetAmount,
         Float currentAmount

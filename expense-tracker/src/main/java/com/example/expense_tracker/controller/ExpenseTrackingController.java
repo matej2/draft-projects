@@ -87,4 +87,9 @@ public class ExpenseTrackingController {
     public List<CategoryResponse> getCategories() {
         return this.categoryService.getAllCategories();
     }
+
+    @PostMapping("/budget/status")
+    public List<CurrentCategoryBudgetResponse> getBudgetStatus(@RequestBody ExpenseFilterRequest request) {
+        return this.expenseTrackingService.getBudgetStatus(request);
+    }
 }

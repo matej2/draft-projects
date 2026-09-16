@@ -1,12 +1,12 @@
 package com.example.expense_tracker.service;
 
+import com.example.expense_tracker.domain.dto.CurrentCategoryBudgetResponse;
+import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
-import com.example.expense_tracker.domain.entity.Category;
-import com.example.expense_tracker.domain.entity.Expense;
-import com.example.expense_tracker.domain.entity.Frequency;
-import com.example.expense_tracker.domain.entity.User;
+import com.example.expense_tracker.domain.entity.*;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
+import com.example.expense_tracker.repository.BudgetRepository;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
+    private final BudgetRepository budgetRepository;
+
     private final ExpenseMapper expenseMapper;
+
     private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
     private final UserDetailService userDetailService;
@@ -71,4 +74,22 @@ public class ExpenseTrackingService {
     }
 
 
+    public List<CurrentCategoryBudgetResponse> getBudgetStatus(final ExpenseFilterRequest expenseFilter) {
+        List<Budget> budgetlist = this.budgetRepository.findAll();
+
+        return budgetlist.stream().map(
+                b -> {
+                    Float currentSum = this.expenseRepository.summarizeCurrentAmountByCategoryIdByDateBetween(
+                            b.getCategory().getId(),
+                            expenseFilter.startDate(),
+                            expenseFilter.endDate());
+                    currentSum = currentSum != null ? currentSum : 0f;
+
+                    return new CurrentCategoryBudgetResponse(
+                            b.getCategory().getName(),
+                            this.budgetRepository.findOneByCategory(b.getCategory()).getMonthlyLimit(),
+                            currentSum);
+                }
+        ).toList();
+    }
 }

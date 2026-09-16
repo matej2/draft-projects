@@ -9,7 +9,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE TABLE IF NOT EXISTS budget (
       id serial primary key,
       monthly_limit real,
-      month smallint,
       category integer references category(id)
     );
 

@@ -1,8 +1,8 @@
 package com.example.expense_tracker.domain.dto;
 
-public record CategoryBudget(
+public record CurrentCategoryBudgetResponse(
         String category,
         Float monthlyLimit,
-        Byte month
+        Float currentAmount
 ) {
 }
