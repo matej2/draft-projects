@@ -3,8 +3,11 @@ package com.example.expense_tracker;
 import com.example.expense_tracker.config.RsaKeyProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableAsync
@@ -15,4 +18,10 @@ public class ExpenseTrackerApplication {
 		SpringApplication.run(ExpenseTrackerApplication.class, args);
 	}
 
+}
+
+@Configuration
+@EnableScheduling
+@ConditionalOnProperty(name = "scheduling.enabled")
+class SchedulingConfiguration {
 }

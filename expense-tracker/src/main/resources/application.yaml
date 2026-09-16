@@ -51,3 +51,6 @@ management:
 app:
   client-id: my-mobile-app
   client-secret: ${CLIENT_SECRET}  # from env var
+
+scheduling:
+  enabled: true
