@@ -11,7 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/main/resources/db/migration/01-create-tables.sh:/docker-entrypoint-initdb.d/01-create-tables.sh
+      - ./src/main/resources/db/migration/:/docker-entrypoint-initdb.d/
   pgweb:
     container_name: pgweb
     restart: always
