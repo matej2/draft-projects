@@ -3,6 +3,7 @@ package com.example.expense_tracker.job;
 import com.example.expense_tracker.domain.dto.CategoryInsightsResponse;
 import com.example.expense_tracker.domain.dto.CategoryResponse;
 import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
+import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,23 @@ public class InsightsCalculatorJob {
     }
 
     private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest) {
-        Float averageCostLastMonth =  expenseTrackingService.averageCostByCategory(expenseRequest, category.id());
-        averageCostLastMonth = averageCostLastMonth != null ? averageCostLastMonth : 0f;
+        CategoryInsightResultRow insightResponse = expenseTrackingService.insightsByCategory(expenseRequest, category.id());
 
-        return new CategoryInsightsResponse(
-                category.name(),
-                averageCostLastMonth,
-                0f,
-                0f
-        );
+        if (insightResponse == null) {
+            return new CategoryInsightsResponse(
+                    category.name(),
+                    0f,
+                    0f,
+                    0f
+            );
+        } else {
+            return new CategoryInsightsResponse(
+                    category.name(),
+                    insightResponse.stdDev(),
+                    insightResponse.stdDevPercent(),
+                    insightResponse.avg()
+            );
+        }
     }
 
     private LocalDate getFirstDayOfThePreviousMonth() {

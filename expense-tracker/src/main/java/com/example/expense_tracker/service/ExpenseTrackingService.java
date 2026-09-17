@@ -1,10 +1,8 @@
 package com.example.expense_tracker.service;
 
-import com.example.expense_tracker.domain.dto.CurrentCategoryBudgetResponse;
-import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
-import com.example.expense_tracker.domain.dto.ExpenseRequest;
-import com.example.expense_tracker.domain.dto.ExpenseResponse;
+import com.example.expense_tracker.domain.dto.*;
 import com.example.expense_tracker.domain.entity.*;
+import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
 import com.example.expense_tracker.repository.BudgetRepository;
 import com.example.expense_tracker.repository.ExpenseRepository;
@@ -73,8 +71,8 @@ public class ExpenseTrackingService {
         expenseRepository.deleteById(id);
     }
 
-    public Float averageCostByCategory(final ExpenseFilterRequest expenseFilter, Integer categoryId) {
-        return expenseRepository.averageCurrentAmountByCategoryIdByDateBetween(
+    public CategoryInsightResultRow insightsByCategory(final ExpenseFilterRequest expenseFilter, Integer categoryId) {
+        return expenseRepository.insightsByCategoryIdByDateBetween(
                 categoryId,
                 expenseFilter.startDate(),
                 expenseFilter.endDate()
