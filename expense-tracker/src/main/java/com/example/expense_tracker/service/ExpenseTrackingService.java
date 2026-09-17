@@ -73,6 +73,14 @@ public class ExpenseTrackingService {
         expenseRepository.deleteById(id);
     }
 
+    public Float averageCostByCategory(final ExpenseFilterRequest expenseFilter, Integer categoryId) {
+        return expenseRepository.averageCurrentAmountByCategoryIdByDateBetween(
+                categoryId,
+                expenseFilter.startDate(),
+                expenseFilter.endDate()
+        );
+    }
+
 
     public List<CurrentCategoryBudgetResponse> getBudgetStatus(final ExpenseFilterRequest expenseFilter) {
         List<Budget> budgetlist = this.budgetRepository.findAll();

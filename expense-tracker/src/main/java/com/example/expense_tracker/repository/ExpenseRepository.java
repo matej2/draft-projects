@@ -24,4 +24,18 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     GROUP BY c.id
     """)
     Float summarizeCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);
+    @Query(value = """
+    SELECT AVG(cost)
+    FROM Expense e INNER JOIN Category c
+        ON e.category.id = c.id
+    WHERE 
+        c.id = :categoryId AND
+        e.expenseDate >= :startDate AND
+        e.expenseDate < :endDate
+        
+    GROUP BY c.id
+    """)
+    Float averageCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);
+
+
 }
