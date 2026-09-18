@@ -1,24 +1,16 @@
 package com.example.expense_tracker.domain.dto;
 
-import lombok.ToString;
-
-@ToString
-public class CategoryInsightsResponse {
-    private String category;
-    private Float average;
-    private Float stddev;
-    private Float currdev;
-
+public record CategoryInsightsResponse(String category, Float stdDev, Float stddevPercent, Float avg) {
     public CategoryInsightsResponse(
             String category,
-            Float average,
-            Float stddev,
-            Float currdev
+            Float stdDev,
+            Float stddevPercent,
+            Float avg
     ) {
         this.category = category;
-        this.average = (float) (Math.round(average * 100.0) / 100.0);
-        this.stddev = (float) (Math.round(stddev * 100.0) / 100.0);
-        this.currdev = (float) (Math.round(currdev * 100.0) / 100.0);
+        this.stdDev = (float) (Math.round(stdDev * 100.0) / 100.0);
+        this.stddevPercent = (float) (Math.round(stddevPercent * 100.0) / 100.0);
+        this.avg = (float) (Math.round(avg * 100.0) / 100.0);
     }
 
 }

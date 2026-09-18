@@ -6,7 +6,11 @@ import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
 import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
+import com.example.expense_tracker.service.InsightService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +23,13 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InsightsCalculatorJob {
     private final ExpenseTrackingService expenseTrackingService;
     private final CategoryService categoryService;
+    private final InsightService insightService;
+
+    private static Logger logger = LoggerFactory.getLogger(InsightsCalculatorJob.class);
 
     private LocalDate convertToLocalDate(Date dateToConvert) {
         return LocalDate.ofInstant(
@@ -68,8 +76,7 @@ public class InsightsCalculatorJob {
     }
 
     private void saveInsights(List<CategoryInsightsResponse> insightList) {
-        System.out.println("Saving insights for current month");
-        System.out.println(insightList);
+        insightService.saveInsightList(insightList);
     }
 
     @Scheduled(fixedDelayString = "5m")
@@ -87,7 +94,6 @@ public class InsightsCalculatorJob {
         });
 
         saveInsights(categoryInsightsResponseList);
-
-        System.out.println("InsightsCalculatorJob ended");
+        logger.info("Saved insights for month in range: {} - {}", firstLocalDate, lastLocalDate);
     }
 }
