@@ -41,7 +41,9 @@ public class WebController {
 
     @GetMapping
     public String home(Model model, Integer pageNumber) {
-        pageNumber = pageNumber == null ? 0 : pageNumber;
+        if (pageNumber == null || pageNumber < 1) {
+            pageNumber = 0;
+        }
         Pageable sortedByDate = PageRequest.of(
                 pageNumber,
                 40,

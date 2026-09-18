@@ -105,10 +105,10 @@
 
     <div class="input-group mb-3">
 
-        <a th:href="@{/?pageNumber=${pageNumber-1}}" class="btn btn-link p-0">
+        <a th:href="@{/?pageNumber={pageNum}(pageNum=${pageNumber-1})}" class="btn btn-link p-0">
             <i class="bi bi-fill"></i> Page <span th:text="${pageNumber-1}"></span>
         </a>
-        <a th:href="@{/?pageNumber=${pageNumber+1}}" class="btn btn-link p-0">
+        <a th:href="@{/?pageNumber={pageNum}(pageNum=${pageNumber+1})}" class="btn btn-link p-0">
             <i class="bi bi-fill"></i> Page <span th:text="${pageNumber+1}"></span>
         </a>
     </div>
