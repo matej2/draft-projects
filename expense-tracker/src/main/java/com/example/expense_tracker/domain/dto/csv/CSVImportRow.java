@@ -8,10 +8,14 @@ public class CSVImportRow extends CsvBean {
 
         @CsvBindByName
         private String date;
-
-        // Automatically infer column name as 'Age'
         @CsvBindByName
         private int refNum;
-
-        // getters and setters
+        @CsvBindByName
+        private String subject;
+        @CsvBindByName
+        private String description;
+        @CsvBindByName
+        private Float positiveTraffic;
+        @CsvBindByName
+        private Float negativeTraffic;
 }

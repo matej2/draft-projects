@@ -7,6 +7,8 @@ import com.example.expense_tracker.domain.entity.Expense;
 import com.example.expense_tracker.domain.entity.Frequency;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 public class ExpenseMapper {
     public static final String DATE = "date";
@@ -51,7 +53,10 @@ public class ExpenseMapper {
 
     public static Expense toExpense(CSVImportRow row) {
         Expense expense = new Expense();
+        LocalDate date = LocalDate.parse(row.getDate());
+        expense.setExpenseDate(date);
         expense.setNote(String.valueOf(row.getRefNum()));
+        expense.setCost(row.getNegativeTraffic());
 
         return expense;
     }
