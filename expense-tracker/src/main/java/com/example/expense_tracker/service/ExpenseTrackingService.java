@@ -1,14 +1,20 @@
 package com.example.expense_tracker.service;
 
-import com.example.expense_tracker.domain.dto.*;
+import com.example.expense_tracker.domain.dto.CurrentCategoryBudgetResponse;
+import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
+import com.example.expense_tracker.domain.dto.ExpenseRequest;
+import com.example.expense_tracker.domain.dto.ExpenseResponse;
+import com.example.expense_tracker.domain.dto.csv.CSVImportRow;
 import com.example.expense_tracker.domain.entity.*;
 import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
 import com.example.expense_tracker.helper.CSVHelper;
 import com.example.expense_tracker.repository.BudgetRepository;
 import com.example.expense_tracker.repository.ExpenseRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.csv.CSVParser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,9 +25,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.example.expense_tracker.domain.Utils.getCSVParser;
-import static com.example.expense_tracker.domain.mapper.ExpenseMapper.NEGATIVE_TRAFFIC;
-import static com.example.expense_tracker.domain.mapper.ExpenseMapper.POSITIVE_TRAFFIC;
+import static com.example.expense_tracker.domain.Utils.getCsvReader;
 
 @Service
 @RequiredArgsConstructor
@@ -107,16 +111,21 @@ public class ExpenseTrackingService {
         ).toList();
     }
 
-    public void parseFromFile(MultipartFile file) throws IOException {
+    public void saveFromFile(MultipartFile file) throws IOException, CsvValidationException {
         if (CSVHelper.hasCSVFormat(file)) {
-            CSVParser parser = getCSVParser(file.getInputStream());
 
-            List<Expense> importedRowList = parser.getRecords().stream()
-                    .filter(r -> r.get(POSITIVE_TRAFFIC) == null && r.get(NEGATIVE_TRAFFIC) != null)
-                    .map(ExpenseMapper::toExpense)
-                    .toList();
+            List<CSVImportRow> result;
 
-            this.expenseRepository.saveAll(importedRowList);
+            try(CSVReader reader = getCsvReader(file.getInputStream())) {
+                 result = new CsvToBeanBuilder<CSVImportRow>(reader)
+                        .withType(CSVImportRow.class)
+                        .build()
+                        .parse();
+            }
+
+            List<Expense> expenseList = result.stream().map(ExpenseMapper::toExpense).toList();
+
+            this.expenseRepository.saveAll(expenseList);
         }
     }
 }

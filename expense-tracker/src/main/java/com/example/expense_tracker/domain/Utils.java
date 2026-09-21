@@ -1,7 +1,6 @@
 package com.example.expense_tracker.domain;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
+import com.opencsv.CSVReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +12,8 @@ public class Utils {
         return (float) (Math.round(number * 100.0) / 100.0);
     }
 
-    public static CSVParser getCSVParser(InputStream input) throws IOException {
+    public static CSVReader getCsvReader(InputStream input) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-        CSVFormat format = CSVFormat.Builder.create().setIgnoreHeaderCase(true).setTrim(true).get();
-
-        return CSVParser.builder().setReader(reader).setFormat(format).get();
+        return new CSVReader(reader);
     }
 }

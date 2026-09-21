@@ -1,6 +1,7 @@
 package com.example.expense_tracker.controller.advice;
 
 import com.example.expense_tracker.domain.dto.exception.ErrorResponse;
+import com.example.expense_tracker.exception.CSVParsingException;
 import com.example.expense_tracker.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,5 +33,11 @@ public class GlobalControllerExceptionHandler {
 
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Invalid request", readableMessage);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CSVParsingException.class)
+    public ResponseEntity<ErrorResponse> handleCSVParsingException(CSVParsingException ex) {
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid file", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

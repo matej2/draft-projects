@@ -2,11 +2,10 @@ package com.example.expense_tracker.domain.mapper;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
+import com.example.expense_tracker.domain.dto.csv.CSVImportRow;
 import com.example.expense_tracker.domain.entity.Expense;
-import org.apache.commons.csv.CSVRecord;
+import com.example.expense_tracker.domain.entity.Frequency;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component
 public class ExpenseMapper {
@@ -27,32 +26,32 @@ public class ExpenseMapper {
     }
 
     public static ExpenseResponse toExpenseResponse(Expense expense) {
+        Frequency frequency = new Frequency();
         // Calculate total cost in a year
-        Float totalCost = expense.getCost() * expense.getFrequency().getNumber();
+        float totalCost = 0f;
+
+        if (expense.getFrequency() != null) {
+            frequency = expense.getFrequency();
+
+            if (expense.getCost() != null) {
+                totalCost = expense.getCost() * frequency.getNumber();
+            }
+        }
 
         return new ExpenseResponse(
                 expense.getId(),
                 expense.getNote(),
                 expense.getCost(),
                 expense.getExpenseDate(),
-                expense.getFrequency().getId(),
+                frequency.getId(),
                 totalCost,
                 1
         );
     }
 
-    public static Expense toExpense(CSVRecord record) {
-        String reference = String.format(
-                "Reference: %s, Sender: %s",
-                record.get(REF_NUM),
-                record.get(SUBJECT)
-        );
-
+    public static Expense toExpense(CSVImportRow row) {
         Expense expense = new Expense();
-        expense.setExpenseDate(LocalDate.parse(record.get(DATE)));
-        expense.setNote(reference);
-        expense.setCost(Float.parseFloat(record.get(NEGATIVE_TRAFFIC)));
-        expense.setExpenseDate(LocalDate.parse(record.get(DATE)));
+        expense.setNote(String.valueOf(row.getRefNum()));
 
         return expense;
     }

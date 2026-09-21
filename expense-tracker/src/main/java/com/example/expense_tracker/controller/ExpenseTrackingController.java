@@ -2,9 +2,11 @@ package com.example.expense_tracker.controller;
 
 import com.example.expense_tracker.domain.dto.*;
 import com.example.expense_tracker.domain.dto.exception.ErrorResponse;
+import com.example.expense_tracker.exception.CSVParsingException;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.FrequencyService;
+import com.opencsv.exceptions.CsvValidationException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -62,8 +66,14 @@ public class ExpenseTrackingController {
     }
 
     @PostMapping("/expense/upload")
-    public void uploadExpense() {
-
+    public void uploadExpense(@RequestParam("file") MultipartFile file) {
+        try {
+            this.expenseTrackingService.saveFromFile(file);
+        } catch (IOException e) {
+            throw new CSVParsingException(e.getMessage());
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @ApiResponses(value = {
