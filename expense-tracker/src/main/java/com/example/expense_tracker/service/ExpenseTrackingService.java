@@ -4,6 +4,7 @@ import com.example.expense_tracker.domain.dto.*;
 import com.example.expense_tracker.domain.entity.*;
 import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
+import com.example.expense_tracker.helper.CSVHelper;
 import com.example.expense_tracker.repository.BudgetRepository;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -97,5 +100,15 @@ public class ExpenseTrackingService {
                             currentSum);
                 }
         ).toList();
+    }
+
+    public void save(MultipartFile file) {
+        if (CSVHelper.hasCSVFormat(file)) {
+            try {
+                List<CSVImportRow> importedRowList = ExpenseMapper.toCSVImportRow(file.getInputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(String.format("Error reading file %s", file.getOriginalFilename()), e);
+            }
+        }
     }
 }

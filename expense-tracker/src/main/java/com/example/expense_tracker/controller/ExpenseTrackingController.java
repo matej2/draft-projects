@@ -61,6 +61,11 @@ public class ExpenseTrackingController {
         this.expenseTrackingService.addExpense(expenseRequest);
     }
 
+    @PostMapping("/expense/upload")
+    public void uploadExpense() {
+
+    }
+
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense updated successfully"),
             @ApiResponse(responseCode = "400", description = "Expense id does not exist")
