@@ -8,6 +8,7 @@ import com.example.expense_tracker.helper.CSVHelper;
 import com.example.expense_tracker.repository.BudgetRepository;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.csv.CSVParser;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.example.expense_tracker.domain.Utils.getCSVParser;
+import static com.example.expense_tracker.domain.mapper.ExpenseMapper.NEGATIVE_TRAFFIC;
+import static com.example.expense_tracker.domain.mapper.ExpenseMapper.POSITIVE_TRAFFIC;
 
 @Service
 @RequiredArgsConstructor
@@ -102,13 +107,16 @@ public class ExpenseTrackingService {
         ).toList();
     }
 
-    public void save(MultipartFile file) {
+    public void parseFromFile(MultipartFile file) throws IOException {
         if (CSVHelper.hasCSVFormat(file)) {
-            try {
-                List<CSVImportRow> importedRowList = ExpenseMapper.toCSVImportRow(file.getInputStream());
-            } catch (IOException e) {
-                throw new RuntimeException(String.format("Error reading file %s", file.getOriginalFilename()), e);
-            }
+            CSVParser parser = getCSVParser(file.getInputStream());
+
+            List<Expense> importedRowList = parser.getRecords().stream()
+                    .filter(r -> r.get(POSITIVE_TRAFFIC) == null && r.get(NEGATIVE_TRAFFIC) != null)
+                    .map(ExpenseMapper::toExpense)
+                    .toList();
+
+            this.expenseRepository.saveAll(importedRowList);
         }
     }
 }
