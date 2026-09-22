@@ -13,10 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 @RequiredArgsConstructor
@@ -49,8 +46,11 @@ public class ApplicationConfig {
         return new ObjectMapper();
     }
 
-    @Bean("siStatUrl")
-    public URL siStatUrl() throws MalformedURLException {
-        return URI.create("https://pxweb.stat.si:443/SiStatData/api/v1/sl/Data/H281S.px").toURL();
+    @Bean
+    public RestClient restTemplate() {
+        return RestClient.builder()
+                .baseUrl("https://pxweb.stat.si:443/SiStatData/api/v1/sl/Data/H281S.px")
+                .build();
     }
+
 }

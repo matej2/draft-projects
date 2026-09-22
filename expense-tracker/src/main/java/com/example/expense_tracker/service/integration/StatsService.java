@@ -3,36 +3,30 @@ package com.example.expense_tracker.service.integration;
 import com.example.expense_tracker.config.singleton.AvgInflationQuerySingleton;
 import com.example.expense_tracker.domain.AvgInflationQueryRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class StatsService {
-    private URL url;
     private final ObjectMapper objectMapper;
-    @Qualifier("siStatUrl")
-    private final URL siStatUrl;
     private AvgInflationQueryRequest avgInflationQueryRequest = AvgInflationQuerySingleton.getInstance();
+    private final RestClient statsRestClient;
 
     private String getBody() throws JsonProcessingException {
         return objectMapper.writeValueAsString(avgInflationQueryRequest);
-    }
-
-    private void setOutputStream(HttpURLConnection connection) throws IOException {
-        OutputStream os = connection.getOutputStream();
-        OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
-        osw.write(getBody());
-        osw.flush();
-        osw.close();
-        os.close();
     }
 
     private String getResponse(HttpURLConnection connection) throws IOException {
@@ -53,24 +47,19 @@ public class StatsService {
         return String.valueOf(response);
     }
 
-    private Double parseAvgInflationFromResponse(String response) throws JsonProcessingException {
-        JsonNode root = new ObjectMapper().readTree(response);
+    private Double parseAvgInflationFromResponse(HashMap<String, HashMap<String, List<Double>>>  response) {
+        Map<String, List<Double>> dataset = response.get("dataset");
+        List<Double> valueListNode = dataset.get("value");
 
-        JsonNode valueListNode = root.at("/dataset/value");
-
-        Double calculatedAvgInf = valueListNode.get(valueListNode.size()-1).asDouble();
-        return calculatedAvgInf;
+        return valueListNode.getLast();
     }
 
+    public Double getAvgYearlyInflation() {
+        HashMap<String, HashMap<String, List<Double>>> response = statsRestClient
+                .post()
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
 
-    public Double getAvgYearlyInflation() throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) this.url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        setOutputStream(conn);
-        conn.connect();
-
-        String response = getResponse(conn);
-        return parseAvgInflationFromResponse(response);
+        return parseAvgInflationFromResponse(Objects.requireNonNull(response));
     }
 }
