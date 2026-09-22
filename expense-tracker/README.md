@@ -45,13 +45,13 @@ This user is then referenced in application when we initialize database connecti
 
 ## Authentication
 
-Generate a keypair file: openssl genrs -out keypair.pen 2048
+Generate a keypair file: `openssl genrsa -out keypair.pen 2048`
 
 Use keypair to generate public key: `openssl rsa -in keypair.pen -pubout -out public.pem`
 
 Use keypair to generate privatekey: `openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem`
 
-After this you can remove keypair file.
+Move generated public and private key to `src/main/resources/certs`. After this you can remove keypair file.
 
 ## JWT token authentication
 
