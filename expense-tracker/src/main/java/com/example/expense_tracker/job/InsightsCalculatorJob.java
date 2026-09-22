@@ -9,9 +9,6 @@ import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.InsightService;
 import com.example.expense_tracker.service.SiStatService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -25,14 +22,12 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class InsightsCalculatorJob {
     private final ExpenseTrackingService expenseTrackingService;
     private final CategoryService categoryService;
     private final InsightService insightService;
     private final SiStatService siStatService;
 
-    private static Logger logger = LoggerFactory.getLogger(InsightsCalculatorJob.class);
 
     private LocalDate convertToLocalDate(Date dateToConvert) {
         return LocalDate.ofInstant(
@@ -99,6 +94,5 @@ public class InsightsCalculatorJob {
         siStatService.getAvgYearlyInflation();
 
         saveInsights(categoryInsightsResponseList);
-        logger.info("Saved insights for month in range: {} - {}", firstLocalDate, lastLocalDate);
     }
 }

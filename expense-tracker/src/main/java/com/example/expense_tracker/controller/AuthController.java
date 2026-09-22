@@ -6,8 +6,6 @@ import com.example.expense_tracker.domain.dto.RegisterRequest;
 import com.example.expense_tracker.service.AuthenticationService;
 import com.example.expense_tracker.service.TokenService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private static final Logger LOG  = LoggerFactory.getLogger(AuthController.class);
     private final TokenService tokenservice;
     private final AuthenticationService authService;
 
@@ -43,7 +40,6 @@ public class AuthController {
 
     @PostMapping("/token")
     public String token(Authentication authentication) {
-        LOG.debug("Token request for user: {}", authentication.getName());
         return tokenservice.generateToken(authentication);
     }
 }

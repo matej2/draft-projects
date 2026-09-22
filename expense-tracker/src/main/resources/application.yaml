@@ -22,15 +22,10 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+
 rsa:
   private-key: 'classpath:certs/private.pem'
   public-key: 'classpath:certs/public.pem'
-debug: true
 
 management:
   endpoints:

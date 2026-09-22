@@ -15,6 +15,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +30,7 @@ import static com.example.expense_tracker.domain.Utils.getCsvReader;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
     private final BudgetRepository budgetRepository;
@@ -112,6 +114,8 @@ public class ExpenseTrackingService {
     }
 
     public void saveFromFile(MultipartFile file) throws IOException, CsvValidationException {
+        log.info("File uploaded successfully: file name {}, file size {}", file.getName(), file.getSize());
+
         if (CSVHelper.hasCSVFormat(file)) {
 
             List<CSVImportRow> result;

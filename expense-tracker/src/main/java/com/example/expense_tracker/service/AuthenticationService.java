@@ -10,6 +10,7 @@ import com.example.expense_tracker.domain.entity.TokenType;
 import com.example.expense_tracker.domain.entity.User;
 import com.example.expense_tracker.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
     private final UserDetailService userDetailService;
     private final PasswordEncoder passwordEncoder;
@@ -25,6 +27,8 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
     public void register(RegisterRequest request) {
+        log.info("Register request for user {} received", request.email());
+
         User user = User.builder()
                 .firstname(request.firstName())
                 .lastname(request.lastName())
@@ -41,6 +45,8 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        log.debug("Authenticating request for user {}", request.email());
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
