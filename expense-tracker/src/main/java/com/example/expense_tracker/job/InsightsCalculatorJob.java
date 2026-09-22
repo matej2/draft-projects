@@ -7,6 +7,7 @@ import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.InsightService;
+import com.example.expense_tracker.service.SiStatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class InsightsCalculatorJob {
     private final ExpenseTrackingService expenseTrackingService;
     private final CategoryService categoryService;
     private final InsightService insightService;
+    private final SiStatService siStatService;
 
     private static Logger logger = LoggerFactory.getLogger(InsightsCalculatorJob.class);
 
@@ -80,7 +83,7 @@ public class InsightsCalculatorJob {
     }
 
     @Scheduled(fixedDelayString = "5m")
-    public void calculateInsights() {
+    public void calculateInsights() throws IOException {
         LocalDate firstLocalDate = getFirstDayOfThePreviousMonth();
         LocalDate lastLocalDate = getLastDayOfThePreviousMonth();
         ExpenseFilterRequest avgExpenseRequest = new ExpenseFilterRequest(firstLocalDate, lastLocalDate);
@@ -92,6 +95,8 @@ public class InsightsCalculatorJob {
                     calculateInsightDetails(category, avgExpenseRequest)
             );
         });
+
+        siStatService.getAvgYearlyInflation();
 
         saveInsights(categoryInsightsResponseList);
         logger.info("Saved insights for month in range: {} - {}", firstLocalDate, lastLocalDate);
