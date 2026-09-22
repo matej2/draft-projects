@@ -13,11 +13,6 @@ spring:
     hibernate:
       ddl-auto: validate
     defer-datasource-initialization: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: 'https://dev-123456.oktapreview.com/oauth2/default/'
   mvc:
     hiddenmethod:
       filter:
@@ -42,10 +37,6 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-
-app:
-  client-id: my-mobile-app
-  client-secret: ${CLIENT_SECRET}  # from env var
 
 scheduling:
   enabled: true
