@@ -1,4 +1,4 @@
-package com.example.expense_tracker.service;
+package com.example.expense_tracker.service.integration;
 
 import com.example.expense_tracker.config.singleton.AvgInflationQuerySingleton;
 import com.example.expense_tracker.domain.AvgInflationQueryRequest;
@@ -15,7 +15,7 @@ import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
-public class SiStatService {
+public class StatsService {
     private URL url;
     private final ObjectMapper objectMapper;
     @Qualifier("siStatUrl")

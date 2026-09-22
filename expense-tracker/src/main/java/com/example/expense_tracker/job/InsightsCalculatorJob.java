@@ -7,7 +7,7 @@ import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.InsightService;
-import com.example.expense_tracker.service.SiStatService;
+import com.example.expense_tracker.service.integration.StatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class InsightsCalculatorJob {
     private final ExpenseTrackingService expenseTrackingService;
     private final CategoryService categoryService;
     private final InsightService insightService;
-    private final SiStatService siStatService;
+    private final StatsService statsService;
 
 
     private LocalDate convertToLocalDate(Date dateToConvert) {
@@ -91,7 +91,7 @@ public class InsightsCalculatorJob {
             );
         });
 
-        siStatService.getAvgYearlyInflation();
+        statsService.getAvgYearlyInflation();
 
         saveInsights(categoryInsightsResponseList);
     }
