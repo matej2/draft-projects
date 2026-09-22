@@ -77,7 +77,7 @@ public class InsightsCalculatorJob {
         insightService.saveInsightList(insightList);
     }
 
-    @Scheduled(fixedDelayString = "5m")
+    @Scheduled(fixedDelayString = "7d")
     public void calculateInsights() throws IOException {
         LocalDate firstLocalDate = getFirstDayOfThePreviousMonth();
         LocalDate lastLocalDate = getLastDayOfThePreviousMonth();
