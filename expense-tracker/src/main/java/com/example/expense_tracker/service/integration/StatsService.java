@@ -47,14 +47,14 @@ public class StatsService {
         return String.valueOf(response);
     }
 
-    private Double parseAvgInflationFromResponse(HashMap<?, ?>  response) {
+    private Integer parseAvgInflationFromResponse(HashMap<?, ?>  response) {
         HashMap<?, ?> dataset = (HashMap<?, ?>) response.get("dataset");
         List<?> valueListNode = (List<?>) dataset.get("value");
 
-        return (Double)valueListNode.getLast();
+        return (Integer)valueListNode.getLast();
     }
 
-    public Double getAvgYearlyInflation() throws JsonProcessingException {
+    public Integer getAvgYearlyInflation() throws JsonProcessingException {
         HashMap<String, Object> response = statsRestClient
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -34,7 +34,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) {
         return http
                 .securityMatcher("/api/**", "/auth/**", "/error")
                 .csrf(AbstractHttpConfigurer::disable)

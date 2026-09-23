@@ -13,7 +13,6 @@ import com.example.expense_tracker.repository.BudgetRepository;
 import com.example.expense_tracker.repository.ExpenseRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -113,7 +112,7 @@ public class ExpenseTrackingService {
         ).toList();
     }
 
-    public void saveFromFile(MultipartFile file) throws IOException, CsvValidationException {
+    public void saveFromFile(MultipartFile file) throws IOException {
         log.info("File uploaded successfully: file name {}, file size {}", file.getName(), file.getSize());
 
         if (CSVHelper.hasCSVFormat(file)) {

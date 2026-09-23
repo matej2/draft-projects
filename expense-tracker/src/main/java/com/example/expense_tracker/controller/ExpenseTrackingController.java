@@ -6,7 +6,6 @@ import com.example.expense_tracker.exception.CSVParsingException;
 import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.FrequencyService;
-import com.opencsv.exceptions.CsvValidationException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -71,8 +70,6 @@ public class ExpenseTrackingController {
             this.expenseTrackingService.saveFromFile(file);
         } catch (IOException e) {
             throw new CSVParsingException(e.getMessage());
-        } catch (CsvValidationException e) {
-            throw new RuntimeException(e);
         }
     }
 
