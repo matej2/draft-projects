@@ -31,12 +31,8 @@ public class WebController {
 
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Boolean isAuthenticated = true;
 
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            isAuthenticated = false;
-        }
-        return isAuthenticated;
+        return !(authentication instanceof AnonymousAuthenticationToken);
     }
 
     @GetMapping
@@ -57,7 +53,7 @@ public class WebController {
     }
 
     private @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
-        Map<String, Object> attributes = Map.of(
+        return Map.of(
                 "expenses", expenses,
                 "frequencies", frequencyService.getFrequency(),
                 "categories", categoryService.getAllCategories(),
@@ -65,7 +61,6 @@ public class WebController {
                 "isAuthenticated", isAuthenticated(),
                 "expenseRequest",new ExpenseRequest(null, null, null, null, null, null)
         );
-        return attributes;
     }
 
     @PostMapping("/submitExpense")

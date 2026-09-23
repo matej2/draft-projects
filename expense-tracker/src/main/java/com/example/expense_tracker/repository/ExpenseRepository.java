@@ -22,7 +22,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
         c.id = :categoryId AND
         e.expenseDate >= :startDate AND
         e.expenseDate < :endDate
-        
     GROUP BY c.id
     """)
     Float summarizeCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);
@@ -34,7 +33,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
         c.id = :categoryId AND
         e.expenseDate >= :startDate AND
         e.expenseDate < :endDate
-        
     GROUP BY c.id
     """)
     Float averageCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);

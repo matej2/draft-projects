@@ -14,7 +14,7 @@ public final class AvgInflationQuerySingleton {
             Selection selectionMonths = new Selection("item", Utils.generateMonths());
             Selection selectionIndex = new Selection("item", Arrays.asList("2", "3"));
 
-            ResponseFormat response = new ResponseFormat("json-stat");;
+            ResponseFormat response = new ResponseFormat("json-stat");
             List<QueryItem> query = Arrays.asList(
                     new QueryItem("MESEC", selectionMonths),
                     new QueryItem("INDEKS", selectionIndex)
