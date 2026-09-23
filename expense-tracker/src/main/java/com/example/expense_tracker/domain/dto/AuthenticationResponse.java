@@ -1,5 +1,0 @@
-package com.example.expense_tracker.domain.dto;
-
-public record AuthenticationResponse(
-        String token
-) {}

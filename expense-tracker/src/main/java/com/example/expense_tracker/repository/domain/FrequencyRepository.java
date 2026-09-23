@@ -1,6 +1,0 @@
-package com.example.expense_tracker.repository.domain;
-
-import com.example.expense_tracker.domain.entity.Frequency;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface FrequencyRepository  extends JpaRepository<Frequency, Integer> { }
