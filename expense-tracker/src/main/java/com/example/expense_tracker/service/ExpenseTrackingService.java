@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.example.expense_tracker.domain.Utils.getCsvReader;
+import static com.example.expense_tracker.domain.CsvUtils.getCsvReader;
 
 @Service
 @RequiredArgsConstructor

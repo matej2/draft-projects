@@ -10,7 +10,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Utils {
+public class CsvUtils {
     public static float roundToTwoDecimals(double number) {
         return (float) (Math.round(number * 100.0) / 100.0);
     }

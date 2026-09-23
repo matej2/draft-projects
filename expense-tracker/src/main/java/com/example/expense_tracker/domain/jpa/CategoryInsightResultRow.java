@@ -1,6 +1,6 @@
 package com.example.expense_tracker.domain.jpa;
 
-import com.example.expense_tracker.domain.Utils;
+import com.example.expense_tracker.domain.CsvUtils;
 
 public record CategoryInsightResultRow (
     float stdDev,
@@ -13,9 +13,9 @@ public record CategoryInsightResultRow (
             Double avg
     ) {
         this(
-                Utils.roundToTwoDecimals(stdDev),
-                Utils.roundToTwoDecimals(stdDevPercent),
-                Utils.roundToTwoDecimals(avg)
+                CsvUtils.roundToTwoDecimals(stdDev),
+                CsvUtils.roundToTwoDecimals(stdDevPercent),
+                CsvUtils.roundToTwoDecimals(avg)
         );
     }
 }

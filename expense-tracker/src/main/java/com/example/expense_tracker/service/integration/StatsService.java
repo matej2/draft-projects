@@ -26,7 +26,7 @@ public class StatsService {
     private final RestClient statsRestClient;
 
     public StatsService(ObjectMapper objectMapper, RestClient statsRestClient) {
-        Selection selectionMonths = new Selection("item", Utils.generateMonths());
+        Selection selectionMonths = new Selection("item", CsvUtils.generateMonths());
         Selection selectionIndex = new Selection("item", Arrays.asList("2", "3"));
 
         ResponseFormat response = new ResponseFormat("json-stat");
