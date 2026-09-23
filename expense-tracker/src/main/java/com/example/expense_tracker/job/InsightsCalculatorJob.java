@@ -8,11 +8,11 @@ import com.example.expense_tracker.service.CategoryService;
 import com.example.expense_tracker.service.ExpenseTrackingService;
 import com.example.expense_tracker.service.InsightService;
 import com.example.expense_tracker.service.integration.StatsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -78,18 +78,16 @@ public class InsightsCalculatorJob {
     }
 
     @Scheduled(fixedDelayString = "7d")
-    public void calculateInsights() throws IOException {
+    public void calculateInsights() throws JsonProcessingException {
         LocalDate firstLocalDate = getFirstDayOfThePreviousMonth();
         LocalDate lastLocalDate = getLastDayOfThePreviousMonth();
         ExpenseFilterRequest avgExpenseRequest = new ExpenseFilterRequest(firstLocalDate, lastLocalDate);
         List<CategoryInsightsResponse> categoryInsightsResponseList = new ArrayList<>();
 
         List<CategoryResponse> categoryList = categoryService.getAllCategories();
-        categoryList.forEach(category -> {
-            categoryInsightsResponseList.add(
-                    calculateInsightDetails(category, avgExpenseRequest)
-            );
-        });
+        categoryList.forEach(category -> categoryInsightsResponseList.add(
+                calculateInsightDetails(category, avgExpenseRequest)
+        ));
 
         statsService.getAvgYearlyInflation();
 

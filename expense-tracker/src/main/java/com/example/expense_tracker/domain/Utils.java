@@ -21,8 +21,11 @@ public class Utils {
     }
 
     public static List<String> generateMonths() {
-        int currentYear = YearMonth.now().getYear();
-        return java.util.stream.IntStream.rangeClosed(1, 12)
+        YearMonth now = YearMonth.now();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+
+        return java.util.stream.IntStream.rangeClosed(1, currentMonth-1)
                 .mapToObj(month -> String.format("%04dM%02d", currentYear, month))
                 .collect(Collectors.toList());
     }

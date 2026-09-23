@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -15,14 +16,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class StatsService {
     private final ObjectMapper objectMapper;
-    private AvgInflationQueryRequest avgInflationQueryRequest = AvgInflationQuerySingleton.getInstance();
+    private final AvgInflationQueryRequest avgInflationQueryRequest = AvgInflationQuerySingleton.getInstance();
     private final RestClient statsRestClient;
 
     private String getBody() throws JsonProcessingException {
@@ -47,16 +47,18 @@ public class StatsService {
         return String.valueOf(response);
     }
 
-    private Double parseAvgInflationFromResponse(HashMap<String, HashMap<String, List<Double>>>  response) {
-        Map<String, List<Double>> dataset = response.get("dataset");
-        List<Double> valueListNode = dataset.get("value");
+    private Double parseAvgInflationFromResponse(HashMap<?, ?>  response) {
+        HashMap<?, ?> dataset = (HashMap<?, ?>) response.get("dataset");
+        List<?> valueListNode = (List<?>) dataset.get("value");
 
-        return valueListNode.getLast();
+        return (Double)valueListNode.getLast();
     }
 
-    public Double getAvgYearlyInflation() {
-        HashMap<String, HashMap<String, List<Double>>> response = statsRestClient
+    public Double getAvgYearlyInflation() throws JsonProcessingException {
+        HashMap<String, Object> response = statsRestClient
                 .post()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(getBody())
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {});
 
