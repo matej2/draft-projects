@@ -1,6 +1,10 @@
 package com.example.expense_tracker.service.integration;
 
-import com.example.expense_tracker.domain.*;
+import com.example.expense_tracker.domain.integration.AvgInflationQueryRequest;
+import com.example.expense_tracker.domain.integration.QueryItem;
+import com.example.expense_tracker.domain.integration.ResponseFormat;
+import com.example.expense_tracker.domain.integration.Selection;
+import com.example.expense_tracker.utils.CsvUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,4 +1,4 @@
-package com.example.expense_tracker.domain;
+package com.example.expense_tracker.domain.integration;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package com.example.expense_tracker.service;
+package com.example.expense_tracker.service.domain;
 
 import com.example.expense_tracker.domain.dto.CategoryResponse;
 import com.example.expense_tracker.domain.entity.Category;
 import com.example.expense_tracker.domain.mapper.CategoryMapper;
-import com.example.expense_tracker.repository.CategoryRepository;
+import com.example.expense_tracker.repository.domain.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

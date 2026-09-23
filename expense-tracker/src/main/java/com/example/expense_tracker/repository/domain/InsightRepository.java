@@ -1,4 +1,4 @@
-package com.example.expense_tracker.repository;
+package com.example.expense_tracker.repository.domain;
 
 import com.example.expense_tracker.domain.entity.Insight;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,9 +1,9 @@
-package com.example.expense_tracker.service;
+package com.example.expense_tracker.service.domain;
 
 import com.example.expense_tracker.domain.dto.CategoryInsightsResponse;
 import com.example.expense_tracker.domain.entity.Insight;
 import com.example.expense_tracker.domain.mapper.InsightMapper;
-import com.example.expense_tracker.repository.InsightRepository;
+import com.example.expense_tracker.repository.domain.InsightRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

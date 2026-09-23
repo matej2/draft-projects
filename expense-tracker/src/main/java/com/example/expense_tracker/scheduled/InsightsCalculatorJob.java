@@ -1,12 +1,12 @@
-package com.example.expense_tracker.job;
+package com.example.expense_tracker.scheduled;
 
 import com.example.expense_tracker.domain.dto.CategoryInsightsResponse;
 import com.example.expense_tracker.domain.dto.CategoryResponse;
 import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
 import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
-import com.example.expense_tracker.service.CategoryService;
-import com.example.expense_tracker.service.ExpenseTrackingService;
-import com.example.expense_tracker.service.InsightService;
+import com.example.expense_tracker.service.domain.CategoryService;
+import com.example.expense_tracker.service.domain.ExpenseTrackingService;
+import com.example.expense_tracker.service.domain.InsightService;
 import com.example.expense_tracker.service.integration.StatsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

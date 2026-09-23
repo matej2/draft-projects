@@ -2,10 +2,10 @@ package com.example.expense_tracker.controller;
 
 import com.example.expense_tracker.domain.dto.ExpenseRequest;
 import com.example.expense_tracker.domain.dto.ExpenseResponse;
-import com.example.expense_tracker.service.CategoryService;
-import com.example.expense_tracker.service.ExpenseTrackingService;
-import com.example.expense_tracker.service.FrequencyService;
-import com.example.expense_tracker.service.InsightService;
+import com.example.expense_tracker.service.domain.CategoryService;
+import com.example.expense_tracker.service.domain.ExpenseTrackingService;
+import com.example.expense_tracker.service.domain.FrequencyService;
+import com.example.expense_tracker.service.domain.InsightService;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.PageRequest;

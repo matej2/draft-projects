@@ -1,4 +1,4 @@
-package com.example.expense_tracker.helper;
+package com.example.expense_tracker.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 

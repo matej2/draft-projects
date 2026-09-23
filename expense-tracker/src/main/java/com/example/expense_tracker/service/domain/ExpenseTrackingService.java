@@ -1,4 +1,4 @@
-package com.example.expense_tracker.service;
+package com.example.expense_tracker.service.domain;
 
 import com.example.expense_tracker.domain.dto.CurrentCategoryBudgetResponse;
 import com.example.expense_tracker.domain.dto.ExpenseFilterRequest;
@@ -8,9 +8,10 @@ import com.example.expense_tracker.domain.dto.csv.CSVImportRow;
 import com.example.expense_tracker.domain.entity.*;
 import com.example.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.example.expense_tracker.domain.mapper.ExpenseMapper;
-import com.example.expense_tracker.helper.CSVHelper;
-import com.example.expense_tracker.repository.BudgetRepository;
-import com.example.expense_tracker.repository.ExpenseRepository;
+import com.example.expense_tracker.utils.CSVHelper;
+import com.example.expense_tracker.repository.domain.BudgetRepository;
+import com.example.expense_tracker.repository.domain.ExpenseRepository;
+import com.example.expense_tracker.service.UserDetailService;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.example.expense_tracker.domain.CsvUtils.getCsvReader;
+import static com.example.expense_tracker.utils.CsvUtils.getCsvReader;
 
 @Service
 @RequiredArgsConstructor

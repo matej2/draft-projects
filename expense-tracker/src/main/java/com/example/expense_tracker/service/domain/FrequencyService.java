@@ -1,10 +1,10 @@
-package com.example.expense_tracker.service;
+package com.example.expense_tracker.service.domain;
 
 import com.example.expense_tracker.domain.dto.FrequencyResponse;
 import com.example.expense_tracker.domain.entity.Frequency;
 import com.example.expense_tracker.domain.mapper.FrequencyMapper;
 import com.example.expense_tracker.exception.ResourceNotFoundException;
-import com.example.expense_tracker.repository.FrequencyRepository;
+import com.example.expense_tracker.repository.domain.FrequencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
