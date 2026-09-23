@@ -1,10 +1,9 @@
 package com.example.expense_tracker.service.integration;
 
-import com.example.expense_tracker.config.singleton.AvgInflationQuerySingleton;
-import com.example.expense_tracker.domain.AvgInflationQueryRequest;
+import com.example.expense_tracker.domain.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -14,16 +13,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class StatsService {
     private final ObjectMapper objectMapper;
-    private final AvgInflationQueryRequest avgInflationQueryRequest = AvgInflationQuerySingleton.getInstance();
+    private final AvgInflationQueryRequest avgInflationQueryRequest;
+    @Qualifier("statsRestClient")
     private final RestClient statsRestClient;
+
+    public StatsService(ObjectMapper objectMapper, RestClient statsRestClient) {
+        Selection selectionMonths = new Selection("item", Utils.generateMonths());
+        Selection selectionIndex = new Selection("item", Arrays.asList("2", "3"));
+
+        ResponseFormat response = new ResponseFormat("json-stat");
+        List<QueryItem> query = Arrays.asList(
+                new QueryItem("MESEC", selectionMonths),
+                new QueryItem("INDEKS", selectionIndex)
+        );
+
+        this.avgInflationQueryRequest = new AvgInflationQueryRequest(query, response);
+        this.objectMapper = objectMapper;
+        this.statsRestClient = statsRestClient;
+    }
 
     private String getBody() throws JsonProcessingException {
         return objectMapper.writeValueAsString(avgInflationQueryRequest);

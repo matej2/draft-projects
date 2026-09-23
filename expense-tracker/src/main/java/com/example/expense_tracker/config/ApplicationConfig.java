@@ -3,7 +3,6 @@ package com.example.expense_tracker.config;
 import com.example.expense_tracker.repository.UserRepository;
 import com.example.expense_tracker.service.CustomUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +12,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.client.RestClient;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
@@ -44,13 +41,6 @@ public class ApplicationConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
-    }
-
-    @Bean
-    public RestClient restTemplate() {
-        return RestClient.builder()
-                .baseUrl("https://pxweb.stat.si:443/SiStatData/api/v1/sl/Data/H281S.px")
-                .build();
     }
 
 }
