@@ -15,7 +15,6 @@ import java.util.List;
 public class FrequencyService {
     private final FrequencyRepository frequencyRepository;
 
-    // TODO: Rename
     public synchronized List<FrequencyResponse> getAllFrequencies() {
         return this.frequencyRepository.findAll().stream().map(FrequencyMapper::toResponse).toList();
     }
