@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: budget-lens
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_SCHEMA:mydatabase}
+    username: ${APP_USERNAME:app_user}
+    password: ${APP_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+rsa:
+  private-key: 'classpath:certs/private.pem'
+  public-key: 'classpath:certs/public.pem'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+scheduling:
+  enabled: true
