@@ -1,10 +1,14 @@
-# About
+# Outlay
 
-## Domain model
+A personal budgeting API built with Spring Boot. Beyond basic expense CRUD, it tracks budgets and savings goals in relation with their frequencies.
 
-Each expense should include expense cost, frequency, note and category. Expense cost should include tax and shipment cost and be normalized to be in single currency. Note should include a text that identifies that event - item name(s), location or event note. 
+> Originally built as a learning project based on [roadmap.sh's Expense Tracker API](https://roadmap.sh/projects/expense-tracker-api), then extended into a real budgeting tool.
 
-Frequency includes a name and number of appearances in year. Although most business cases are focused on monthly frequency, it is important to notice that some edge cases include yearly frequency. Predefined categories are as follows:  
+## Data
+
+Each expense should include expense cost, frequency, note and category. Expense cost should include tax and shipment cost and be normalized to be in single currency. Note should include a text that identifies that event - item name(s), location or event note.
+
+Frequency includes a name and number of appearances in year. Although most business cases are focused on monthly frequency, it is important to notice that some edge cases include yearly frequency. Predefined categories are as follows:
 
 - Yearly: 1
 - Monthly: 12
@@ -23,47 +27,88 @@ Expense can fall into one or more categories. Category includes name and descrip
 
 Result of this application would be to provide an insight in recurring and non-recurring costs and provide future cost predictions with a certain percentage probability. Besides that it should also provide a way to optimize costs by restructuring them or removing unnecessary purchases.
 
-## Database user permissions
+## Features
 
-Database access permissions are designed with principle of least privilege in mind. I decided to use FlyWay. It requires to disable Hibernate, so I defined all DDL statements in a single file, along with permission definition. This file is then copied in database container.
+- Sign up / log in with JWT (RSA-signed, stateless sessions)
+- Full CRUD on expenses
+- Filter expenses by past week, past month, last 3 months, or a custom date range
+- Recurring expense frequencies (daily / weekly / monthly / yearly)
+- Budgets per category, with a status endpoint showing spend vs. limit
+- Savings goals
+- Weekly job that flags anomalous spending per category (statistical: rolling average + standard deviation) and generates a plain-language explanation with concrete suggestions using an LLM
+- CSV import for bulk-adding historical expenses
+- API docs via springdoc-openapi (Swagger UI)
+- Metrics via Actuator + Prometheus
 
-We can further verify that permissions were properly created by executing `\ddp` command inside psql interface.
+## Tech stack
 
-## Data seeding
+- Java, Spring Boot (Web, Data JPA, Security, Actuator)
+- PostgreSQL, Flyway for schema migrations
+- Docker / Docker Compose for local development
 
-After considering business case, I decided to with CommandLineRunner. It defines a seeding method that check if each frequency is present and if its not, adds it.   
-This method is async and it runs in a separate transaction.
+## Architecture notes
 
-I later decided to implement a separation of concerns by completely separating this process. 
+- Authentication uses a self-issued JWT (RSA keypair), not a third-party OAuth2 provider.
+- Anomaly detection is deterministic (statistics only); the LLM is used **only** to turn already-computed numbers into a human-readable explanation — it never decides on its own what counts as "unusual." See `InsightsCalculatorJob` and `InsightExplanationService`.
+- Database access follows least-privilege: the app connects as a dedicated `app_user`, not the Postgres superuser. Schema is created via Flyway.
 
-I created a shell script that would create tables and insert data and create user. The user that is created is granted only the necessary permissions that are required for main application.
+## Getting started
 
-This user is then referenced in application when we initialize database connection. Specifically, this is done by specifying a reference to environment variable that defines password for that user.
+### Prerequisites
 
+- Java 21+
+- Docker & Docker Compose
+- An Anthropic API key (for the insight-explanation feature — the rest of the app works without it)
 
-## Authentication
+### 1. Configure environment variables
 
-Generate a keypair file: `openssl genrsa -out keypair.pen 2048`
+Copy the example file and fill in real values:
 
-Use keypair to generate public key: `openssl rsa -in keypair.pen -pubout -out public.pem`
+```bash
+cp .env.example .env
+```
 
-Use keypair to generate privatekey: `openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem`
+| Variable | Description |
+|---|---|
+| `POSTGRES_PASSWORD` | Password for the Postgres superuser (used only to create the DB and app role) |
+| `APP_PASSWORD` | Password for the least-privilege `app_user` the application connects as |
+| `ANTHROPIC_API_KEY` | Used for AI-generated spending insights |
 
-Move generated public and private key to `src/main/resources/certs`. After this you can remove keypair file.
+**Never commit `.env` or the RSA keypair** — see [Authentication](#authentication) below for how to generate your own keys locally.
 
-## JWT token authentication
+### 2. Generate your own JWT signing keys
 
-Previously generated keypair is used to sign and validate JWT. A custom user detail class is used to hold data about user.
+The repository does not ship with real keys. Generate your own:
 
-# Docker deployment
+```bash
+openssl genrsa -out keypair.pem 2048
+openssl rsa -in keypair.pem -pubout -out src/main/resources/certs/public.pem
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out src/main/resources/certs/private.pem
+rm keypair.pem
+```
 
-Dockerfile defines multi stage build pharse. In first stage it installs maven and downloads dependencies. Second stage builds the application. It copies source and runs build command. The third stage runs the application. It copies jar files from previous image and runs it.
+### 3. Run
 
+```bash
+docker compose up
+```
 
-Docker compose file was modified to run this image. Configuration adds environment variables for datasource (url, username and password), specifies ddl auto (validate) and ads dependency on database config container.
+This starts Postgres, the app, and (for local inspection only) `pgweb` on `localhost:8081`. **`pgweb` has no authentication — do not expose this compose file outside your local machine.**
 
-Dot env file was added to provide values for passwords when running locally - these values can be set elsewhere when running in CD jobs. Docker compose will use these files to initialize database, add users and connect to database.
+The API is available at `http://localhost:8080`. Interactive API docs: `http://localhost:8080/swagger-ui.html`.
 
+## Running tests
 
+```bash
+./mvnw test
+```
 
-## TODO: Profile setup, deploy configuration, docker
+## Roadmap / known limitations
+
+- Test coverage is currently thin — service-layer and repository integration tests are in progress.
+- The server-rendered web UI (Thymeleaf) is a secondary, less-maintained interface; the REST API is the primary surface.
+- No CI pipeline yet.
+
+## License
+
+MIT
