@@ -37,6 +37,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${APP_USERNAME}
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      APP_PORT: ${APP_PORT}
     ports:
       - "8080:8080"
 
