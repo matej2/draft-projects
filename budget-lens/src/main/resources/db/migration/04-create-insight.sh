@@ -14,9 +14,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     );
 
     -- Permission grants
-    GRANT SELECT, INSERT, UPDATE, DELETE ON insight TO app_user;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON insight TO $APP_USERNAME;
 
-    GRANT USAGE, SELECT ON SEQUENCE insight_id_seq TO app_user;
+    GRANT USAGE, SELECT ON SEQUENCE insight_id_seq TO $APP_USERNAME;
 
 
 EOSQL

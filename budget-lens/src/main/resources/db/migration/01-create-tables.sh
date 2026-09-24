@@ -70,17 +70,17 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         ('Others');
 
     -- Config for app_user
-    CREATE USER app_user WITH PASSWORD '$APP_PASSWORD';
-    GRANT USAGE ON SCHEMA public TO app_user;
-    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO app_user;
+    CREATE USER $APP_USERNAME WITH PASSWORD '$APP_PASSWORD';
+    GRANT USAGE ON SCHEMA public TO $APP_USERNAME;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $APP_USERNAME;
 
     -- Permission grants: Domain
-    GRANT SELECT, INSERT, UPDATE, DELETE ON expense TO app_user;
-    GRANT SELECT ON frequency TO app_user;
-    GRANT SELECT ON category TO app_user;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON expense TO $APP_USERNAME;
+    GRANT SELECT ON frequency TO $APP_USERNAME;
+    GRANT SELECT ON category TO $APP_USERNAME;
 
     -- Permission grants: JWT
-    GRANT SELECT, INSERT ON registereduser TO app_user;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON token to app_user;
+    GRANT SELECT, INSERT ON registereduser TO $APP_USERNAME;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON token to $APP_USERNAME;
 
 EOSQL

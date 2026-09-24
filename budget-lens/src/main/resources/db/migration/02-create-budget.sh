@@ -13,7 +13,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     );
 
     -- Permission grants
-    GRANT SELECT, INSERT, UPDATE, DELETE ON budget TO app_user;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON budget TO $APP_USERNAME;
 
 
 EOSQL
