@@ -55,7 +55,7 @@ public class WebController {
     private @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
         return Map.of(
                 "expenses", expenses,
-                "frequencies", frequencyService.getFrequency(),
+                "frequencies", frequencyService.getAllFrequencies(),
                 "categories", categoryService.getAllCategories(),
                 "pageNumber", pageNumber,
                 "isAuthenticated", isAuthenticated(),

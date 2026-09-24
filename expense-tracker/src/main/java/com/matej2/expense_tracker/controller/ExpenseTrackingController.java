@@ -92,7 +92,7 @@ public class ExpenseTrackingController {
             @ApiResponse(responseCode = "200", description = "Frequency found"),
     })
     public List<FrequencyResponse> getExpenseFrequency(){
-        return this.frequencyService.getFrequency();
+        return this.frequencyService.getAllFrequencies();
     }
 
     @GetMapping("/category")

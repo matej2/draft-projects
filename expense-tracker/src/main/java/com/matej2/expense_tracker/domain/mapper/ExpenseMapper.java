@@ -5,20 +5,11 @@ import com.matej2.expense_tracker.domain.dto.ExpenseResponse;
 import com.matej2.expense_tracker.domain.dto.csv.CSVImportRow;
 import com.matej2.expense_tracker.domain.entity.Expense;
 import com.matej2.expense_tracker.domain.entity.Frequency;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-@Component
 public class ExpenseMapper {
-    public static final String DATE = "date";
-    public static final String REF_NUM = "refNum";
-    public static final String SUBJECT = "subject";
-    public static final String DESCRIPTION = "description";
-    public static final String POSITIVE_TRAFFIC = "positiveTraffic";
-    public static final String NEGATIVE_TRAFFIC = "negativeTraffic";
-
-    public Expense fromExpenseRequest(ExpenseRequest expenseRequest) {
+    public static Expense fromExpenseRequest(ExpenseRequest expenseRequest) {
         Expense expense = new Expense();
         expense.setNote(expenseRequest.note());
         expense.setCost(expenseRequest.cost());

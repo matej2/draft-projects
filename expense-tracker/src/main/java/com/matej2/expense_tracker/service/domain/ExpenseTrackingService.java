@@ -8,10 +8,9 @@ import com.matej2.expense_tracker.domain.dto.csv.CSVImportRow;
 import com.matej2.expense_tracker.domain.entity.*;
 import com.matej2.expense_tracker.domain.jpa.CategoryInsightResultRow;
 import com.matej2.expense_tracker.domain.mapper.ExpenseMapper;
-import com.matej2.expense_tracker.utils.CSVHelper;
 import com.matej2.expense_tracker.repository.domain.BudgetRepository;
 import com.matej2.expense_tracker.repository.domain.ExpenseRepository;
-import com.matej2.expense_tracker.service.UserDetailService;
+import com.matej2.expense_tracker.utils.CSVHelper;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -35,17 +34,15 @@ public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
     private final BudgetRepository budgetRepository;
 
-    private final ExpenseMapper expenseMapper;
 
     private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
-    private final UserDetailService userDetailService;
 
     public synchronized void addExpense(ExpenseRequest expense){
         Frequency frequency = this.frequencyService.getFrequencyOrThrow(expense.frequencyId());
         Category category = this.categoryService.getCategory(expense.categoryId());
 
-        Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expense);
+        Expense mappedExpense = ExpenseMapper.fromExpenseRequest(expense);
         mappedExpense.setFrequency(frequency);
         mappedExpense.setCategory(category);
 
@@ -66,7 +63,7 @@ public class ExpenseTrackingService {
     // In real world scenario I would use mapper that would update only defined properties
     // For simplicity purposes I override whole record
     public synchronized void updateExpense(Integer id, ExpenseRequest expenseRequest) {
-        Expense mappedExpense = this.expenseMapper.fromExpenseRequest(expenseRequest);
+        Expense mappedExpense = ExpenseMapper.fromExpenseRequest(expenseRequest);
 
         mappedExpense.setId(id);
         mappedExpense.setFrequency(this.frequencyService.getFrequencyOrThrow(expenseRequest.frequencyId()));
