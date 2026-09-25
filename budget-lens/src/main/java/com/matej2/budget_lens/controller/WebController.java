@@ -2,6 +2,7 @@ package com.matej2.budget_lens.controller;
 
 import com.matej2.budget_lens.domain.dto.ExpenseRequest;
 import com.matej2.budget_lens.domain.dto.ExpenseResponse;
+import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.FrequencyService;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -65,10 +67,16 @@ public class WebController {
 
     @PostMapping("/submitExpense")
     public String submitExpense(
-            @ModelAttribute ExpenseRequest expenseRequest
+            @ModelAttribute ExpenseRequest expenseRequest,
+            RedirectAttributes redirectAttributes
     ) {
         // Public endpoint with rate limit
-        this.expenseTrackingService.addExpense(expenseRequest);
+        String error = "";
+        try {
+            this.expenseTrackingService.addExpense(expenseRequest);
+        } catch (RecordOverLimitExeption e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/";
     }
 

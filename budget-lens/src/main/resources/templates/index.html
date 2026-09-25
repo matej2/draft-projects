@@ -64,6 +64,10 @@
             <input class="btn btn-secondary" type="reset" value="Reset" />
         </div>
 
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+
     </form>
 
     <h1 class="mb-2">Expense list</h1>

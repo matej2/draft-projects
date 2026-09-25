@@ -40,18 +40,19 @@ public class RecordLimiterAspect {
         List<Object> args = List.of(pjp.getArgs());
         String argClassName = getArgClassName(args, pjp);
 
-        RecordLimit recordLimit = recordLimiter.findOneByClassName(getArgClassName(args, pjp));
-        if (recordLimit == null) {
+        RecordLimit recordLimiter = this.recordLimiter.findOneByClassName(getArgClassName(args, pjp));
+        if (recordLimiter == null) {
             pjp.proceed();
             return;
         }
-        long recordCount = getCurrentRecordCount(recordLimit, args.size());
+        long recordCount = getCurrentRecordCount(recordLimiter, args.size());
+        Long recordLimit = recordLimiter.getRecordLimit();
 
-        if (recordCount > recordLimit.getRecordLimit()) {
-            throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s", argClassName));
+        if (recordCount > recordLimit) {
+            throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s. Limit is %d", argClassName, recordLimit));
         } else {
-            recordLimit.setCurrentCount(recordCount);
-            recordLimiter.save(recordLimit);
+            recordLimiter.setCurrentCount(recordCount);
+            this.recordLimiter.save(recordLimiter);
         }
     }
 }
