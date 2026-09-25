@@ -18,41 +18,68 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecordLimiterAspect {
     private final RecordLimiter recordLimiter;
+    private enum RecordProcessingType {
+        SAVE,
+        DELETE
+    }
 
     private static String getArgClassName(List<Object> args, ProceedingJoinPoint pjp) throws Throwable {
-        if (args.isEmpty()) {
+        if (args.isEmpty() || args.getFirst().getClass().getName().equals("com.matej2.budget_lens.domain.entity.RecordLimit")) {
             pjp.proceed();
         }
         Object firstArg = args.getFirst();
         return firstArg.getClass().getName();
     }
 
-    private long getCurrentRecordCount(RecordLimit recordLimit, long argumentCount) throws Throwable {
+    private long getCurrentRecordCountAddition(RecordLimit recordLimit, long argumentCount) throws Throwable {
         long actualRecordCount =  recordLimit.getCurrentCount() == null ?  0L : recordLimit.getCurrentCount();
         return actualRecordCount + argumentCount;
 
     }
 
-    // It might not cover all edge cases, for those one should create a scheduled job that
-    // Updates the count by directly querying data in the database
-    @Around("this(org.springframework.data.repository.Repository) && execution(* save*(..))")
-    public synchronized void interceptRepositoryCallWithList(ProceedingJoinPoint pjp) throws Throwable {
+    private long getCurrentRecordCountSubstraction(RecordLimit recordLimit, long argumentCount) throws Throwable {
+        long actualRecordCount =  recordLimit.getCurrentCount() == null ?  0L : recordLimit.getCurrentCount();
+        return actualRecordCount - argumentCount;
+
+    }
+
+    private void processRecordCount(RecordProcessingType recordProcessingType, ProceedingJoinPoint pjp) throws Throwable {
         List<Object> args = List.of(pjp.getArgs());
         String argClassName = getArgClassName(args, pjp);
 
         RecordLimit recordLimiter = this.recordLimiter.findOneByClassName(getArgClassName(args, pjp));
         if (recordLimiter == null) {
             pjp.proceed();
-            return;
-        }
-        long recordCount = getCurrentRecordCount(recordLimiter, args.size());
-        Long recordLimit = recordLimiter.getRecordLimit();
-
-        if (recordCount > recordLimit) {
-            throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s. Limit is %d", argClassName, recordLimit));
         } else {
-            recordLimiter.setCurrentCount(recordCount);
-            this.recordLimiter.save(recordLimiter);
+            long recordCount;
+            if (recordProcessingType == RecordProcessingType.SAVE) {
+                recordCount = getCurrentRecordCountAddition(recordLimiter, args.size());
+            } else {
+                recordCount = getCurrentRecordCountSubstraction(recordLimiter, args.size());
+            }
+
+            Long recordLimit = recordLimiter.getRecordLimit();
+
+            if (recordCount > recordLimit) {
+                throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s. Limit is %d", argClassName, recordLimit));
+            } else {
+                recordLimiter.setCurrentCount(recordCount);
+                this.recordLimiter.save(recordLimiter);
+                pjp.proceed();
+            }
         }
+    }
+
+    // It might not cover all edge cases, for those one should create a scheduled job that
+    // Updates the count by directly querying data in the database
+    // Method assumes that all arguments are of the same type
+    @Around("this(org.springframework.data.repository.Repository) && execution(* save*(..))")
+    public synchronized void interceptSaveRepositoryCalls(ProceedingJoinPoint pjp) throws Throwable {
+        processRecordCount(RecordProcessingType.SAVE, pjp);
+    }
+
+    @Around("this(org.springframework.data.repository.Repository) && execution(* delete*(..))")
+    public synchronized void interceptDeleteRepositoryCalls(ProceedingJoinPoint pjp) throws Throwable {
+        processRecordCount(RecordProcessingType.DELETE, pjp);
     }
 }
