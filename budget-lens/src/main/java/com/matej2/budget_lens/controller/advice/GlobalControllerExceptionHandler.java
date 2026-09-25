@@ -2,6 +2,7 @@ package com.matej2.budget_lens.controller.advice;
 
 import com.matej2.budget_lens.domain.dto.exception.ErrorResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
+import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,12 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(CSVParsingException.class)
     public ResponseEntity<ErrorResponse> handleCSVParsingException(CSVParsingException ex) {
         ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid file", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RecordOverLimitExeption.class)
+    public ResponseEntity<ErrorResponse> handleRecordOverLimitExe(RecordOverLimitExeption ex) {
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Record limit exceeded", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
