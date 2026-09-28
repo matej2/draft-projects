@@ -1,5 +1,6 @@
 package com.matej2.budget_lens.config.filter;
 
+import com.matej2.budget_lens.config.annotation.RecordLimitEnabled;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.repository.domain.RecordLimiter;
@@ -10,6 +11,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Aspect
@@ -23,50 +25,56 @@ public class RecordLimiterAspect {
         DELETE
     }
 
-    private static String getArgClassName(List<Object> args, ProceedingJoinPoint pjp) throws Throwable {
-        if (args.isEmpty() || args.getFirst().getClass().getName().equals("com.matej2.budget_lens.domain.entity.RecordLimit")) {
+    private static RecordLimitEnabled getArgClassName(Object repository) {
+        List<Class<?>> repositoryInterfaces = Arrays.stream(repository.getClass().getInterfaces()).toList();
+        if (repositoryInterfaces.isEmpty()) {
+            return null;
+        }
+
+        return repositoryInterfaces.getFirst().getAnnotation(RecordLimitEnabled.class);
+    }
+
+    private long getCurrentRecordCount(RecordLimit recordLimit, long recordCount) throws Throwable {
+        long actualRecordCount =  recordLimit.getCurrentCount() == null ?  0L : recordLimit.getCurrentCount();
+        return actualRecordCount + recordCount;
+
+    }
+
+    private long getCurrentRecordCountSubstraction(RecordLimit recordLimit) throws Throwable {
+        return getCurrentRecordCount(recordLimit, -1);
+    }
+
+    private void checkRecordLimit(Long recordCount, RecordLimit recordLimitForEntity, ProceedingJoinPoint pjp) throws Throwable {
+        if (recordCount > recordLimitForEntity.getRecordLimit()) {
+            throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s", recordLimitForEntity));
+        } else {
+            recordLimitForEntity.setCurrentCount(recordCount);
+            this.recordLimiter.save(recordLimitForEntity);
             pjp.proceed();
         }
-        Object firstArg = args.getFirst();
-        return firstArg.getClass().getName();
-    }
-
-    private long getCurrentRecordCountAddition(RecordLimit recordLimit, long argumentCount) throws Throwable {
-        long actualRecordCount =  recordLimit.getCurrentCount() == null ?  0L : recordLimit.getCurrentCount();
-        return actualRecordCount + argumentCount;
-
-    }
-
-    private long getCurrentRecordCountSubstraction(RecordLimit recordLimit, long argumentCount) throws Throwable {
-        long actualRecordCount =  recordLimit.getCurrentCount() == null ?  0L : recordLimit.getCurrentCount();
-        return actualRecordCount - argumentCount;
-
     }
 
     private void processRecordCount(RecordProcessingType recordProcessingType, ProceedingJoinPoint pjp) throws Throwable {
         List<Object> args = List.of(pjp.getArgs());
-        String argClassName = getArgClassName(args, pjp);
+        RecordLimitEnabled argClassName = getArgClassName(pjp.getThis());
 
-        RecordLimit recordLimiter = this.recordLimiter.findOneByClassName(getArgClassName(args, pjp));
-        if (recordLimiter == null) {
+        if  (argClassName == null) {
+            pjp.proceed();
+            return;
+        }
+
+        RecordLimit recordLimitsForEntity = this.recordLimiter.findOneByClassName(argClassName.entityName());
+        if (recordLimitsForEntity == null) {
             pjp.proceed();
         } else {
             long recordCount;
             if (recordProcessingType == RecordProcessingType.SAVE) {
-                recordCount = getCurrentRecordCountAddition(recordLimiter, args.size());
+                recordCount = getCurrentRecordCount(recordLimitsForEntity, args.size());
             } else {
-                recordCount = getCurrentRecordCountSubstraction(recordLimiter, args.size());
+                recordCount = getCurrentRecordCountSubstraction(recordLimitsForEntity);
             }
 
-            Long recordLimit = recordLimiter.getRecordLimit();
-
-            if (recordCount > recordLimit) {
-                throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s. Limit is %d", argClassName, recordLimit));
-            } else {
-                recordLimiter.setCurrentCount(recordCount);
-                this.recordLimiter.save(recordLimiter);
-                pjp.proceed();
-            }
+            checkRecordLimit(recordCount, recordLimitsForEntity, pjp);
         }
     }
 

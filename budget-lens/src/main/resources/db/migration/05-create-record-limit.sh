@@ -15,7 +15,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     INSERT INTO
         recordlimit (class_name, record_limit)
     VALUES
-        ('com.matej2.budget_lens.domain.entity.Expense', 10);
+        ('Expense', 10);
 
     -- Permission grants
     GRANT SELECT, INSERT, UPDATE, DELETE ON recordlimit TO $APP_USERNAME;
