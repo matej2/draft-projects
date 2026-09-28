@@ -89,10 +89,10 @@
                 <div th:text="${{accessInfo.note()}}"></div>
             </td>
             <td>
-                <div th:text="${{categories.get(accessInfo.category()).name()}}"></div>
+                <div th:text="${{categories.get(accessInfo.category()-1).name()}}"></div>
             </td>
             <td>
-                <div th:text="${{frequencies.get(accessInfo.frequency()).number()}}"></div>
+                <div th:text="${{frequencies.get(accessInfo.frequency()-1).description()}}"></div>
             </td>
             <td>
                 <div th:text="${{accessInfo.cost()}}"></div>
