@@ -7,7 +7,6 @@ import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightService;
-import com.matej2.budget_lens.service.integration.StatsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +25,6 @@ public class InsightsCalculatorJob {
     private final ExpenseTrackingService expenseTrackingService;
     private final CategoryService categoryService;
     private final InsightService insightService;
-    private final StatsService statsService;
 
 
     private LocalDate convertToLocalDate(Date dateToConvert) {
@@ -88,8 +86,6 @@ public class InsightsCalculatorJob {
         categoryList.forEach(category -> categoryInsightsResponseList.add(
                 calculateInsightDetails(category, avgExpenseRequest)
         ));
-
-        statsService.getAvgYearlyInflation();
 
         saveInsights(categoryInsightsResponseList);
     }
