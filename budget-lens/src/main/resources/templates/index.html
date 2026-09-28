@@ -75,6 +75,8 @@
         <thead class="table-dark">
         <tr>
             <th>Note</th>
+            <th>Category</th>
+            <th>Frequency</th>
             <th>Cost</th>
             <th>Total cost in a year</th>
             <th>Actions</th>
@@ -85,6 +87,12 @@
         <tr th:each="accessInfo: ${expenses}">
             <td>
                 <div th:text="${{accessInfo.note()}}"></div>
+            </td>
+            <td>
+                <div th:text="${{categories.get(accessInfo.category()).name()}}"></div>
+            </td>
+            <td>
+                <div th:text="${{frequencies.get(accessInfo.frequency()).number()}}"></div>
             </td>
             <td>
                 <div th:text="${{accessInfo.cost()}}"></div>

@@ -8,6 +8,7 @@ public record ExpenseResponse(
     Float cost,
     LocalDate expenseDate,
     Integer frequency,
+    Integer category,
     Float totalCost,
     Integer owner
 ){}
