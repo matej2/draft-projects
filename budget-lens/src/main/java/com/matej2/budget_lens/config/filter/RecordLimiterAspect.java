@@ -44,8 +44,8 @@ public class RecordLimiterAspect {
         return getCurrentRecordCount(recordLimit, -1);
     }
 
-    private void checkRecordLimit(Long recordCount, RecordLimit recordLimitForEntity, ProceedingJoinPoint pjp) throws Throwable {
-        if (recordCount > recordLimitForEntity.getRecordLimit()) {
+    private void checkRecordLimit(Long recordCount, RecordLimit recordLimitForEntity, ProceedingJoinPoint pjp, RecordProcessingType recordProcessingType) throws Throwable {
+        if (recordCount > recordLimitForEntity.getRecordLimit() && recordProcessingType != RecordProcessingType.DELETE) {
             throw new RecordOverLimitExeption(String.format("Record limit exceeded for object of type %s", recordLimitForEntity));
         } else {
             recordLimitForEntity.setCurrentCount(recordCount);
@@ -75,7 +75,7 @@ public class RecordLimiterAspect {
                 recordCount = getCurrentRecordCountSubstraction(recordLimitsForEntity);
             }
 
-            checkRecordLimit(recordCount, recordLimitsForEntity, pjp);
+            checkRecordLimit(recordCount, recordLimitsForEntity, pjp, recordProcessingType);
         }
     }
 
