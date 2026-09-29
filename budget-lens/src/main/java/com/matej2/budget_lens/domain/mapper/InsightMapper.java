@@ -1,11 +1,17 @@
 package com.matej2.budget_lens.domain.mapper;
 
 import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Insight;
 
+import java.time.YearMonth;
+
 public class InsightMapper {
-    public static Insight toInsightEntity(CategoryInsightsResponse insight) {
+    public static Insight toInsightEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
+
         Insight insightEntity = new Insight();
+        insightEntity.setYearMonth(yearMonth);
+        insightEntity.setCategory(category);
         insightEntity.setAverage(insight.avg());
         insightEntity.setStandardDeviation(insight.stdDev());
         insightEntity.setStandardDeviationPercent(insight.stddevPercent());

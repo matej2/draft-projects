@@ -3,6 +3,8 @@ package com.matej2.budget_lens.domain.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.YearMonth;
+
 // Ideally this entity would be handled in a separate database that is more optimized
 // Calculates insights for current month
 @Entity
@@ -13,9 +15,12 @@ public class Insight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Float average;
+    private YearMonth yearMonth;
     // Standard deviation for last 3 months
     private Float standardDeviation;
     private Float standardDeviationPercent;
-    //Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category")
+    Category category;
     private Boolean isSentToAI;
 }

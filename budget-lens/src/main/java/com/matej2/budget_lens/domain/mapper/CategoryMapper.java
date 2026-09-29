@@ -9,4 +9,12 @@ public class CategoryMapper {
     public static CategoryResponse toResponse(Category category) {
         return new CategoryResponse(category.getId(), category.getName());
     }
+
+    public static Category toEntity(CategoryResponse categoryResponse) {
+        Category category = new Category();
+        category.setId(categoryResponse.id());
+        category.setName(categoryResponse.name());
+
+        return category;
+    }
 }

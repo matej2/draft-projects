@@ -10,12 +10,12 @@ import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,14 +42,16 @@ public class InsightsCalculatorJob {
 
         if (insightResponse == null) {
             return new CategoryInsightsResponse(
-                    category.name(),
+                    category.id(),
+                    category,
                     0f,
                     0f,
                     0f
             );
         } else {
             return new CategoryInsightsResponse(
-                    category.name(),
+                    category.id(),
+                    category,
                     insightResponse.stdDev(),
                     insightResponse.stdDevPercent(),
                     insightResponse.avg()
@@ -57,9 +59,7 @@ public class InsightsCalculatorJob {
         }
     }
 
-    private LocalDate getFirstDayOfThePreviousMonth() {
-        Calendar calendar = Calendar.getInstance();
-
+    private LocalDate getFirstDayOfThePreviousMonth(Calendar calendar) {
         calendar.add(Calendar.MONTH, -1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date firstDateOfPreviousMonth = calendar.getTime();
@@ -67,23 +67,25 @@ public class InsightsCalculatorJob {
         return convertToLocalDate(firstDateOfPreviousMonth);
     }
 
-    private LocalDate getLastDayOfThePreviousMonth() {
-        Calendar calendar = Calendar.getInstance();
-
+    private LocalDate getLastDayOfThePreviousMonth(Calendar calendar) {
         calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date lastDateOfPreviousMonth = calendar.getTime();
 
         return convertToLocalDate(lastDateOfPreviousMonth);
     }
 
-    private void saveInsights(List<CategoryInsightsResponse> insightList) {
-        insightService.saveInsightList(insightList);
+    private void saveInsights(List<CategoryInsightsResponse> insightList, YearMonth yearMonth) {
+        insightService.saveInsightList(insightList, yearMonth);
     }
 
-    @Scheduled(fixedDelayString = "7d")
-    public void calculateInsights() throws JsonProcessingException {
-        LocalDate firstLocalDate = getFirstDayOfThePreviousMonth();
-        LocalDate lastLocalDate = getLastDayOfThePreviousMonth();
+    @Scheduled(fixedDelayString = "1m")
+    public void calculateInsights() {
+        Calendar calendar = Calendar.getInstance();
+
+        LocalDate firstLocalDate = getFirstDayOfThePreviousMonth(calendar);
+        LocalDate lastLocalDate = getLastDayOfThePreviousMonth(calendar);
+        YearMonth yearMonth = YearMonth.from(lastLocalDate);
+
         ExpenseFilterRequest avgExpenseRequest = new ExpenseFilterRequest(firstLocalDate, lastLocalDate);
         List<CategoryInsightsResponse> categoryInsightsResponseList = new ArrayList<>();
 
@@ -92,7 +94,7 @@ public class InsightsCalculatorJob {
                 calculateInsightDetails(category, avgExpenseRequest)
         ));
 
-        saveInsights(categoryInsightsResponseList);
+        saveInsights(categoryInsightsResponseList, yearMonth);
     }
 
     @Scheduled(fixedDelayString = "15m")
