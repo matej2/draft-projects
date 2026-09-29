@@ -23,13 +23,20 @@ public class InsightService {
     public void saveInsightList(List<CategoryInsightsResponse> insight, YearMonth yearMonth) {
         log.debug("Saved insights request for month");
 
-        List<Insight> insightListToSave =  insight.stream()
-                .map(i -> InsightMapper.toInsightEntity(
+        insight
+            .forEach(i -> {
+                Insight insightEntity = InsightMapper.toInsightEntity(
                         i,
                         categoryRepository.getReferenceById(i.id()),
+                        yearMonth);
+
+                insightRepository.updateByCategoryIdAndDate(
+                        insightEntity.getAverage(),
+                        insightEntity.getStandardDeviation(),
+                        insightEntity.getStandardDeviationPercent(),
+                        insightEntity.getCategory(),
                         yearMonth
-                ))
-                .toList();
-        insightRepository.saveAll(insightListToSave);
+                );
+            });
     }
 }

@@ -8,7 +8,12 @@ import java.time.YearMonth;
 // Ideally this entity would be handled in a separate database that is more optimized
 // Calculates insights for current month
 @Entity
-@Table(name = "insight")
+@Table(
+        name = "insight",
+        uniqueConstraints = @UniqueConstraint(
+                name = "insight_year_month_category_key",
+                columnNames = {"year_month", "category"})
+)
 @Data
 public class Insight {
     @Id

@@ -15,6 +15,10 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
       category integer references category(id)
     );
 
+    -- CONSTRAINTS
+    ALTER TABLE insight
+      ADD CONSTRAINT insight_year_month_category_key UNIQUE (year_month, category);
+
     -- Permission grants
     GRANT SELECT, INSERT, UPDATE, DELETE ON insight TO $APP_USERNAME;
 

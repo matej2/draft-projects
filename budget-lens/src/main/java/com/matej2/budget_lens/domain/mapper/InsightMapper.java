@@ -10,6 +10,7 @@ public class InsightMapper {
     public static Insight toInsightEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
 
         Insight insightEntity = new Insight();
+        insightEntity.setId(insight.id());
         insightEntity.setYearMonth(yearMonth);
         insightEntity.setCategory(category);
         insightEntity.setAverage(insight.avg());
