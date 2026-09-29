@@ -3,7 +3,10 @@ package com.matej2.budget_lens.scheduled;
 import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.CategoryResponse;
 import com.matej2.budget_lens.domain.dto.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
+import com.matej2.budget_lens.repository.domain.ExpenseRepository;
+import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightService;
@@ -25,6 +28,8 @@ public class InsightsCalculatorJob {
     private final ExpenseTrackingService expenseTrackingService;
     private final CategoryService categoryService;
     private final InsightService insightService;
+    private final ExpenseRepository expenseRepository;
+    private final RecordLimiter recordLimiter;
 
 
     private LocalDate convertToLocalDate(Date dateToConvert) {
@@ -88,5 +93,13 @@ public class InsightsCalculatorJob {
         ));
 
         saveInsights(categoryInsightsResponseList);
+    }
+
+    @Scheduled(fixedDelayString = "15m")
+    public void calculateRecordLimits() {
+        long expenseCount = expenseRepository.count();
+        RecordLimit recordLimit = recordLimiter.findOneByClassName("Expense");
+        recordLimit.setCurrentCount(expenseCount);
+        recordLimiter.save(recordLimit);
     }
 }
