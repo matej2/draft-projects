@@ -7,8 +7,6 @@ import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.InsightRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -44,11 +42,12 @@ public class InsightService {
     }
 
     public List<CategoryInsightsResponse> getAllInsights() {
-        Pageable sortedByDate = PageRequest.of(
-                0,
-                9999,
-                Sort.by("yearMonth").descending());
-        return insightRepository.findAll(sortedByDate).stream()
+        Sort.Order yearMonthOrder = new Sort.Order(Sort.Direction.DESC, "yearMonth");
+        Sort.Order categoryOrder = new Sort.Order(Sort.Direction.ASC, "category");
+
+        List<Sort.Order> orders = List.of(yearMonthOrder, categoryOrder);
+
+        return insightRepository.findAll(Sort.by(orders)).stream()
                 .map(InsightMapper::toResponse)
                 .toList();
     };

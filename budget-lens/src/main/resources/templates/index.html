@@ -143,10 +143,10 @@
                     <div th:text="${{group.key}}"></div>
                 </td>
                 <td>
-                    <div th:text="${{insight.avg()}}"></div>
+                    <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
                 </td>
                 <td>
-                    <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
+                    <div th:text="${{insight.avg()}}"></div>
                 </td>
                 <td>
                     <div th:text="${{insight.stdDev()}}"></div>
