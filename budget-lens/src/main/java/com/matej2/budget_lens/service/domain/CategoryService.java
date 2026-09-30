@@ -23,4 +23,7 @@ public class CategoryService {
                 .map(CategoryMapper::toResponse)
                 .toList();
     }
+    public Category getUncategorizedCategory() {
+        return categoryRepository.findByName("Uncategorized");
+    }
 }

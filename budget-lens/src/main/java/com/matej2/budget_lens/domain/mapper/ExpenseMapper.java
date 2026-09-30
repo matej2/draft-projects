@@ -3,6 +3,7 @@ package com.matej2.budget_lens.domain.mapper;
 import com.matej2.budget_lens.domain.dto.ExpenseRequest;
 import com.matej2.budget_lens.domain.dto.ExpenseResponse;
 import com.matej2.budget_lens.domain.dto.csv.CSVImportRow;
+import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.Frequency;
 
@@ -37,18 +38,19 @@ public class ExpenseMapper {
                 expense.getCost(),
                 expense.getExpenseDate(),
                 frequency.getId(),
-                expense.getCategory().getId(),
+                expense.getCategory() == null ? null: expense.getCategory().getId(),
                 totalCost,
                 1
         );
     }
 
-    public static Expense toExpense(CSVImportRow row) {
+    public static Expense toExpense(CSVImportRow row, Category uncategorized) {
         Expense expense = new Expense();
         LocalDate date = LocalDate.parse(row.getDate());
         expense.setExpenseDate(date);
         expense.setNote(String.valueOf(row.getRefNum()));
         expense.setCost(row.getNegativeTraffic());
+        expense.setCategory(uncategorized);
 
         return expense;
     }

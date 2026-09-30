@@ -124,7 +124,9 @@ public class ExpenseTrackingService {
                         .parse();
             }
 
-            List<Expense> expenseList = result.stream().map(ExpenseMapper::toExpense).toList();
+            Category uncategorizedCategory = this.categoryService.getUncategorizedCategory();
+
+            List<Expense> expenseList = result.stream().map(r-> ExpenseMapper.toExpense(r, uncategorizedCategory)).toList();
 
             this.expenseRepository.saveAll(expenseList);
         }

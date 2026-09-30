@@ -15,4 +15,8 @@ Docker compose file uses this image. Its configuration adds environment variable
 
 `.env` file provides values for credentials when running locally - these values can be set elsewhere when running in CD jobs. Docker compose will use these files to initialize database, add users and connect to database.
 
+# AI analitics
 
+Transactions are imported using CSV export file. These transactions are ordered by the frequency of the source (transaction owner). Only the top 20% of most frequent transactions will be sent to AI.
+
+AI will try to figure a ways to save spendings based on the budget.
