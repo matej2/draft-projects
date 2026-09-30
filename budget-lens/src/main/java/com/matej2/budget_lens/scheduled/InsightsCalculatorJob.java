@@ -61,15 +61,14 @@ public class InsightsCalculatorJob {
         }
     }
 
-    private LocalDate getFirstDayOfThePreviousMonth(Calendar calendar) {
-        calendar.add(Calendar.MONTH, -1);
+    private LocalDate getFirstDayOfTheMonth(Calendar calendar) {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date firstDateOfPreviousMonth = calendar.getTime();
 
         return convertToLocalDate(firstDateOfPreviousMonth);
     }
 
-    private LocalDate getLastDayOfThePreviousMonth(Calendar calendar) {
+    private LocalDate getLastDayOfTheMonth(Calendar calendar) {
         calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date lastDateOfPreviousMonth = calendar.getTime();
 
@@ -80,23 +79,42 @@ public class InsightsCalculatorJob {
         insightService.saveInsightList(insightList, yearMonth);
     }
 
+    private List<Calendar> generateCalendarInstancesForLastTreeMonths() {
+        List<Calendar> result = new ArrayList<>();
+        Calendar calendarMonth = Calendar.getInstance();
+
+        java.util.stream.IntStream
+                .rangeClosed(0, 2)
+                .forEach(
+                i -> {
+                    calendarMonth.add(Calendar.MONTH, -i);
+                    result.add(calendarMonth);
+                    calendarMonth.setTime(new Date());
+                }
+        );
+
+        return result;
+    }
+
     @Scheduled(fixedDelayString = "1m")
     public void calculateInsights() {
-        Calendar calendar = Calendar.getInstance();
+        List<Calendar> treeMonths = generateCalendarInstancesForLastTreeMonths();
 
-        LocalDate firstLocalDate = getFirstDayOfThePreviousMonth(calendar);
-        LocalDate lastLocalDate = getLastDayOfThePreviousMonth(calendar);
-        YearMonth yearMonth = YearMonth.from(lastLocalDate);
+        treeMonths.forEach(c -> {
+            LocalDate firstLocalDate = getFirstDayOfTheMonth(c);
+            LocalDate lastLocalDate = getLastDayOfTheMonth(c);
+            YearMonth yearMonth = YearMonth.from(lastLocalDate);
 
-        ExpenseFilterRequest avgExpenseRequest = new ExpenseFilterRequest(firstLocalDate, lastLocalDate);
-        List<CategoryInsightsResponse> categoryInsightsResponseList = new ArrayList<>();
+            ExpenseFilterRequest avgExpenseRequest = new ExpenseFilterRequest(firstLocalDate, lastLocalDate);
+            List<CategoryInsightsResponse> categoryInsightsResponseList = new ArrayList<>();
 
-        List<CategoryResponse> categoryList = categoryService.getAllCategories();
-        categoryList.forEach(category -> categoryInsightsResponseList.add(
-                calculateInsightDetails(category, avgExpenseRequest, yearMonth)
-        ));
+            List<CategoryResponse> categoryList = categoryService.getAllCategories();
+            categoryList.forEach(category -> categoryInsightsResponseList.add(
+                    calculateInsightDetails(category, avgExpenseRequest, yearMonth)
+            ));
 
-        saveInsights(categoryInsightsResponseList, yearMonth);
+            saveInsights(categoryInsightsResponseList, yearMonth);
+        });
     }
 
     @Scheduled(fixedDelayString = "15m")
