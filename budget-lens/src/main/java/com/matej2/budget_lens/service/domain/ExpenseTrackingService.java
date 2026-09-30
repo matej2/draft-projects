@@ -34,7 +34,6 @@ public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
     private final BudgetRepository budgetRepository;
 
-
     private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
 
@@ -104,7 +103,7 @@ public class ExpenseTrackingService {
 
                     return new CurrentCategoryBudgetResponse(
                             b.getCategory().getName(),
-                            this.budgetRepository.findOneByCategory(b.getCategory()).getMonthlyLimit(),
+                            this.budgetRepository.findOneByCategory(b.getCategory()).getQuota(),
                             currentSum);
                 }
         ).toList();

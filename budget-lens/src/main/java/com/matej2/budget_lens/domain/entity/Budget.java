@@ -10,8 +10,12 @@ public class Budget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Float monthlyLimit;
+    private String note;
+    private Float quota;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
     private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "frequency", nullable = false)
+    private Frequency frequency;
 }
