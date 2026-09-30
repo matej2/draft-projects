@@ -137,23 +137,26 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="insight: ${insights}">
-            <td>
-                <div th:text="${{insight.yearMonth()}}"></div>
-            </td>
-            <td>
-                <div th:text="${{insight.avg()}}"></div>
-            </td>
-            <td>
-                <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
-            </td>
-            <td>
-                <div th:text="${{insight.stdDev()}}"></div>
-            </td>
-            <td>
-                <div th:text="${{insight.stddevPercent()}}"></div>
-            </td>
-        </tr>
+        <th:block th:each="group : ${insights}">
+            <tr th:each="insight, stat: ${group.value}">
+                <td th:if="${stat.first}" th:rowspan="${group.value.size()}" class="align-middle">
+                    <div th:text="${{group.key}}"></div>
+                </td>
+                <td>
+                    <div th:text="${{insight.avg()}}"></div>
+                </td>
+                <td>
+                    <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
+                </td>
+                <td>
+                    <div th:text="${{insight.stdDev()}}"></div>
+                </td>
+                <td>
+                    <div th:text="${{insight.stddevPercent()}}"></div>
+                </td>
+            </tr>
+
+        </th:block>
         </tbody>
     </table>
 

@@ -1,5 +1,6 @@
 package com.matej2.budget_lens.controller;
 
+import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.ExpenseRequest;
 import com.matej2.budget_lens.domain.dto.ExpenseResponse;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
@@ -20,8 +21,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.YearMonth;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -54,12 +58,21 @@ public class WebController {
         return "index";
     }
 
+    private Map<YearMonth, List<CategoryInsightsResponse>> getGroupedInsights(List<CategoryInsightsResponse> insightList) {
+        return insightList.stream()
+                .collect(Collectors.groupingBy(
+                        CategoryInsightsResponse::yearMonth,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+    }
+
     private @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
         return Map.of(
                 "expenses", expenses,
                 "frequencies", frequencyService.getAllFrequencies(),
                 "categories", categoryService.getAllCategories(),
-                "insights", insightService.getAllInsights(),
+                "insights", getGroupedInsights(insightService.getAllInsights()),
                 "pageNumber", pageNumber,
                 "isAuthenticated", isAuthenticated(),
                 "expenseRequest",new ExpenseRequest(null, null, null, null, null, null)
