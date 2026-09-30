@@ -129,6 +129,7 @@
     <table class="table" th:if="${!insights.isEmpty()}">
         <thead class="table-dark">
         <tr>
+            <th>Year/month</th>
             <th>Average</th>
             <th>Category</th>
             <th>Standard deviation</th>
@@ -137,6 +138,9 @@
         </thead>
         <tbody>
         <tr th:each="insight: ${insights}">
+            <td>
+                <div th:text="${{insight.yearMonth()}}"></div>
+            </td>
             <td>
                 <div th:text="${{insight.avg()}}"></div>
             </td>

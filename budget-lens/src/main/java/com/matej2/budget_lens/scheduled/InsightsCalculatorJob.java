@@ -37,12 +37,13 @@ public class InsightsCalculatorJob {
                 dateToConvert.toInstant(), ZoneId.systemDefault());
     }
 
-    private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest) {
+    private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
         CategoryInsightResultRow insightResponse = expenseTrackingService.insightsByCategory(expenseRequest, category.id());
 
         if (insightResponse == null) {
             return new CategoryInsightsResponse(
                     category.id(),
+                    yearMonth,
                     category,
                     0f,
                     0f,
@@ -51,6 +52,7 @@ public class InsightsCalculatorJob {
         } else {
             return new CategoryInsightsResponse(
                     category.id(),
+                    yearMonth,
                     category,
                     insightResponse.stdDev(),
                     insightResponse.stdDevPercent(),
@@ -91,7 +93,7 @@ public class InsightsCalculatorJob {
 
         List<CategoryResponse> categoryList = categoryService.getAllCategories();
         categoryList.forEach(category -> categoryInsightsResponseList.add(
-                calculateInsightDetails(category, avgExpenseRequest)
+                calculateInsightDetails(category, avgExpenseRequest, yearMonth)
         ));
 
         saveInsights(categoryInsightsResponseList, yearMonth);

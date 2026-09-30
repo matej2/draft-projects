@@ -23,6 +23,7 @@ public class InsightMapper {
     public static CategoryInsightsResponse toResponse(Insight insightEntity) {
         return new CategoryInsightsResponse(
                 insightEntity.getId(),
+                insightEntity.getYearMonth(),
                 CategoryMapper.toResponse(insightEntity.getCategory()),
                 insightEntity.getStandardDeviation(),
                 insightEntity.getStandardDeviationPercent(),
