@@ -71,8 +71,8 @@
     </form>
 
     <h1 class="mb-2">Expense list</h1>
-    <table class="table">
-        <thead class="table-dark">
+    <table class="table table-striped">
+        <thead>
         <tr>
             <th>Note</th>
             <th>Category</th>
@@ -126,8 +126,8 @@
     </div>
 
     <h1 class="mb-2">Insight list</h1>
-    <table class="table" th:if="${!insights.isEmpty()}">
-        <thead class="table-dark">
+    <table class="table table-striped" th:if="${!insights.isEmpty()}">
+        <thead>
         <tr>
             <th>Year/month</th>
             <th>Average</th>
