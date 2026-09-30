@@ -11,7 +11,7 @@ public class CSVImportRow extends CsvBean {
         @CsvBindByName
         private int refNum;
         @CsvBindByName
-        private String subject;
+        private String source;
         @CsvBindByName
         private String description;
         @CsvBindByName
