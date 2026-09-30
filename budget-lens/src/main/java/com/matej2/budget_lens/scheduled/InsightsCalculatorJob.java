@@ -45,9 +45,9 @@ public class InsightsCalculatorJob {
                     category.id(),
                     yearMonth,
                     category,
-                    0f,
-                    0f,
-                    0f
+                    null,
+                    null,
+                    null
             );
         } else {
             return new CategoryInsightsResponse(

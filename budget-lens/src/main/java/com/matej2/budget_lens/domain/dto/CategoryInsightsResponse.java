@@ -1,5 +1,7 @@
 package com.matej2.budget_lens.domain.dto;
 
+import com.matej2.budget_lens.utils.MathUtils;
+
 import java.time.YearMonth;
 
 public record CategoryInsightsResponse(Integer id, YearMonth yearMonth, CategoryResponse category, Float stdDev, Float stddevPercent, Float avg) {
@@ -15,9 +17,9 @@ public record CategoryInsightsResponse(Integer id, YearMonth yearMonth, Category
         this.id = id;
         this.yearMonth = yearMonth;
         this.category = category;
-        this.stdDev = (float) (Math.round(stdDev * 100.0) / 100.0);
-        this.stddevPercent = (float) (Math.round(stddevPercent * 100.0) / 100.0);
-        this.avg = (float) (Math.round(avg * 100.0) / 100.0);
+        this.stdDev = MathUtils.toTwoDecimals(stdDev);
+        this.stddevPercent = MathUtils.toTwoDecimals(stddevPercent);
+        this.avg = MathUtils.toTwoDecimals(avg);
     }
 
 }
