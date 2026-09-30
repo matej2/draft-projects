@@ -19,4 +19,14 @@ public class InsightMapper {
 
         return insightEntity;
     }
+
+    public static CategoryInsightsResponse toResponse(Insight insightEntity) {
+        return new CategoryInsightsResponse(
+                insightEntity.getId(),
+                CategoryMapper.toResponse(insightEntity.getCategory()),
+                insightEntity.getStandardDeviation(),
+                insightEntity.getStandardDeviationPercent(),
+                insightEntity.getAverage()
+        );
+    }
 }

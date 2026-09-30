@@ -39,4 +39,10 @@ public class InsightService {
                 );
             });
     }
+
+    public List<CategoryInsightsResponse> getAllInsights() {
+        return insightRepository.findAll().stream()
+                .map(InsightMapper::toResponse)
+                .toList();
+    };
 }

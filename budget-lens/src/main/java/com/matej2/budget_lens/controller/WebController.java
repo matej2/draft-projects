@@ -59,6 +59,7 @@ public class WebController {
                 "expenses", expenses,
                 "frequencies", frequencyService.getAllFrequencies(),
                 "categories", categoryService.getAllCategories(),
+                "insights", insightService.getAllInsights(),
                 "pageNumber", pageNumber,
                 "isAuthenticated", isAuthenticated(),
                 "expenseRequest",new ExpenseRequest(null, null, null, null, null, null)
