@@ -11,10 +11,9 @@ import java.time.YearMonth;
 @Component
 @RequiredArgsConstructor
 public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryInsightsResponse, Insight>{
-    // TODO: Remove
     private final CategoryMapper categoryMapper;
-    public  Insight toEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
 
+    public  Insight toEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
         Insight insightEntity = new Insight();
         insightEntity.setId(insight.id());
         insightEntity.setYearMonth(yearMonth);

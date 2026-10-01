@@ -11,8 +11,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class FrequencyMapper implements Mapper<FrequencyResponse, FrequencyResponse, Frequency> {
-    // TODO: Move mapping to services, remove dependency
     private final ExpenseMapper expenseMapper;
+
     @Override
     public Frequency toEntity(FrequencyResponse requestDto) {
         throw new UnsupportedOperationException("Not supported yet.");
