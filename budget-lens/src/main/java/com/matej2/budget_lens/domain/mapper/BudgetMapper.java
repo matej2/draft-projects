@@ -23,6 +23,11 @@ public class BudgetMapper implements Mapper<BudgetRequest, Budget> {
     }
 
     public BudgetRequest toDto(Budget entity) {
-        return null;
+        return new BudgetRequest(
+                entity.getNote(),
+                entity.getQuota(),
+                entity.getCategory().getId(),
+                entity.getFrequency().getId()
+        );
     }
 }

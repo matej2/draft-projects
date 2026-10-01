@@ -71,6 +71,7 @@ public class WebController {
                 "frequencies", frequencyService.getAllFrequencies(),
                 "categories", categoryService.getAllCategories(),
                 "insights", getGroupedInsights(insightService.getAllInsights()),
+                "budgets", budgetService.getAll(),
                 "pageNumber", pageNumber,
                 "isAuthenticated", isAuthenticated(),
                 "budgetRequest", new BudgetRequest(null, null, null, null)

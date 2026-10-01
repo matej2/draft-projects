@@ -70,7 +70,43 @@
             </form>
         </div>
         <div class="col">
-            <div class="table">Table</div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Note</th>
+                    <th>Quota</th>
+                    <th>Category</th>
+                    <th>Frequency</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="accessInfo: ${budgets}">
+                    <td>
+                        <div th:text="${{accessInfo.note()}}"></div>
+                    </td>
+                    <td>
+                        <div th:text="${{accessInfo.quota()}}"></div>
+                    </td>
+                    <td>
+                        <!-- TODO: Get category, frequency by id-->
+                        <th:block th:if="${accessInfo.categoryId() != null}">
+                            <div th:text="${{categories.get(accessInfo.categoryId()-1).name()}}"></div>
+                        </th:block>
+                        <th:block th:unless="${accessInfo.categoryId() != null}">
+                            <div>No category</div>
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:if="${accessInfo.frequencyId() != null}">
+                            <div th:text="${{frequencies.get(accessInfo.frequencyId()-1).description()}}"></div>
+                        </th:block>
+                        <th:block th:unless="${accessInfo.frequencyId() != null}">
+                            <div>No frequency</div>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

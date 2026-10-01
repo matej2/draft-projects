@@ -42,4 +42,11 @@ public class BudgetService {
         Budget budgetEntity = budgetMapper.toEntity(budget);
         this.budgetRepository.save(budgetEntity);
     }
+
+    /// TODO: Replace with dto class
+    public List<BudgetRequest> getAll() {
+        return this.budgetRepository.findAll().stream()
+                .map(budgetMapper::toDto)
+                .toList();
+    }
 }
