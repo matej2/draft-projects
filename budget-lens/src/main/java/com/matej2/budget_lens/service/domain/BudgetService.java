@@ -1,9 +1,11 @@
 package com.matej2.budget_lens.service.domain;
 
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.response.CurrentCategoryBudgetResponse;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.response.CurrentCategoryBudgetResponse;
 import com.matej2.budget_lens.domain.entity.Budget;
+import com.matej2.budget_lens.domain.entity.Category;
+import com.matej2.budget_lens.domain.entity.Frequency;
 import com.matej2.budget_lens.domain.mapper.BudgetMapper;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
@@ -18,6 +20,8 @@ public class BudgetService {
     private final BudgetRepository budgetRepository;
     private final BudgetMapper budgetMapper;
     private final ExpenseRepository expenseRepository;
+    private final CategoryService categoryService;
+    private final FrequencyService frequencyService;
 
     public List<CurrentCategoryBudgetResponse> getBudgetStatus(final ExpenseFilterRequest expenseFilter) {
         List<Budget> budgetlist = this.budgetRepository.findAll();
@@ -39,7 +43,10 @@ public class BudgetService {
     }
 
     public void add(BudgetRequest budget) {
-        Budget budgetEntity = budgetMapper.toEntity(budget);
+        Category categoryEntity = categoryService.getCategory(budget.categoryId());
+        Frequency frequency = frequencyService.getFrequencyOrThrow(budget.frequencyId());
+
+        Budget budgetEntity = budgetMapper.toEntity(budget,  categoryEntity, frequency);
         this.budgetRepository.save(budgetEntity);
     }
 
