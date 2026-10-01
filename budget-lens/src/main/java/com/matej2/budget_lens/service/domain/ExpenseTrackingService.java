@@ -33,6 +33,7 @@ import static com.matej2.budget_lens.utils.CsvUtils.getCsvReader;
 @Slf4j
 public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
+    private final ExpenseMapper expenseMapper;
 
     private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
@@ -41,7 +42,7 @@ public class ExpenseTrackingService {
         Frequency frequency = this.frequencyService.getFrequencyOrThrow(expense.frequencyId());
         Category category = this.categoryService.getCategory(expense.categoryId());
 
-        Expense mappedExpense = ExpenseMapper.fromExpenseRequest(expense);
+        Expense mappedExpense = expenseMapper.toEntity(expense);
         mappedExpense.setFrequency(frequency);
         mappedExpense.setCategory(category);
 
@@ -55,14 +56,14 @@ public class ExpenseTrackingService {
 
     public synchronized List<ExpenseResponse> getExpense(Pageable pageable) {
         return this.expenseRepository.findAll(pageable).stream()
-                .map(ExpenseMapper::toExpenseResponse)
+                .map(expenseMapper::toResponse)
                 .toList();
     }
 
     // In real world scenario I would use mapper that would update only defined properties
     // For simplicity purposes I override whole record
     public synchronized void updateExpense(Integer id, ExpenseRequest expenseRequest) {
-        Expense mappedExpense = ExpenseMapper.fromExpenseRequest(expenseRequest);
+        Expense mappedExpense = expenseMapper.toEntity(expenseRequest);
 
         mappedExpense.setId(id);
         mappedExpense.setFrequency(this.frequencyService.getFrequencyOrThrow(expenseRequest.frequencyId()));
@@ -74,7 +75,7 @@ public class ExpenseTrackingService {
     public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
         List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate, pageable);
 
-        return filteredExpense.stream().map(ExpenseMapper::toExpenseResponse).toList();
+        return filteredExpense.stream().map(expenseMapper::toResponse).toList();
     }
 
     public synchronized void deleteExpense(Integer id) {
@@ -106,7 +107,7 @@ public class ExpenseTrackingService {
 
             Category uncategorizedCategory = this.categoryService.getUncategorizedCategory();
 
-            List<Expense> expenseList = result.stream().map(r-> ExpenseMapper.toExpense(r, uncategorizedCategory)).toList();
+            List<Expense> expenseList = result.stream().map(r-> expenseMapper.toExpense(r, uncategorizedCategory)).toList();
 
             this.expenseRepository.saveAll(expenseList);
         }

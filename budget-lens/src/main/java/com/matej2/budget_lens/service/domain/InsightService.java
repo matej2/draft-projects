@@ -20,13 +20,14 @@ import java.util.List;
 public class InsightService {
     private final InsightRepository insightRepository;
     private final CategoryRepository categoryRepository;
+    private final InsightMapper insightMapper;
 
     public void saveInsightList(List<CategoryInsightsResponse> insight, YearMonth yearMonth) {
         log.debug("Saved insights request for month");
 
         insight
             .forEach(i -> {
-                Insight insightEntity = InsightMapper.toInsightEntity(
+                Insight insightEntity = insightMapper.toEntity(
                         i,
                         categoryRepository.getReferenceById(i.id()),
                         yearMonth);
@@ -50,7 +51,7 @@ public class InsightService {
         List<Sort.Order> orders = List.of(yearMonthOrder, categoryOrder);
 
         return insightRepository.findAll(Sort.by(orders)).stream()
-                .map(InsightMapper::toResponse)
+                .map(insightMapper::toResponse)
                 .toList();
     };
 }

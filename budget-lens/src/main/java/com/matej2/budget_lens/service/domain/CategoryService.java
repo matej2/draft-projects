@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     // TODO: Rename, set exception message
     public Category getCategory(Integer id) {
@@ -21,7 +22,7 @@ public class CategoryService {
     public List<CategoryResponse> getAllCategories() {
         List<Category> allCategories = categoryRepository.findAll();
         return allCategories.stream()
-                .map(CategoryMapper::toResponse)
+                .map(categoryMapper::toResponse)
                 .toList();
     }
     public Category getUncategorizedCategory() {

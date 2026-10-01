@@ -14,9 +14,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FrequencyService {
     private final FrequencyRepository frequencyRepository;
+    private final FrequencyMapper frequencyMapper;
 
     public synchronized List<FrequencyResponse> getAllFrequencies() {
-        return this.frequencyRepository.findAll().stream().map(FrequencyMapper::toResponse).toList();
+        return this.frequencyRepository.findAll().stream().map(frequencyMapper::toResponse).toList();
     }
 
     public Frequency getFrequencyOrThrow(Integer id) {

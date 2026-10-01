@@ -3,11 +3,17 @@ package com.matej2.budget_lens.domain.mapper;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Insight;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 
-public class InsightMapper {
-    public static Insight toInsightEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
+@Component
+@RequiredArgsConstructor
+public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryInsightsResponse, Insight>{
+    // TODO: Remove
+    private final CategoryMapper categoryMapper;
+    public  Insight toEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
 
         Insight insightEntity = new Insight();
         insightEntity.setId(insight.id());
@@ -20,11 +26,17 @@ public class InsightMapper {
         return insightEntity;
     }
 
-    public static CategoryInsightsResponse toResponse(Insight insightEntity) {
+    @Override
+    public Insight toEntity(CategoryInsightsResponse requestDto) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public  CategoryInsightsResponse toResponse(Insight insightEntity) {
         return new CategoryInsightsResponse(
                 insightEntity.getId(),
                 insightEntity.getYearMonth(),
-                CategoryMapper.toResponse(insightEntity.getCategory()),
+                categoryMapper.toResponse(insightEntity.getCategory()),
                 insightEntity.getStandardDeviation(),
                 insightEntity.getStandardDeviationPercent(),
                 insightEntity.getAverage()

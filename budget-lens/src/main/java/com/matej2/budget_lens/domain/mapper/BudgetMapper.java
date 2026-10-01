@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class BudgetMapper implements Mapper<BudgetRequest, Budget> {
+public class BudgetMapper implements Mapper<BudgetRequest, BudgetRequest, Budget> {
     private final CategoryService categoryService;
     private final FrequencyService frequencyService;
 
@@ -22,7 +22,7 @@ public class BudgetMapper implements Mapper<BudgetRequest, Budget> {
         return budgetEntity;
     }
 
-    public BudgetRequest toDto(Budget entity) {
+    public BudgetRequest toResponse(Budget entity) {
         return new BudgetRequest(
                 entity.getNote(),
                 entity.getQuota(),

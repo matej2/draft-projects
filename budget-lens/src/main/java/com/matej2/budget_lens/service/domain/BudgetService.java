@@ -46,7 +46,7 @@ public class BudgetService {
     /// TODO: Replace with dto class
     public List<BudgetRequest> getAll() {
         return this.budgetRepository.findAll().stream()
-                .map(budgetMapper::toDto)
+                .map(budgetMapper::toResponse)
                 .toList();
     }
 }
