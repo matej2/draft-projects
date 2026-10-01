@@ -3,6 +3,7 @@ package com.matej2.budget_lens.controller;
 import com.matej2.budget_lens.domain.dto.BudgetRequest;
 import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.ExpenseResponse;
+import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.time.YearMonth;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -95,6 +98,16 @@ public class WebController {
     @DeleteMapping("/deleteExpense/{id}")
     public String deleteExpense(@PathVariable Integer id){
         this.expenseTrackingService.deleteExpense(id);
+        return "redirect:/";
+    }
+
+    @PostMapping("/uploadCsv")
+    public String uploadCsv(@RequestParam("file") MultipartFile file) {
+        try {
+            this.expenseTrackingService.saveFromFile(file);
+        } catch (IOException e) {
+            throw new CSVParsingException(e.getMessage());
+        }
         return "redirect:/";
     }
 

@@ -112,6 +112,14 @@
 
     <div class="row">
         <h1 class="mb-2">Expense list</h1>
+
+        <form method="post" th:action="@{/uploadCsv}" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="file" accept="text/csv" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload file</button>
+        </form>
+
         <table class="table table-striped">
             <thead>
             <tr>

@@ -88,7 +88,7 @@ public class InsightsCalculatorJob {
                 .forEach(
                 i -> {
                     calendarMonth.add(Calendar.MONTH, -i);
-                    result.add(calendarMonth);
+                    result.add((Calendar)calendarMonth.clone());
                     calendarMonth.setTime(new Date());
                 }
         );
