@@ -1,12 +1,8 @@
 package com.matej2.budget_lens.domain.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "frequency")
@@ -17,7 +13,4 @@ public class Frequency {
     private Integer id;
     private short number;
     private String description;
-    @OneToMany(mappedBy = "frequency", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("frequency")
-    private final List<Expense> expenseList = new ArrayList<>();
 }
