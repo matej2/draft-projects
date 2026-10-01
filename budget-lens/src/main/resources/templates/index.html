@@ -17,7 +17,7 @@
     <a  class="btn btn-primary" href="#" th:if="${!isAuthenticated}" th:href="@{/login}">Login</a>
 
     <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"
-    th:object="${expenseRequest}" method="POST">
+    th:object="${budgetRequest}" method="POST">
 
         <div class="input-group mb-3">
             <label class="input-group-text" for="note">Note:</label>
@@ -26,15 +26,9 @@
         </div>
 
         <div class="input-group mb-3">
-            <label class="input-group-text" for="cost">Cost (€):</label>
-            <input class="form-control" type="number" step="0.01" id="cost" th:field="*{cost}" min="1" required />
-            <span th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" style="color: red;"></span>
-        </div>
-
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="expenseDate">Date of the cost:</label>
-            <input class="form-control" type="date" id="expenseDate" th:field="*{expenseDate}" required />
-            <span th:if="${#fields.hasErrors('expenseDate')}" th:errors="*{expenseDate}" style="color: red;"></span>
+            <label class="input-group-text" for="quota">Cost (€):</label>
+            <input class="form-control" type="number" step="0.01" id="quota" th:field="*{quota}" min="1" required />
+            <span th:if="${#fields.hasErrors('quota')}" th:errors="*{quota}" style="color: red;"></span>
         </div>
 
         <div class="input-group mb-3">

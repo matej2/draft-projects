@@ -1,14 +1,15 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.CurrentCategoryBudgetResponse;
 import com.matej2.budget_lens.domain.dto.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.ExpenseRequest;
 import com.matej2.budget_lens.domain.dto.ExpenseResponse;
 import com.matej2.budget_lens.domain.dto.csv.CSVImportRow;
-import com.matej2.budget_lens.domain.entity.*;
+import com.matej2.budget_lens.domain.entity.Category;
+import com.matej2.budget_lens.domain.entity.Expense;
+import com.matej2.budget_lens.domain.entity.Frequency;
+import com.matej2.budget_lens.domain.entity.User;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
-import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.utils.CSVHelper;
 import com.opencsv.CSVReader;
@@ -32,7 +33,6 @@ import static com.matej2.budget_lens.utils.CsvUtils.getCsvReader;
 @Slf4j
 public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
-    private final BudgetRepository budgetRepository;
 
     private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
@@ -89,25 +89,6 @@ public class ExpenseTrackingService {
         );
     }
 
-
-    public List<CurrentCategoryBudgetResponse> getBudgetStatus(final ExpenseFilterRequest expenseFilter) {
-        List<Budget> budgetlist = this.budgetRepository.findAll();
-
-        return budgetlist.stream().map(
-                b -> {
-                    Float currentSum = this.expenseRepository.summarizeCurrentAmountByCategoryIdByDateBetween(
-                            b.getCategory().getId(),
-                            expenseFilter.startDate(),
-                            expenseFilter.endDate());
-                    currentSum = currentSum != null ? currentSum : 0f;
-
-                    return new CurrentCategoryBudgetResponse(
-                            b.getCategory().getName(),
-                            this.budgetRepository.findOneByCategory(b.getCategory()).getQuota(),
-                            currentSum);
-                }
-        ).toList();
-    }
 
     public void saveFromFile(MultipartFile file) throws IOException {
         log.info("File uploaded successfully: file name {}, file size {}", file.getName(), file.getSize());

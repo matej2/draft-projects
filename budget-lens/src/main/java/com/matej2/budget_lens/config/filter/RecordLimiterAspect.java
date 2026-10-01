@@ -56,6 +56,10 @@ public class RecordLimiterAspect {
 
     // TODO: Apply record limit for each owner
     private synchronized void processRecordCount(RecordProcessingType recordProcessingType, ProceedingJoinPoint pjp) throws Throwable {
+        if (pjp.getArgs() != null) {
+            pjp.proceed();
+            return;
+        }
         List<Object> args = List.of(pjp.getArgs());
         RecordLimitEnabled argClassName = getArgClassName(pjp.getThis());
 

@@ -1,13 +1,10 @@
 package com.matej2.budget_lens.controller;
 
+import com.matej2.budget_lens.domain.dto.BudgetRequest;
 import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.ExpenseRequest;
 import com.matej2.budget_lens.domain.dto.ExpenseResponse;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
-import com.matej2.budget_lens.service.domain.CategoryService;
-import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
-import com.matej2.budget_lens.service.domain.FrequencyService;
-import com.matej2.budget_lens.service.domain.InsightService;
+import com.matej2.budget_lens.service.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +31,7 @@ public class WebController {
     private final FrequencyService frequencyService;
     private final CategoryService categoryService;
     private final InsightService insightService;
+    private final BudgetService budgetService;
 
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -75,19 +73,18 @@ public class WebController {
                 "insights", getGroupedInsights(insightService.getAllInsights()),
                 "pageNumber", pageNumber,
                 "isAuthenticated", isAuthenticated(),
-                "expenseRequest",new ExpenseRequest(null, null, null, null, null, null)
+                "budgetRequest", new BudgetRequest(null, null, null, null)
         );
     }
 
     @PostMapping("/submitExpense")
     public String submitExpense(
-            @ModelAttribute ExpenseRequest expenseRequest,
+            @ModelAttribute BudgetRequest budgetRequest,
             RedirectAttributes redirectAttributes
     ) {
         // Public endpoint with rate limit
-        String error = "";
         try {
-            this.expenseTrackingService.addExpense(expenseRequest);
+            this.budgetService.add(budgetRequest);
         } catch (RecordOverLimitExeption e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
