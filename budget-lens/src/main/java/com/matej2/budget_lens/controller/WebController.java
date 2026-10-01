@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.controller;
 
-import com.matej2.budget_lens.domain.dto.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
+import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;

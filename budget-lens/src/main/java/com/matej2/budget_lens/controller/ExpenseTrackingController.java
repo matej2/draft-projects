@@ -1,7 +1,11 @@
 package com.matej2.budget_lens.controller;
 
-import com.matej2.budget_lens.domain.dto.*;
 import com.matej2.budget_lens.domain.dto.exception.ErrorResponse;
+import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
+import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;

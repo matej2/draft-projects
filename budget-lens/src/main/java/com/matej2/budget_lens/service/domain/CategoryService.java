@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.CategoryResponse;
+import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.mapper.CategoryMapper;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
@@ -14,6 +14,7 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    // TODO: Rename, set exception message
     public Category getCategory(Integer id) {
         return categoryRepository.findById(id).orElseThrow();
     }

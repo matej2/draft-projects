@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.ExpenseFilterRequest;
-import com.matej2.budget_lens.domain.dto.ExpenseRequest;
-import com.matej2.budget_lens.domain.dto.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.domain.dto.csv.CSVImportRow;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;

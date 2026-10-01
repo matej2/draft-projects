@@ -1,4 +1,4 @@
-package com.matej2.budget_lens.domain.dto;
+package com.matej2.budget_lens.domain.dto.response;
 
 public record BudgetStatusResponse(
         CurrentCategoryBudgetResponse currentCategoryBudgetResponse,

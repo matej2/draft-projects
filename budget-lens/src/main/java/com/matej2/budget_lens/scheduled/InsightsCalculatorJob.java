@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.scheduled;
 
-import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.CategoryResponse;
-import com.matej2.budget_lens.domain.dto.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;

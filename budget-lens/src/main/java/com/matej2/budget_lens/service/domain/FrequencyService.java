@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.FrequencyResponse;
+import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
 import com.matej2.budget_lens.domain.entity.Frequency;
 import com.matej2.budget_lens.domain.mapper.FrequencyMapper;
 import com.matej2.budget_lens.exception.ResourceNotFoundException;

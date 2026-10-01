@@ -1,7 +1,7 @@
 package com.matej2.budget_lens.domain.mapper;
 
-import com.matej2.budget_lens.domain.dto.ExpenseRequest;
-import com.matej2.budget_lens.domain.dto.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.domain.dto.csv.CSVImportRow;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
@@ -44,6 +44,7 @@ public class ExpenseMapper {
         );
     }
 
+    // TODO: Refactor other mappers into components
     public static Expense toExpense(CSVImportRow row, Category uncategorized) {
         Expense expense = new Expense();
         LocalDate date = LocalDate.parse(row.getDate());

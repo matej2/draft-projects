@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.domain.mapper;
 
-import com.matej2.budget_lens.domain.dto.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Insight;
 

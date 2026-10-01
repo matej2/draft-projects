@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.CurrentCategoryBudgetResponse;
-import com.matej2.budget_lens.domain.dto.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
+import com.matej2.budget_lens.domain.dto.response.CurrentCategoryBudgetResponse;
+import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.entity.Budget;
 import com.matej2.budget_lens.domain.mapper.BudgetMapper;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;

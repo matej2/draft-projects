@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.CurrentCategoryBudgetResponse;
-import com.matej2.budget_lens.domain.dto.ExpenseFilterRequest;
-import com.matej2.budget_lens.domain.dto.ExpenseRequest;
+import com.matej2.budget_lens.domain.dto.response.CurrentCategoryBudgetResponse;
+import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
 import com.matej2.budget_lens.domain.entity.Budget;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
@@ -34,6 +34,9 @@ public class ExpenseTrackingServiceTest {
     private ExpenseRepository expenseRepository;
     @Mock
     private BudgetRepository budgetRepository;
+
+    @InjectMocks
+    private BudgetService budgetService;
 
     @InjectMocks
     private ExpenseTrackingService expenseTrackingService;
@@ -87,13 +90,13 @@ public class ExpenseTrackingServiceTest {
         Budget budget = new  Budget();
         budget.setId(1);
         budget.setCategory(category);
-        budget.setMonthlyLimit(50.0f);
+        budget.setQuota(50.0f);
 
         when(budgetRepository.findAll()).thenReturn(List.of(budget));
         when(budgetRepository.findOneByCategory(any(Category.class))).thenReturn(budget);
         when(expenseRepository.summarizeCurrentAmountByCategoryIdByDateBetween(anyInt(), any(LocalDate.class), any(LocalDate.class))).thenReturn(35.0f);
 
-        List<CurrentCategoryBudgetResponse> response = this.expenseTrackingService.getBudgetStatus(filter);
+        List<CurrentCategoryBudgetResponse> response = this.budgetService.getBudgetStatus(filter);
 
         assertThat(response).isNotNull();
         assertThat(response.size()).isEqualTo(1);

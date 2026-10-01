@@ -1,7 +1,7 @@
 package com.matej2.budget_lens.domain.mapper;
 
-import com.matej2.budget_lens.domain.dto.ExpenseResponse;
-import com.matej2.budget_lens.domain.dto.FrequencyResponse;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
 import com.matej2.budget_lens.domain.entity.Frequency;
 
 import java.util.List;
