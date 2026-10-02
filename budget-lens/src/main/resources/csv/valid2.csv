@@ -1,0 +1,101 @@
+date,refNum,source,description,positiveTraffic,negativeTraffic
+2024-01-04,2679,Landlord Properties,Monthly rent,0,1749.20
+2024-01-04,4432,Gas station,Gas station London,0,56.69
+2024-01-10,2169,Book Haven,Books,0,17.17
+2024-01-20,1488,Fashion Outlet,Shoes,0,51.32
+2024-01-25,6168,Green Energy Ltd,Gas bill,0,178.61
+2024-01-26,5422,Home Depot Hardware,Home improvement supplies,0,70.98
+2024-02-06,3803,Book Haven,Books,0,76.44
+2024-02-15,7482,Telecom One,Mobile plan,0,53.98
+2024-02-17,2489,Cars dealership,Oil change,0,427.68
+2024-02-28,7201,City Pharmacy,Prescription,0,67.49
+2024-03-03,3547,Supermarket Fresh,Weekly grocery shopping,0,81.43
+2024-03-03,9785,Book Haven,Books,0,69.33
+2024-03-11,2291,City Pharmacy,Health products,0,44.08
+2024-04-05,9348,Bella Italia Restaurant,Dinner,0,116.76
+2024-04-06,6574,Electro World,Monitor,0,105.30
+2024-04-21,6155,Gas station,Fuel purchase,0,81.67
+2024-04-24,3286,Bella Italia Restaurant,Dinner,0,49.57
+2024-04-28,2084,Cars dealership,Tire replacement,0,1325.39
+2024-05-10,9751,Home Depot Hardware,Home improvement supplies,0,24.22
+2024-05-23,6514,Landlord Properties,Monthly rent,0,1164.07
+2024-06-08,6977,Book Haven,Books,0,30.33
+2024-06-14,5374,Telecom One,Internet subscription,0,55.77
+2024-06-18,9279,Book Haven,Stationery,0,29.73
+2024-07-13,8527,Coffee House,Coffee and snack,0,9.53
+2024-07-15,9830,Coffee House,Morning coffee,0,12.25
+2024-07-23,4752,Green Energy Ltd,Gas bill,0,211.48
+2024-07-27,3664,Bella Italia Restaurant,Lunch,0,100.00
+2024-08-07,3615,Fashion Outlet,Winter jacket,0,170.99
+2024-08-18,7873,Green Energy Ltd,Electricity bill,0,53.45
+2024-08-18,9085,Streamify,Monthly subscription,0,17.10
+2024-08-23,4611,Book Haven,Books,0,56.25
+2024-09-01,1750,Bella Italia Restaurant,Dinner,0,46.00
+2024-09-02,2535,Streamify,Monthly subscription,0,5.87
+2024-09-05,7924,Fashion Outlet,Shoes,0,239.69
+2024-09-11,4527,Supermarket Fresh,Household supplies,0,46.61
+2024-09-12,2674,Landlord Properties,Monthly rent,0,1661.93
+2024-09-14,5012,SafeGuard Insurance,Car insurance,0,389.30
+2024-09-27,8428,Coffee House,Coffee and snack,0,5.54
+2024-09-30,6313,Green Energy Ltd,Utility payment,0,73.43
+2024-10-12,7572,Bella Italia Restaurant,Lunch,0,122.64
+2024-11-02,5554,Book Haven,Books,0,84.40
+2024-11-08,1525,FitLife Gym,Gym membership,0,77.44
+2024-11-19,2139,SafeGuard Insurance,Car insurance,0,375.84
+2025-01-07,3340,Electro World,Laptop charger,0,399.54
+2025-01-13,2654,Green Energy Ltd,Gas bill,0,99.85
+2025-01-17,7912,Coffee House,Team coffee order,0,19.78
+2025-01-26,1916,Supermarket Fresh,Weekly grocery shopping,0,158.91
+2025-01-29,5506,Store ABC,Store ABC Manchester,0,33.62
+2025-01-29,9179,Supermarket Fresh,Groceries,0,163.42
+2025-02-03,5333,Cars dealership,Oil change,0,456.59
+2025-02-12,4257,Streamify,Streaming service,0,19.93
+2025-02-16,5040,Bella Italia Restaurant,Restaurant bill,0,101.24
+2025-02-17,5803,Green Energy Ltd,Utility payment,0,65.18
+2025-02-20,6881,City Pharmacy,Prescription,0,37.08
+2025-03-05,4150,Store ABC,Store ABC online order,0,54.30
+2025-03-09,5552,FitLife Gym,Gym membership,0,48.78
+2025-03-09,1711,Streamify,Streaming service,0,15.45
+2025-03-16,7543,Electro World,Laptop charger,0,711.47
+2025-03-22,4483,Bella Italia Restaurant,Restaurant bill,0,89.59
+2025-03-28,6930,Landlord Properties,Monthly rent,0,1186.38
+2025-04-13,4733,Streamify,Monthly subscription,0,9.74
+2025-04-14,5741,Cars dealership,Car repair,0,962.05
+2025-04-29,4593,SafeGuard Insurance,Health insurance,0,323.68
+2025-05-15,7065,SafeGuard Insurance,Car insurance,0,122.91
+2025-06-03,3287,Streamify,Streaming service,0,9.64
+2025-06-10,1106,Store ABC,Store ABC online order,0,22.85
+2025-07-04,2307,Store ABC,Store ABC Manchester,0,20.99
+2025-08-15,6925,Green Energy Ltd,Utility payment,0,164.85
+2025-08-17,4456,City Pharmacy,Vitamins and supplements,0,67.60
+2025-08-21,3045,Gas station,Car wash,0,70.29
+2025-09-22,5304,City Pharmacy,Vitamins and supplements,0,42.42
+2025-10-11,6820,Store ABC,Store ABC Manchester,0,36.77
+2025-10-18,5386,FitLife Gym,Personal training session,0,55.66
+2025-10-29,7224,Gas station,Gas station London,0,119.93
+2025-11-05,3266,City Pharmacy,Health products,0,11.43
+2025-11-10,5339,Bella Italia Restaurant,Restaurant bill,0,120.55
+2025-11-13,3677,Green Energy Ltd,Utility payment,0,61.59
+2025-11-29,4657,Supermarket Fresh,Weekly grocery shopping,0,160.99
+2025-12-21,7227,Book Haven,Books,0,32.81
+2025-12-25,8359,Store ABC,Store ABC London,0,52.33
+2026-01-19,4582,Store ABC,Store ABC London,0,41.45
+2026-02-19,9935,SafeGuard Insurance,Car insurance,0,96.10
+2026-02-23,4811,Book Haven,Stationery,0,18.31
+2026-03-22,1409,City Pharmacy,Health products,0,49.55
+2026-04-01,4598,Home Depot Hardware,Garden supplies,0,237.77
+2026-04-07,2519,Landlord Properties,Monthly rent,0,1647.48
+2026-05-03,8019,Book Haven,Stationery,0,8.03
+2026-05-11,2424,Streamify,Monthly subscription,0,14.58
+2026-05-31,2824,Gas station,Car wash,0,35.42
+2026-06-04,7216,Green Energy Ltd,Electricity bill,0,74.13
+2026-07-09,5010,Gas station,Car wash,0,58.99
+2026-07-10,9928,Landlord Properties,Monthly rent,0,1269.33
+2026-07-13,6635,City Transport,Train ticket,0,11.62
+2026-07-16,5557,Store ABC,Store ABC Manchester,0,7.36
+2026-07-29,1520,SafeGuard Insurance,Home insurance,0,30.21
+2026-08-05,8517,SafeGuard Insurance,Health insurance,0,328.41
+2026-08-06,2584,Store ABC,Store ABC London,0,61.52
+2026-08-09,1434,Electro World,Phone accessories,0,494.58
+2026-08-13,4814,Coffee House,Coffee and snack,0,10.68
+2026-09-24,8573,Home Depot Hardware,Tools,0,221.02
