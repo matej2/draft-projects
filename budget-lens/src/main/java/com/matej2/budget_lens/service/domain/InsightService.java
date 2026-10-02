@@ -32,15 +32,14 @@ public class InsightService {
                         categoryRepository.getReferenceById(i.id()),
                         yearMonth);
 
-                if (insightEntity.getAverage() != null) {
-                    insightRepository.updateByCategoryIdAndDate(
-                            insightEntity.getAverage(),
-                            insightEntity.getStandardDeviation(),
-                            insightEntity.getStandardDeviationPercent(),
-                            insightEntity.getCategory(),
-                            yearMonth
-                    );
-                }
+                insightRepository.updateByCategoryIdAndDate(
+                        insightEntity.getAverage(),
+                        insightEntity.getStandardDeviation(),
+                        insightEntity.getStandardDeviationPercent(),
+                        insightEntity.getCategory(),
+                        yearMonth
+                );
+
             });
     }
 

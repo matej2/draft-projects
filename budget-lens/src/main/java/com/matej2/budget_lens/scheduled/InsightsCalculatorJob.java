@@ -17,10 +17,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -41,24 +38,16 @@ public class InsightsCalculatorJob {
         CategoryInsightResultRow insightResponse = expenseTrackingService.insightsByCategory(expenseRequest, category.id());
 
         if (insightResponse == null) {
-            return new CategoryInsightsResponse(
-                    category.id(),
-                    yearMonth,
-                    category,
-                    null,
-                    null,
-                    null
-            );
-        } else {
-            return new CategoryInsightsResponse(
-                    category.id(),
-                    yearMonth,
-                    category,
-                    insightResponse.stdDev(),
-                    insightResponse.stdDevPercent(),
-                    insightResponse.avg()
-            );
+            return null;
         }
+        return new CategoryInsightsResponse(
+                category.id(),
+                yearMonth,
+                category,
+                insightResponse.stdDev(),
+                insightResponse.stdDevPercent(),
+                insightResponse.avg()
+        );
     }
 
     private LocalDate getFirstDayOfTheMonth(Calendar calendar) {
@@ -100,18 +89,19 @@ public class InsightsCalculatorJob {
     public void calculateInsights() {
         List<Calendar> treeMonths = generateCalendarInstancesForLastTreeMonths();
 
-        treeMonths.forEach(c -> {
-            LocalDate firstLocalDate = getFirstDayOfTheMonth(c);
-            LocalDate lastLocalDate = getLastDayOfTheMonth(c);
+        treeMonths.forEach(month -> {
+            LocalDate firstLocalDate = getFirstDayOfTheMonth(month);
+            LocalDate lastLocalDate = getLastDayOfTheMonth(month);
             YearMonth yearMonth = YearMonth.from(lastLocalDate);
 
             ExpenseFilterRequest avgExpenseRequest = new ExpenseFilterRequest(firstLocalDate, lastLocalDate);
-            List<CategoryInsightsResponse> categoryInsightsResponseList = new ArrayList<>();
 
             List<CategoryResponse> categoryList = categoryService.getAllCategories();
-            categoryList.forEach(category -> categoryInsightsResponseList.add(
-                    calculateInsightDetails(category, avgExpenseRequest, yearMonth)
-            ));
+
+            List<CategoryInsightsResponse> categoryInsightsResponseList = categoryList.stream()
+                    .map(category -> calculateInsightDetails(category, avgExpenseRequest, yearMonth))
+                    .filter(Objects::nonNull)
+                    .toList();
 
             saveInsights(categoryInsightsResponseList, yearMonth);
         });
