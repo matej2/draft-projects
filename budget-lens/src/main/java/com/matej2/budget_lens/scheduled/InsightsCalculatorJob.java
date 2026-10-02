@@ -84,7 +84,7 @@ public class InsightsCalculatorJob {
         Calendar calendarMonth = Calendar.getInstance();
 
         java.util.stream.IntStream
-                .rangeClosed(0, 2)
+                .rangeClosed(0, 6)
                 .forEach(
                 i -> {
                     calendarMonth.add(Calendar.MONTH, -i);
