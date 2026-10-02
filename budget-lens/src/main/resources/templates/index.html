@@ -10,19 +10,22 @@
 <body>
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col">
+    <div class="row bg-body-secondary rounded mb-3 p-3">
+        <div class="col-4 ">
+
             <a class="btn btn-primary" href="#" th:if="${isAuthenticated}" th:href="@{/logout}">Logout</a>
 
-            <h1>New expense</h1>
-
             <div th:if="${!isAuthenticated}">
-                Login to add new expense
+                <div class="mb-3">
+                    Login to add new budget
+                </div>
                 <a  class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
             </div>
 
             <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"
                   th:object="${budgetRequest}" method="POST">
+
+                <h3>Add new budget</h3>
 
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="note">Note:</label>
@@ -69,7 +72,9 @@
 
             </form>
         </div>
-        <div class="col">
+        <div class="col-8">
+            <h1>Budget list</h1>
+
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -110,103 +115,117 @@
         </div>
     </div>
 
-    <div class="row">
-        <h1 class="mb-2">Expense list</h1>
-
-        <form method="post" th:action="@{/uploadCsv}" enctype="multipart/form-data">
-            <div class="form-group">
-                <input type="file" name="file" accept="text/csv" class="form-control-file">
+    <div class="row bg-body-secondary rounded mb-3 p-3">
+        <div class="col-4">
+            <div th:if="${!isAuthenticated}">
+                <div class="mb-3">
+                    Login to upload CSV with expenses
+                </div>
+                <a  class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
             </div>
-            <button type="submit" class="btn btn-primary">Upload file</button>
-        </form>
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Note</th>
-                <th>Category</th>
-                <th>Cost</th>
-                <th>Actions</th>
+            <form th:if="${isAuthenticated}" method="post" th:action="@{/uploadCsv}" enctype="multipart/form-data">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="formFile">CSV file</label>
+                    <input type="file" id="formFile" name="file" accept="text/csv" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Upload file</button>
+            </form>
+        </div>
+        <div class="col-8">
+            <h1 class="mb-2">Expense list</h1>
 
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="expense: ${expenses}">
-                <td>
-                    <div th:text="${{expense.note()}}"></div>
-                </td>
-                <td>
-                    <th:block th:if="${expense.category() != null}">
-                        <div th:text="${{categories.get(expense.category()-1).name()}}"></div>
-                    </th:block>
-                    <th:block th:unless="${expense.category() != null}">
-                        <div>No category</div>
-                    </th:block>
-                </td>
-                <td>
-                    <div th:text="${{expense.cost()}}"></div>
-                </td>
-                <td>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Note</th>
+                    <th>Category</th>
+                    <th>Cost</th>
+                    <th>Actions</th>
 
-                    <form th:action="@{/deleteExpense/{id}(id=${expense.id})}" th:method="DELETE"
-                          style="display:inline;">
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="expense: ${expenses}">
+                    <td>
+                        <div th:text="${{expense.note()}}"></div>
+                    </td>
+                    <td>
+                        <th:block th:if="${expense.category() != null}">
+                            <div th:text="${{categories.get(expense.category()-1).name()}}"></div>
+                        </th:block>
+                        <th:block th:unless="${expense.category() != null}">
+                            <div>No category</div>
+                        </th:block>
+                    </td>
+                    <td>
+                        <div th:text="${{expense.cost()}}"></div>
+                    </td>
+                    <td>
 
-                        <button type="submit" class="btn btn-link p-0">
-                            <i class="bi bi-trash-fill"></i> Delete
-                        </button>
-                    </form>
-                </td>
+                        <form th:action="@{/deleteExpense/{id}(id=${expense.id})}" th:method="DELETE"
+                              style="display:inline;">
 
-            </tr>
-            </tbody>
-        </table>
+                            <button type="submit" class="btn btn-link p-0">
+                                <i class="bi bi-trash-fill"></i> Delete
+                            </button>
+                        </form>
+                    </td>
 
-        <div class="input-group mb-3">
+                </tr>
+                </tbody>
+            </table>
 
-            <a th:href="@{/?pageNumber={pageNum}(pageNum=${pageNumber-1})}" class="btn btn-link p-0">
-                <i class="bi bi-fill"></i> Page <span th:text="${pageNumber-1}"></span>
-            </a>
-            <a th:href="@{/?pageNumber={pageNum}(pageNum=${pageNumber+1})}" class="btn btn-link p-0">
-                <i class="bi bi-fill"></i> Page <span th:text="${pageNumber+1}"></span>
-            </a>
+            <div class="input-group mb-3">
+
+                <a th:href="@{/?pageNumber={pageNum}(pageNum=${pageNumber-1})}" class="btn btn-link p-0">
+                    <i class="bi bi-fill"></i> Page <span th:text="${pageNumber-1}"></span>
+                </a>
+                <a th:href="@{/?pageNumber={pageNum}(pageNum=${pageNumber+1})}" class="btn btn-link p-0">
+                    <i class="bi bi-fill"></i> Page <span th:text="${pageNumber+1}"></span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <h1 class="mb-2">Insight list</h1>
-        <table class="table table-striped" th:if="${!insights.isEmpty()}">
-            <thead>
-            <tr>
-                <th>Year/month</th>
-                <th>Average</th>
-                <th>Category</th>
-                <th>Standard deviation</th>
-                <th>Standard deviation percent</th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:each="group : ${insights}">
-                <tr th:each="insight, stat: ${group.value}">
-                    <td th:if="${stat.first}" th:rowspan="${group.value.size()}" class="align-middle">
-                        <div th:text="${{group.key}}"></div>
-                    </td>
-                    <td>
-                        <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
-                    </td>
-                    <td>
-                        <div th:text="${{insight.avg()}}"></div>
-                    </td>
-                    <td>
-                        <div th:text="${{insight.stdDev()}}"></div>
-                    </td>
-                    <td>
-                        <div th:text="${{insight.stddevPercent()}}"></div>
-                    </td>
+    <div class="row bg-body-secondary rounded mb-3 p-3">
+        <div class="col">
+            <h1 class="mb-2">Insight list</h1>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Year/month</th>
+                    <th>Category</th>
+                    <th>Average</th>
+                    <th>Standard deviation</th>
+                    <th>Standard deviation percent</th>
                 </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="group : ${insights}">
+                    <tr th:each="insight, stat: ${group.value}">
+                        <td th:if="${stat.first}" th:rowspan="${group.value.size()}" class="align-middle">
+                            <div th:text="${{group.key}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${{insight.avg()}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${{insight.stdDev()}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${{insight.stddevPercent()}}"></div>
+                        </td>
+                    </tr>
 
-            </th:block>
-            </tbody>
-        </table>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
 </div>
