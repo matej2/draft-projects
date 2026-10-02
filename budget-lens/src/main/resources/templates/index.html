@@ -196,9 +196,11 @@
                 <tr>
                     <th>Year/month</th>
                     <th>Category</th>
-                    <th>Average</th>
+                    <th>Median</th>
+                    <th>Safe budget level</th>
                     <th>Standard deviation</th>
                     <th>Standard deviation percent</th>
+                    <th>Is cost variable?</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -211,13 +213,19 @@
                             <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
                         </td>
                         <td>
-                            <div th:text="${{insight.avg()}}"></div>
+                            <div th:text="${insight.median()}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${insight.percentile90()}"></div>
                         </td>
                         <td>
                             <div th:text="${{insight.stdDev()}}"></div>
                         </td>
                         <td>
                             <div th:class="${insight.stddevPercent() > 30 ? 'bg-danger-subtle' : 'bg-success-subtle'}" th:text="${{insight.stddevPercent()}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${insight.isCostVariable()}"></div>
                         </td>
                     </tr>
 

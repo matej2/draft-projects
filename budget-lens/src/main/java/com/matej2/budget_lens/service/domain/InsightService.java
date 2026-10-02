@@ -37,7 +37,10 @@ public class InsightService {
                         insightEntity.getStandardDeviation(),
                         insightEntity.getStandardDeviationPercent(),
                         insightEntity.getCategory(),
-                        yearMonth
+                        yearMonth,
+                        insightEntity.getMedian(),
+                        insightEntity.getPercentile90(),
+                        insightEntity.getIsCostVariable()
                 );
 
             });
