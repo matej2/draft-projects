@@ -38,7 +38,10 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
                 categoryMapper.toResponse(insightEntity.getCategory()),
                 insightEntity.getStandardDeviation(),
                 insightEntity.getStandardDeviationPercent(),
-                insightEntity.getAverage()
+                insightEntity.getAverage(),
+                insightEntity.getMedian(),
+                insightEntity.getPercentile90(),
+                insightEntity.getIsCostVariable()
         );
     }
 }

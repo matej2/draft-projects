@@ -20,10 +20,13 @@ public class Insight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Float average;
+    private Float median;
+    // Percentile P90 - budget you would stay under 80% of months
+    private Float percentile90;
     private YearMonth yearMonth;
-    // Standard deviation for last 3 months
     private Float standardDeviation;
     private Float standardDeviationPercent;
+    private Boolean isCostVariable;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
     Category category;

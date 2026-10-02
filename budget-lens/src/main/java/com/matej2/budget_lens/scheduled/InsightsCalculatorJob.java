@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.scheduled;
 
+import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
-import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
@@ -44,9 +44,12 @@ public class InsightsCalculatorJob {
                 category.id(),
                 yearMonth,
                 category,
-                insightResponse.stdDev(),
-                insightResponse.stdDevPercent(),
-                insightResponse.avg()
+                insightResponse.getStdDev(),
+                insightResponse.getStdDevPercent(),
+                insightResponse.getAvg(),
+                insightResponse.getMedian(),
+                insightResponse.getPercentile90(),
+                insightResponse.isFixedCost()
         );
     }
 

@@ -2,7 +2,7 @@ package com.matej2.budget_lens.utils;
 
 public class MathUtils {
 
-    public static Float toTwoDecimals(Float number) {
+    public static Float toTwoDecimals(Double number) {
         if (number == null) {
             return null;
         }

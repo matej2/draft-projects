@@ -40,17 +40,33 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     Float averageCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);
     @Query(value = """
     SELECT NEW com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow(
-        stddev_pop(e.cost),
-        ((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100,
-        AVG(e.cost)
-    )
-    FROM Expense e INNER JOIN Category c
-        ON e.category.id = c.id
-    WHERE
-        c.id = :categoryId AND
-        e.expenseDate >= :startDate AND
-        e.expenseDate < :endDate
-    GROUP BY c.id
+        i.std_dev,
+        i.stddev_percent,
+        i.avg_cost,
+        i.p50,
+        i.p90,
+        1
+    ) FROM (
+        SELECT
+            stddev_pop(e.cost) as std_dev,
+            ((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100 as stddev_percent,
+            AVG(e.cost) as avg_cost,
+            percentile_disc(0.5) WITHIN GROUP (
+                ORDER BY
+                    e.cost
+            ) as p50,
+            percentile_disc(0.9) WITHIN GROUP (
+                ORDER BY
+                    e.cost
+            ) as p90
+        FROM Expense e INNER JOIN Category c
+            ON e.category.id = c.id
+        WHERE
+            c.id = :categoryId AND
+            e.expenseDate >= :startDate AND
+            e.expenseDate < :endDate
+        GROUP BY c.id
+    ) i
     """)
     CategoryInsightResultRow insightsByCategoryIdByDateBetween(
             @Param("categoryId") Integer categoryId,
