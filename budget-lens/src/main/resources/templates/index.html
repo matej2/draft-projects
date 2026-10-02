@@ -80,27 +80,27 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="accessInfo: ${budgets}">
+                <tr th:each="budget: ${budgets}">
                     <td>
-                        <div th:text="${{accessInfo.note()}}"></div>
+                        <div th:text="${{budget.note()}}"></div>
                     </td>
                     <td>
-                        <div th:text="${{accessInfo.quota()}}"></div>
+                        <div th:text="${{budget.quota()}}"></div>
                     </td>
                     <td>
                         <!-- TODO: Get category, frequency by id-->
-                        <th:block th:if="${accessInfo.categoryId() != null}">
-                            <div th:text="${{categories.get(accessInfo.categoryId()-1).name()}}"></div>
+                        <th:block th:if="${budget.categoryId() != null}">
+                            <div th:text="${{T(com.matej2.budget_lens.utils.RecordUtils).getCategoryById(categories, budget.categoryId()).name()}}"></div>
                         </th:block>
-                        <th:block th:unless="${accessInfo.categoryId() != null}">
+                        <th:block th:unless="${budget.categoryId() != null}">
                             <div>No category</div>
                         </th:block>
                     </td>
                     <td>
-                        <th:block th:if="${accessInfo.frequencyId() != null}">
-                            <div th:text="${{frequencies.get(accessInfo.frequencyId()-1).description()}}"></div>
+                        <th:block th:if="${budget.frequencyId() != null}">
+                            <div th:text="${{T(com.matej2.budget_lens.utils.RecordUtils).getFrequencyById(frequencies, budget.frequencyId()).description()}}"></div>
                         </th:block>
-                        <th:block th:unless="${accessInfo.frequencyId() != null}">
+                        <th:block th:unless="${budget.frequencyId() != null}">
                             <div>No frequency</div>
                         </th:block>
                     </td>
@@ -133,35 +133,35 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="accessInfo: ${expenses}">
+            <tr th:each="expense: ${expenses}">
                 <td>
-                    <div th:text="${{accessInfo.note()}}"></div>
+                    <div th:text="${{expense.note()}}"></div>
                 </td>
                 <td>
-                    <th:block th:if="${accessInfo.category() != null}">
-                        <div th:text="${{categories.get(accessInfo.category()-1).name()}}"></div>
+                    <th:block th:if="${expense.category() != null}">
+                        <div th:text="${{categories.get(expense.category()-1).name()}}"></div>
                     </th:block>
-                    <th:block th:unless="${accessInfo.category() != null}">
+                    <th:block th:unless="${expense.category() != null}">
                         <div>No category</div>
                     </th:block>
                 </td>
                 <td>
-                    <th:block th:if="${accessInfo.frequency() != null}">
-                        <div th:text="${{frequencies.get(accessInfo.frequency()-1).description()}}"></div>
+                    <th:block th:if="${expense.frequency() != null}">
+                        <div th:text="${{frequencies.get(expense.frequency()-1).description()}}"></div>
                     </th:block>
-                    <th:block th:unless="${accessInfo.frequency() != null}">
+                    <th:block th:unless="${expense.frequency() != null}">
                         <div>No frequency</div>
                     </th:block>
                 </td>
                 <td>
-                    <div th:text="${{accessInfo.cost()}}"></div>
+                    <div th:text="${{expense.cost()}}"></div>
                 </td>
                 <td>
-                    <div th:text="${{accessInfo.totalCost()}}"></div>
+                    <div th:text="${{expense.totalCost()}}"></div>
                 </td>
                 <td>
 
-                    <form th:action="@{/deleteExpense/{id}(id=${accessInfo.id})}" th:method="DELETE"
+                    <form th:action="@{/deleteExpense/{id}(id=${expense.id})}" th:method="DELETE"
                           style="display:inline;">
 
                         <button type="submit" class="btn btn-link p-0">
