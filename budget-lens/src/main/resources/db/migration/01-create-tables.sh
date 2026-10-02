@@ -42,7 +42,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         note varchar(100),
         cost real,
         expense_date date,
-        frequency integer references frequency(id),
         category integer references category(id),
         owner integer references registereduser(id),
         source varchar(100)

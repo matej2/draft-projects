@@ -1,12 +1,11 @@
 package com.matej2.budget_lens.service.domain;
 
+import com.matej2.budget_lens.domain.dto.csv.CSVImportRow;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
-import com.matej2.budget_lens.domain.dto.csv.CSVImportRow;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
-import com.matej2.budget_lens.domain.entity.Frequency;
 import com.matej2.budget_lens.domain.entity.User;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
@@ -35,15 +34,12 @@ public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
 
-    private final FrequencyService  frequencyService;
     private final CategoryService  categoryService;
 
     public synchronized void addExpense(ExpenseRequest expense){
-        Frequency frequency = this.frequencyService.getFrequencyOrThrow(expense.frequencyId());
         Category category = this.categoryService.getCategory(expense.categoryId());
 
         Expense mappedExpense = expenseMapper.toEntity(expense);
-        mappedExpense.setFrequency(frequency);
         mappedExpense.setCategory(category);
 
         Authentication authenticationContext  =  SecurityContextHolder.getContext().getAuthentication();
@@ -66,7 +62,6 @@ public class ExpenseTrackingService {
         Expense mappedExpense = expenseMapper.toEntity(expenseRequest);
 
         mappedExpense.setId(id);
-        mappedExpense.setFrequency(this.frequencyService.getFrequencyOrThrow(expenseRequest.frequencyId()));
 
         this.expenseRepository.save(mappedExpense);
     }

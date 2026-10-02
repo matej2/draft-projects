@@ -27,15 +27,6 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
     public ExpenseResponse toResponse(Expense expense) {
         Frequency frequency = new Frequency();
         // Calculate total cost in a year
-        float totalCost = 0f;
-
-        if (expense.getFrequency() != null) {
-            frequency = expense.getFrequency();
-
-            if (expense.getCost() != null) {
-                totalCost = expense.getCost() * frequency.getNumber();
-            }
-        }
 
         return new ExpenseResponse(
                 expense.getId(),
@@ -44,7 +35,6 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
                 expense.getExpenseDate(),
                 frequency.getId(),
                 expense.getCategory() == null ? null: expense.getCategory().getId(),
-                totalCost,
                 1
         );
     }

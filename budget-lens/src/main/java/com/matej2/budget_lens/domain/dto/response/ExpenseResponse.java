@@ -9,6 +9,5 @@ public record ExpenseResponse(
     LocalDate expenseDate,
     Integer frequency,
     Integer category,
-    Float totalCost,
     Integer owner
 ){}

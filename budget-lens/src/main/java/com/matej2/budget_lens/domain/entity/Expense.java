@@ -1,6 +1,5 @@
 package com.matej2.budget_lens.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,10 +16,6 @@ public class Expense {
     private String note;
     private Float cost;
     private LocalDate expenseDate;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "frequency", nullable = false)
-    @JsonIgnoreProperties("expenseList")
-    private Frequency frequency;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
     private Category category;

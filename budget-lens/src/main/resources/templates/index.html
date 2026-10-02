@@ -125,9 +125,7 @@
             <tr>
                 <th>Note</th>
                 <th>Category</th>
-                <th>Frequency</th>
                 <th>Cost</th>
-                <th>Total cost in a year</th>
                 <th>Actions</th>
 
             </tr>
@@ -146,18 +144,7 @@
                     </th:block>
                 </td>
                 <td>
-                    <th:block th:if="${expense.frequency() != null}">
-                        <div th:text="${{frequencies.get(expense.frequency()-1).description()}}"></div>
-                    </th:block>
-                    <th:block th:unless="${expense.frequency() != null}">
-                        <div>No frequency</div>
-                    </th:block>
-                </td>
-                <td>
                     <div th:text="${{expense.cost()}}"></div>
-                </td>
-                <td>
-                    <div th:text="${{expense.totalCost()}}"></div>
                 </td>
                 <td>
 
