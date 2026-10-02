@@ -43,7 +43,7 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
         Expense expense = new Expense();
         LocalDate date = LocalDate.parse(row.getDate());
         expense.setExpenseDate(date);
-        expense.setNote(String.valueOf(row.getRefNum()));
+        expense.setNote(String.format("%s: %s",row.getRefNum(), row.getDescription()));
         expense.setCost(row.getNegativeTraffic());
         expense.setCategory(uncategorized);
 

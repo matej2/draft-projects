@@ -138,7 +138,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Note</th>
+                    <th>RefNum: Description</th>
                     <th>Category</th>
                     <th>Cost</th>
                     <th>Actions</th>
@@ -217,7 +217,7 @@
                             <div th:text="${{insight.stdDev()}}"></div>
                         </td>
                         <td>
-                            <div th:text="${{insight.stddevPercent()}}"></div>
+                            <div th:class="${insight.stddevPercent() > 30 ? 'bg-danger-subtle' : 'bg-success-subtle'}" th:text="${{insight.stddevPercent()}}"></div>
                         </td>
                     </tr>
 
