@@ -1,7 +1,7 @@
 package com.matej2.budget_lens.domain.dto.response;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Date;
 
 public record CategoryInsightsResponse(
         Integer id,
@@ -13,5 +13,5 @@ public record CategoryInsightsResponse(
         Float percentile90,
         Boolean isCostVariable,
         Long expenseCount,
-        Date updatedAt
+        LocalDate updatedAt
         ) {}

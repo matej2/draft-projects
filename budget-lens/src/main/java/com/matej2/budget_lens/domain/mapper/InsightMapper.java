@@ -24,6 +24,7 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
         insightEntity.setPercentile90(insight.percentile90());
         insightEntity.setIsCostVariable(insight.isCostVariable());
         insightEntity.setExpenseCount(insight.expenseCount());
+        insightEntity.setUpdatedAt(insight.updatedAt());
 
         return insightEntity;
     }

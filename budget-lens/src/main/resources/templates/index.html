@@ -196,11 +196,13 @@
                 <tr>
                     <th>Year/month</th>
                     <th>Category</th>
+                    <th>Expense count</th>
                     <th>Median</th>
                     <th>Safe budget level</th>
                     <th>Standard deviation</th>
                     <th>Standard deviation percent</th>
                     <th>Is cost variable?</th>
+                    <th>Updated at</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -211,6 +213,9 @@
                         </td>
                         <td>
                             <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${{insight.expenseCount()}}"></div>
                         </td>
                         <td>
                             <div th:text="${insight.median()}"></div>
@@ -226,6 +231,9 @@
                         </td>
                         <td>
                             <div th:text="${insight.isCostVariable()}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${insight.updatedAt()}"></div>
                         </td>
                     </tr>
 

@@ -50,7 +50,7 @@ public class InsightsCalculatorJob {
                 insightResponse.getPercentile90(),
                 insightResponse.isFixedCost(),
                 insightResponse.getExpenseCount(),
-                new Date()
+                LocalDate.now()
         );
     }
 

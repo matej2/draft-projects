@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Date;
 
 @Repository
 public interface InsightRepository extends JpaRepository<Insight, Integer> {
@@ -40,6 +40,6 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
             @Param("percentile90") float percentile90,
             @Param("isCostVariable") boolean isCostVariable,
             @Param("expenseCount") Long expenseCount,
-            @Param("updatedAt") Date updatedAt
+            @Param("updatedAt") LocalDate updatedAt
         );
 }
