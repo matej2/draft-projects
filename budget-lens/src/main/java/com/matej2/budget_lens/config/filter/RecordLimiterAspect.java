@@ -84,7 +84,7 @@ public class RecordLimiterAspect {
     }
 
     // It might not cover all edge cases, for those one should create a scheduled job that
-    // Updates the count by directly querying data in the database
+    // Updates the expenseCount by directly querying data in the database
     // Method assumes that all arguments are of the same type
     @Around("this(org.springframework.data.repository.Repository) && execution(* save*(..))")
     public synchronized void interceptSaveRepositoryCalls(ProceedingJoinPoint pjp) throws Throwable {

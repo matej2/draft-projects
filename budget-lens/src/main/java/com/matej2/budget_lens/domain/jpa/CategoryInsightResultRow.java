@@ -11,6 +11,7 @@ public class CategoryInsightResultRow {
     private float median;
     private float percentile90;
     private boolean isFixedCost;
+    private Long expenseCount;
 
     public CategoryInsightResultRow(
             Double stdDev,
@@ -18,7 +19,8 @@ public class CategoryInsightResultRow {
             Double avg,
             Float median,
             Float percentile90,
-            Boolean isFixedCost
+            Boolean isFixedCost,
+            Long expenseCount
     ) {
                 this.stdDev = MathUtils.toTwoDecimals(stdDev);
                 this.stdDevPercent = MathUtils.toTwoDecimals(stdDevPercent);
@@ -26,5 +28,6 @@ public class CategoryInsightResultRow {
                 this.median = MathUtils.toTwoDecimals(median.doubleValue());
                 this.percentile90 = MathUtils.toTwoDecimals(percentile90.doubleValue());
                 this.isFixedCost = isFixedCost;
+                this.expenseCount = expenseCount;
     }
 }

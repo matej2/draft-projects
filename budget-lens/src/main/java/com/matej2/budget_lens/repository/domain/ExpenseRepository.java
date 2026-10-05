@@ -40,7 +40,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             ORDER BY
                 e.cost
         ) as p90,
-        (((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100 < 10) as is_fixed_cost
+        (((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100 < 10) as is_fixed_cost,
+        COUNT(e.id) as expenseCount
     ) FROM Expense e INNER JOIN Category c
             ON e.category.id = c.id
         WHERE

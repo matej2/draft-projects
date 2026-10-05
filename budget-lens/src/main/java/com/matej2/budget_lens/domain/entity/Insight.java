@@ -30,6 +30,6 @@ public class Insight {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
     Category category;
-    private Integer count;
+    private Long expenseCount;
     private Date updatedAt;
 }

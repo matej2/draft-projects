@@ -39,7 +39,9 @@ public class InsightService {
                         yearMonth,
                         insightEntity.getMedian(),
                         insightEntity.getPercentile90(),
-                        insightEntity.getIsCostVariable()
+                        insightEntity.getIsCostVariable(),
+                        insightEntity.getExpenseCount(),
+                        insightEntity.getUpdatedAt()
                 );
 
             });

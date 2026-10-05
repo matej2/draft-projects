@@ -23,6 +23,7 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
         insightEntity.setMedian(insight.median());
         insightEntity.setPercentile90(insight.percentile90());
         insightEntity.setIsCostVariable(insight.isCostVariable());
+        insightEntity.setExpenseCount(insight.expenseCount());
 
         return insightEntity;
     }
@@ -42,7 +43,9 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
                 insightEntity.getStandardDeviationPercent(),
                 insightEntity.getMedian(),
                 insightEntity.getPercentile90(),
-                insightEntity.getIsCostVariable()
+                insightEntity.getIsCostVariable(),
+                insightEntity.getExpenseCount(),
+                insightEntity.getUpdatedAt()
         );
     }
 }

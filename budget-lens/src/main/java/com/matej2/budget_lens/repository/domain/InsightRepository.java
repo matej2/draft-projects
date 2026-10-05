@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.YearMonth;
+import java.util.Date;
 
 @Repository
 public interface InsightRepository extends JpaRepository<Insight, Integer> {
@@ -18,15 +19,17 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
     @Transactional
     @Modifying
     @Query("""
-    INSERT INTO Insight (yearMonth, category, standardDeviation, standardDeviationPercent, median, percentile90, isCostVariable)
-    VALUES (:yearMonth, :category, :standardDeviation, :standardDeviationPercent, :median, :percentile90, :isCostVariable)
+    INSERT INTO Insight (yearMonth, category, standardDeviation, standardDeviationPercent, median, percentile90, isCostVariable, expenseCount, updatedAt)
+    VALUES (:yearMonth, :category, :standardDeviation, :standardDeviationPercent, :median, :percentile90, :isCostVariable, :expenseCount, :updatedAt)
     ON CONFLICT (yearMonth, category)
     DO UPDATE SET
         standardDeviation = :standardDeviation,
         standardDeviationPercent = :standardDeviationPercent,
         median = :median,
         percentile90 = :percentile90,
-        isCostVariable = :isCostVariable
+        isCostVariable = :isCostVariable,
+        expenseCount = :expenseCount,
+        updatedAt = :updatedAt
     """)
     void updateByCategoryIdAndDate(
             @Param("standardDeviation") float standardDeviation,
@@ -35,6 +38,8 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
             @Param("yearMonth") YearMonth yearMonth,
             @Param("median") float median,
             @Param("percentile90") float percentile90,
-            @Param("isCostVariable") boolean isCostVariable
+            @Param("isCostVariable") boolean isCostVariable,
+            @Param("expenseCount") Long expenseCount,
+            @Param("updatedAt") Date updatedAt
         );
 }
