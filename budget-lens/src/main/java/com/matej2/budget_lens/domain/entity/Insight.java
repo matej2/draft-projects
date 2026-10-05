@@ -3,6 +3,7 @@ package com.matej2.budget_lens.domain.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Date;
 import java.time.YearMonth;
 
 // Ideally this entity would be handled in a separate database that is more optimized
@@ -29,4 +30,6 @@ public class Insight {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
     Category category;
+    private Integer count;
+    private Date updatedAt;
 }
