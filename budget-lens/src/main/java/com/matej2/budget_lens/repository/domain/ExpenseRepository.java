@@ -45,7 +45,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
         i.avg_cost,
         i.p50,
         i.p90,
-        1
+        i.is_fixed_cost
     ) FROM (
         SELECT
             stddev_pop(e.cost) as std_dev,
@@ -58,7 +58,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             percentile_disc(0.9) WITHIN GROUP (
                 ORDER BY
                     e.cost
-            ) as p90
+            ) as p90,
+            (((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100 < 10) as is_fixed_cost
         FROM Expense e INNER JOIN Category c
             ON e.category.id = c.id
         WHERE

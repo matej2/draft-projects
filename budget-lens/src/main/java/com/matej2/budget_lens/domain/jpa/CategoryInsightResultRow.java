@@ -18,13 +18,13 @@ public class CategoryInsightResultRow {
             Double avg,
             Float median,
             Float percentile90,
-            Integer isFixedCost
+            Boolean isFixedCost
     ) {
                 this.stdDev = MathUtils.toTwoDecimals(stdDev);
                 this.stdDevPercent = MathUtils.toTwoDecimals(stdDevPercent);
                 this.avg = MathUtils.toTwoDecimals(avg);
                 this.median = MathUtils.toTwoDecimals(median.doubleValue());
                 this.percentile90 = MathUtils.toTwoDecimals(percentile90.doubleValue());
-                this.isFixedCost = isFixedCost == 1;
+                this.isFixedCost = isFixedCost;
     }
 }
