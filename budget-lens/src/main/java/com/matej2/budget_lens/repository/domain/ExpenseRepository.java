@@ -32,11 +32,11 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
         stddev_pop(e.cost) as std_dev,
         ((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100 as stddev_percent,
         AVG(e.cost) as avg_cost,
-        percentile_disc(0.5) WITHIN GROUP (
+        percentile_cont(0.5) WITHIN GROUP (
             ORDER BY
                 e.cost
         ) as p50,
-        percentile_disc(0.9) WITHIN GROUP (
+        percentile_cont(0.9) WITHIN GROUP (
             ORDER BY
                 e.cost
         ) as p90,
