@@ -24,6 +24,7 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
         insightEntity.setMedian(insight.median());
         insightEntity.setPercentile90(insight.percentile90());
         insightEntity.setIsSentToAI(insight.isCostVariable());
+        insightEntity.setIsCostVariable(insight.isCostVariable());
 
         return insightEntity;
     }

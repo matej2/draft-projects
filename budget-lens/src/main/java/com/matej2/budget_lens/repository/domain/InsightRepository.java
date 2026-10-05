@@ -18,7 +18,7 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
     @Transactional
     @Modifying
     @Query("""
-    INSERT INTO Insight (yearMonth, category, average, standardDeviation, standardDeviationPercent, median, percentile90, is_cost_variable)
+    INSERT INTO Insight (yearMonth, category, average, standardDeviation, standardDeviationPercent, median, percentile90, isCostVariable)
     VALUES (:yearMonth, :category, :average, :standardDeviation, :standardDeviationPercent, :median, :percentile90, :isCostVariable)
     ON CONFLICT (yearMonth, category)
     DO UPDATE SET
@@ -27,7 +27,7 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
         standardDeviationPercent = :standardDeviationPercent,
         median = :median,
         percentile90 = :percentile90,
-        is_cost_variable = :isCostVariable
+        isCostVariable = :isCostVariable
     """)
     void updateByCategoryIdAndDate(
             @Param("average") float average,
