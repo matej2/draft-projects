@@ -8,10 +8,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE TABLE IF NOT EXISTS insight (
       id serial primary key,
       year_month date,
-      average real,
       standard_deviation real,
       standard_deviation_percent real,
-      is_sent_toai boolean,
       category integer references category(id),
       median real,
       percentile90 real,

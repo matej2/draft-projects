@@ -46,7 +46,6 @@ public class InsightsCalculatorJob {
                 category,
                 insightResponse.getStdDev(),
                 insightResponse.getStdDevPercent(),
-                insightResponse.getAvg(),
                 insightResponse.getMedian(),
                 insightResponse.getPercentile90(),
                 insightResponse.isFixedCost()

@@ -18,12 +18,10 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
         insightEntity.setId(insight.id());
         insightEntity.setYearMonth(yearMonth);
         insightEntity.setCategory(category);
-        insightEntity.setAverage(insight.avg());
         insightEntity.setStandardDeviation(insight.stdDev());
         insightEntity.setStandardDeviationPercent(insight.stddevPercent());
         insightEntity.setMedian(insight.median());
         insightEntity.setPercentile90(insight.percentile90());
-        insightEntity.setIsSentToAI(insight.isCostVariable());
         insightEntity.setIsCostVariable(insight.isCostVariable());
 
         return insightEntity;
@@ -42,7 +40,6 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
                 categoryMapper.toResponse(insightEntity.getCategory()),
                 insightEntity.getStandardDeviation(),
                 insightEntity.getStandardDeviationPercent(),
-                insightEntity.getAverage(),
                 insightEntity.getMedian(),
                 insightEntity.getPercentile90(),
                 insightEntity.getIsCostVariable()

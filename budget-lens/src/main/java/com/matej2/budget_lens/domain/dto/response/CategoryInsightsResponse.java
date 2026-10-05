@@ -8,7 +8,6 @@ public record CategoryInsightsResponse(
         CategoryResponse category,
         Float stdDev,
         Float stddevPercent,
-        Float avg,
         Float median,
         Float percentile90,
         Boolean isCostVariable

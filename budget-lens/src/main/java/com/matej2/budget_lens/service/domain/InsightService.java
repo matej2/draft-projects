@@ -33,7 +33,6 @@ public class InsightService {
                         yearMonth);
 
                 insightRepository.updateByCategoryIdAndDate(
-                        insightEntity.getAverage(),
                         insightEntity.getStandardDeviation(),
                         insightEntity.getStandardDeviationPercent(),
                         insightEntity.getCategory(),
