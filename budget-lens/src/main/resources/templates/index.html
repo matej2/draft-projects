@@ -201,6 +201,7 @@
                     <th>Standard deviation percent</th>
                     <th>Is cost variable?</th>
                     <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on the 75th percentile">Safe budget quota <i class="bi bi-info-circle"></i></th>
+                    <th>Safe budget confience</th>
                     <th>Updated at</th>
                 </tr>
                 </thead>
@@ -228,6 +229,10 @@
                         <td>
                             <div th:if="${insight.expenseCount() > 2}" th:text="${insight.percentile90()}"></div>
                             <div th:unless="${insight.expenseCount() > 2}">Not enough info - only one expense entry</div>
+                        </td>
+                        <td>
+                            <div th:if="${insight.expenseCount() > 2 && insight.expenseCount() <50}" th:text="${(insight.expenseCount()/48)*100}"></div>
+                            <div th:if="${insight.expenseCount() > 50}">30 %</div>
                         </td>
                         <td>
                             <div th:text="${insight.updatedAt()}"></div>
