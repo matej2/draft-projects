@@ -198,10 +198,9 @@
                     <th>Category</th>
                     <th>Expense count</th>
                     <th>Median</th>
-                    <th>Safe budget level</th>
-                    <th>Standard deviation</th>
                     <th>Standard deviation percent</th>
                     <th>Is cost variable?</th>
+                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on the 75th percentile">Safe budget quota <i class="bi bi-info-circle"></i></th>
                     <th>Updated at</th>
                 </tr>
                 </thead>
@@ -221,16 +220,14 @@
                             <div th:text="${insight.median()}"></div>
                         </td>
                         <td>
-                            <div th:text="${insight.percentile90()}"></div>
-                        </td>
-                        <td>
-                            <div th:text="${{insight.stdDev()}}"></div>
-                        </td>
-                        <td>
                             <div th:class="${insight.stddevPercent() > 30 ? 'bg-danger-subtle' : 'bg-success-subtle'}" th:text="${{insight.stddevPercent()}}"></div>
                         </td>
                         <td>
-                            <div th:text="${insight.isCostVariable()}"></div>
+                            <div th:text="${insight.stddevPercent() > 10 ? 'Variable' : 'Fixed'}"></div>
+                        </td>
+                        <td>
+                            <div th:if="${insight.expenseCount() > 2}" th:text="${insight.percentile90()}"></div>
+                            <div th:unless="${insight.expenseCount() > 2}">Not enough info - only one expense entry</div>
                         </td>
                         <td>
                             <div th:text="${insight.updatedAt()}"></div>
@@ -248,7 +245,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script>
-    document.getElementById('expenseDate').valueAsDate = new Date();
+    window.onload = function() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    };
+
 </script>
 </body>
 </html>
