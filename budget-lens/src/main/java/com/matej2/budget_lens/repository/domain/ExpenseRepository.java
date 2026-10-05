@@ -36,7 +36,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             ORDER BY
                 e.cost
         ) as p50,
-        percentile_cont(0.9) WITHIN GROUP (
+        percentile_cont(0.75) WITHIN GROUP (
             ORDER BY
                 e.cost
         ) as p90,
