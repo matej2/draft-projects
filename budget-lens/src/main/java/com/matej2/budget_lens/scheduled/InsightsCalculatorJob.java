@@ -35,7 +35,7 @@ public class InsightsCalculatorJob {
                 dateToConvert.toInstant(), ZoneId.systemDefault());
     }
 
-    private Float calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
+    private double calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
         // Safe budget confidence calculation
         double expenseCountRelativeToOptimal;
 
@@ -47,10 +47,17 @@ public class InsightsCalculatorJob {
         }
 
         // Optimal expense standard deviation is 0 %. Confidence is calculated as % towards that number.
-        double expenseStandardDeviationRelativeToOptimal = (100.0 - insightResponse.getStdDevPercent())/100;
+        double expenseStandardDeviationRelativeToOptimal = (1.0 - insightResponse.getStdDevPercent());
 
         // Calculations are combined using ratio 70:30
-        return MathUtils.toTwoDecimals(expenseCountRelativeToOptimal * 70 + expenseStandardDeviationRelativeToOptimal * 30);
+        return MathUtils.toTwoDecimals(expenseCountRelativeToOptimal * 0.7 + expenseStandardDeviationRelativeToOptimal * 0.3);
+    }
+
+    private Float calculateAdjustedBudget(double safeBudgetConfidence, float pecentile90) {
+        float budgetMultiplierPercent = 0.3f;
+        double realisticBudget = budgetMultiplierPercent - (budgetMultiplierPercent * safeBudgetConfidence);
+
+        return MathUtils.toTwoDecimals(pecentile90 + pecentile90 * realisticBudget);
     }
 
     private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
@@ -60,18 +67,19 @@ public class InsightsCalculatorJob {
             return null;
         }
 
-        float safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
+        double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
+        float adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
 
         return new CategoryInsightsResponse(
                 category.id(),
                 yearMonth,
                 category,
-                insightResponse.getStdDevPercent(),
+                MathUtils.toPercentage(insightResponse.getStdDevPercent()),
                 insightResponse.getMedian(),
-                insightResponse.getPercentile90(),
+                adjustedSafeBudget,
                 insightResponse.getExpenseCount(),
                 LocalDate.now(),
-                safeBudgetConfidence
+                MathUtils.toPercentage(safeBudgetConfidence)
         );
     }
 

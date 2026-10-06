@@ -49,7 +49,7 @@ public class WebController {
         }
         Pageable sortedByDate = PageRequest.of(
                 pageNumber,
-                40,
+                15,
                 Sort.by("expenseDate").descending());
         List<ExpenseResponse> expenses = expenseTrackingService.getExpense(sortedByDate);
 

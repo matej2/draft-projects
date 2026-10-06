@@ -29,7 +29,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     Float summarizeCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);
     @Query(value = """
     SELECT NEW com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow(
-        ((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) * 100 as stddev_percent,
+        ((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) as stddev_percent,
         AVG(e.cost) as avg_cost,
         percentile_cont(0.5) WITHIN GROUP (
             ORDER BY

@@ -2,6 +2,10 @@ package com.matej2.budget_lens.utils;
 
 public class MathUtils {
 
+    public static Float toPercentage(double number) {
+        return MathUtils.toTwoDecimals(number * 100);
+    }
+
     public static Float toTwoDecimals(Double number) {
         if (number == null) {
             return null;
