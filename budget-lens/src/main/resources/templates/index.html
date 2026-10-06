@@ -231,11 +231,12 @@
                             <div th:unless="${insight.expenseCount() > 2}">Not enough info - only one expense entry</div>
                         </td>
                         <td>
-                            <div th:if="${insight.expenseCount() > 2 && insight.expenseCount() <50}" th:text="${(insight.expenseCount()/48)*100}"></div>
-                            <div th:if="${insight.expenseCount() > 50}">30 %</div>
+                            <div th:if="${insight.expenseCount() < 2}">0 %</div>
+                            <div th:if="${insight.expenseCount() > 2 && insight.expenseCount() <20}" th:text="${((insight.expenseCount()/20.0)*50)+(50-(insight.stddevPercent()/100)*50)}"></div>
+                            <div th:if="${insight.expenseCount() > 20}">100 %</div>
                         </td>
                         <td>
-                            <div th:text="${insight.updatedAt()}"></div>
+                            <small th:text="${insight.updatedAt()}"></small>
                         </td>
                     </tr>
 
