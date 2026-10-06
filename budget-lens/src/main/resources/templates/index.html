@@ -228,12 +228,11 @@
                         </td>
                         <td>
                             <div th:if="${insight.expenseCount() > 2}" th:text="${insight.percentile90()}"></div>
-                            <div th:unless="${insight.expenseCount() > 2}">Not enough info - only one expense entry</div>
+                            <div th:unless="${insight.expenseCount() > 2}">Not enough info</div>
                         </td>
                         <td>
-                            <div th:if="${insight.expenseCount() < 2}">0 %</div>
-                            <div th:if="${insight.expenseCount() > 2 && insight.expenseCount() <20}" th:text="${((insight.expenseCount()/20.0)*50)+(50-(insight.stddevPercent()/100)*50)}"></div>
-                            <div th:if="${insight.expenseCount() > 20}">100 %</div>
+                            <div th:if="${insight.safeBudgetConfidence() > 0}" th:text="${insight.safeBudgetConfidence()}"></div>
+                            <div th:if="${insight.safeBudgetConfidence() <= 0}">Not enough info</div>
                         </td>
                         <td>
                             <small th:text="${insight.updatedAt()}"></small>

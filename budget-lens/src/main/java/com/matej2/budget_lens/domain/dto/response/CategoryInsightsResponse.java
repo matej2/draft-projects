@@ -11,5 +11,6 @@ public record CategoryInsightsResponse(
         Float median,
         Float percentile90,
         Long expenseCount,
-        LocalDate updatedAt
+        LocalDate updatedAt,
+        Float safeBudgetConfidence
         ) {}

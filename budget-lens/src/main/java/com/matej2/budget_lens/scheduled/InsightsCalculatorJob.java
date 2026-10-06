@@ -10,6 +10,7 @@ import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightService;
+import com.matej2.budget_lens.utils.MathUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,12 +35,33 @@ public class InsightsCalculatorJob {
                 dateToConvert.toInstant(), ZoneId.systemDefault());
     }
 
+    private Float calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
+        // Safe budget confidence calculation
+        double expenseCountRelativeToOptimal;
+
+        if (insightResponse.getExpenseCount() > 2 && insightResponse.getExpenseCount() < 30) {
+            // Optimal expense count is 30. Confidence is calculated as % towards that count.
+            expenseCountRelativeToOptimal = insightResponse.getExpenseCount().floatValue() / 28.0;
+        } else {
+            return 0f;
+        }
+
+        // Optimal expense standard deviation is 0 %. Confidence is calculated as % towards that number.
+        double expenseStandardDeviationRelativeToOptimal = (100.0 - insightResponse.getStdDevPercent())/100;
+
+        // Calculations are combined using ratio 70:30
+        return MathUtils.toTwoDecimals(expenseCountRelativeToOptimal * 70 + expenseStandardDeviationRelativeToOptimal * 30);
+    }
+
     private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
         CategoryInsightResultRow insightResponse = expenseTrackingService.insightsByCategory(expenseRequest, category.id());
 
         if (insightResponse == null) {
             return null;
         }
+
+        float safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
+
         return new CategoryInsightsResponse(
                 category.id(),
                 yearMonth,
@@ -48,7 +70,8 @@ public class InsightsCalculatorJob {
                 insightResponse.getMedian(),
                 insightResponse.getPercentile90(),
                 insightResponse.getExpenseCount(),
-                LocalDate.now()
+                LocalDate.now(),
+                safeBudgetConfidence
         );
     }
 
