@@ -44,11 +44,9 @@ public class InsightsCalculatorJob {
                 category.id(),
                 yearMonth,
                 category,
-                insightResponse.getStdDev(),
                 insightResponse.getStdDevPercent(),
                 insightResponse.getMedian(),
                 insightResponse.getPercentile90(),
-                insightResponse.isFixedCost(),
                 insightResponse.getExpenseCount(),
                 LocalDate.now()
         );
