@@ -3,6 +3,7 @@ package com.matej2.budget_lens.controller;
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.response.InsightsResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
@@ -60,9 +61,9 @@ public class WebController {
         return "index";
     }
 
-    private List<CategoryInsightsResponse> getFormatedInsights(List<CategoryInsightsResponse> insightList) {
+    private List<InsightsResponse> getFormatedInsights(List<CategoryInsightsResponse> insightList) {
         return insightList.stream()
-                .map(i -> new CategoryInsightsResponse(
+                .map(i -> new InsightsResponse(
                         i.id(),
                         i.yearMonth(),
                         i.category(),
@@ -77,17 +78,17 @@ public class WebController {
                 .toList();
     }
 
-    private Map<YearMonth, List<CategoryInsightsResponse>> getGroupedInsights(List<CategoryInsightsResponse> insightList) {
+    private Map<YearMonth, List<InsightsResponse>> getGroupedInsights(List<InsightsResponse> insightList) {
         return insightList.stream()
                 .collect(Collectors.groupingBy(
-                        CategoryInsightsResponse::yearMonth,
+                        InsightsResponse::yearMonth,
                         LinkedHashMap::new,
                         Collectors.toList()
                 ));
     }
 
     private @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
-        Map<YearMonth, List<CategoryInsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
+        Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
                 getFormatedInsights(insightService.getAllInsights())
         );
         return Map.of(

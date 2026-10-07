@@ -208,7 +208,6 @@
                     <th>Expense count</th>
                     <th>Median [€]</th>
                     <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Standard deviation in percentage">Variability [%] <i class="bi bi-info-circle"></i></th>
-                    <th>Is cost variable?</th>
                     <th>Current budget utilization [%]</th>
                     <th>Safe budget confidence [%]</th>
                     <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on expense count and variability (ratio 70:30). An additional 30% can be added based on the confidence.">Suggested safe budget <i class="bi bi-info-circle"></i></th>
@@ -233,9 +232,6 @@
                             </td>
                             <td>
                                 <div th:text="${{insight.stddevPercent()}}"></div>
-                            </td>
-                            <td>
-                                <div th:text="${insight.stddevPercent() > 10 ? 'Variable' : 'Fixed'}"></div>
                             </td>
                             <td>
                                 <div th:text="${{insight.budgetUtilization()}}"></div>

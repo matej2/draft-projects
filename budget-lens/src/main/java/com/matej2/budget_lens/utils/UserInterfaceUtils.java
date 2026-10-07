@@ -1,9 +1,9 @@
 package com.matej2.budget_lens.utils;
 
-import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.InsightsResponse;
 
 public class UserInterfaceUtils {
-    public static String getClassNamesForInsightRow(CategoryInsightsResponse insight) {
+    public static String getClassNamesForInsightRow(InsightsResponse insight) {
         String result = "";
         boolean isInsightValid = checkInsightValidity(insight);
 
@@ -15,7 +15,7 @@ public class UserInterfaceUtils {
         }
         return result;
     }
-    public static boolean checkInsightValidity(CategoryInsightsResponse insight) {
+    public static boolean checkInsightValidity(InsightsResponse insight) {
         return insight.expenseCount() > 2;
     }
 }
