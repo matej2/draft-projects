@@ -30,4 +30,5 @@ public class Insight {
     private Long expenseCount;
     private LocalDate updatedAt;
     private Float safeBudgetConfidence;
+    private Float budgetUtilization;
 }
