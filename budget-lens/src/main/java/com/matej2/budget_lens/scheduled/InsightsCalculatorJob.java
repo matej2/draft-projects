@@ -7,6 +7,7 @@ import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.repository.domain.RecordLimiter;
+import com.matej2.budget_lens.service.domain.BudgetService;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightService;
@@ -17,8 +18,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.*;
+
+import static com.matej2.budget_lens.utils.DateUtils.getFirstDayOfTheMonth;
+import static com.matej2.budget_lens.utils.DateUtils.getLastDayOfTheMonth;
 
 @Component
 @RequiredArgsConstructor
@@ -28,12 +31,7 @@ public class InsightsCalculatorJob {
     private final InsightService insightService;
     private final ExpenseRepository expenseRepository;
     private final RecordLimiter recordLimiter;
-
-
-    private LocalDate convertToLocalDate(Date dateToConvert) {
-        return LocalDate.ofInstant(
-                dateToConvert.toInstant(), ZoneId.systemDefault());
-    }
+    private final BudgetService budgetService;
 
     private double calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
         // Safe budget confidence calculation
@@ -81,20 +79,6 @@ public class InsightsCalculatorJob {
                 LocalDate.now(),
                 MathUtils.toPercentage(safeBudgetConfidence)
         );
-    }
-
-    private LocalDate getFirstDayOfTheMonth(Calendar calendar) {
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date firstDateOfPreviousMonth = calendar.getTime();
-
-        return convertToLocalDate(firstDateOfPreviousMonth);
-    }
-
-    private LocalDate getLastDayOfTheMonth(Calendar calendar) {
-        calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        Date lastDateOfPreviousMonth = calendar.getTime();
-
-        return convertToLocalDate(lastDateOfPreviousMonth);
     }
 
     private void saveInsights(List<CategoryInsightsResponse> insightList, YearMonth yearMonth) {
