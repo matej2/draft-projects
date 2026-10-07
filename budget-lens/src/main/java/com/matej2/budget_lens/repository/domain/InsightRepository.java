@@ -19,8 +19,8 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
     @Transactional
     @Modifying
     @Query("""
-    INSERT INTO Insight (yearMonth, category, standardDeviationPercent, median, percentile90, expenseCount, updatedAt, safeBudgetConfidence)
-    VALUES (:yearMonth, :category, :standardDeviationPercent, :median, :percentile90, :expenseCount, :updatedAt, :safeBudgetConfidence)
+    INSERT INTO Insight (yearMonth, category, standardDeviationPercent, median, percentile90, expenseCount, updatedAt, safeBudgetConfidence, budgetUtilization)
+    VALUES (:yearMonth, :category, :standardDeviationPercent, :median, :percentile90, :expenseCount, :updatedAt, :safeBudgetConfidence, :budgetUtilization)
     ON CONFLICT (yearMonth, category)
     DO UPDATE SET
         standardDeviationPercent = :standardDeviationPercent,
@@ -28,7 +28,8 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
         percentile90 = :percentile90,
         expenseCount = :expenseCount,
         updatedAt = :updatedAt,
-        safeBudgetConfidence = :safeBudgetConfidence
+        safeBudgetConfidence = :safeBudgetConfidence,
+        budgetUtilization = :budgetUtilization
     """)
     void updateByCategoryIdAndDate(
             @Param("standardDeviationPercent") float standardDeviationPercent,
@@ -38,6 +39,7 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
             @Param("percentile90") float percentile90,
             @Param("expenseCount") Long expenseCount,
             @Param("updatedAt") LocalDate updatedAt,
-            @Param("safeBudgetConfidence") Float safeBudgetConfidence
+            @Param("safeBudgetConfidence") Float safeBudgetConfidence,
+            @Param("budgetUtilization") Float budgetUtilization
         );
 }

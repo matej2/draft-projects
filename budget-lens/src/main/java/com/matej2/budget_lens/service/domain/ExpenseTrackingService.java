@@ -11,6 +11,7 @@ import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.utils.CSVHelper;
+import com.matej2.budget_lens.utils.DateUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.matej2.budget_lens.utils.CsvUtils.getCsvReader;
@@ -50,6 +53,12 @@ public class ExpenseTrackingService {
         this.expenseRepository.save(mappedExpense);
     }
 
+    public synchronized List<ExpenseResponse> getAllExpenses() {
+        return this.expenseRepository.findAll().stream()
+                .map(expenseMapper::toResponse)
+                .toList();
+    }
+
     public synchronized List<ExpenseResponse> getExpense(Pageable pageable) {
         return this.expenseRepository.findAll(pageable).stream()
                 .map(expenseMapper::toResponse)
@@ -66,7 +75,22 @@ public class ExpenseTrackingService {
         this.expenseRepository.save(mappedExpense);
     }
 
+    public List<ExpenseResponse> getExpenseByMonth(Month month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month.getValue());
+        LocalDate firstDate = DateUtils.getFirstDayOfTheMonth(calendar);
+        LocalDate lastDate = DateUtils.getLastDayOfTheMonth(calendar);
 
+        return this.expenseRepository.findByExpenseDateBetween(firstDate, lastDate).stream()
+                .map(expenseMapper::toResponse)
+                .toList();
+    }
+
+    public List<ExpenseResponse> getExpenseByDate(ExpenseFilterRequest expenseRequest) {
+        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(expenseRequest.startDate(), expenseRequest.endDate());
+
+        return filteredExpense.stream().map(expenseMapper::toResponse).toList();
+    }
     public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
         List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate, pageable);
 

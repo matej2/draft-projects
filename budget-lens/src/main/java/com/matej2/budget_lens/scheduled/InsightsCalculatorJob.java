@@ -1,8 +1,10 @@
 package com.matej2.budget_lens.scheduled;
 
+import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
@@ -58,8 +60,30 @@ public class InsightsCalculatorJob {
         return MathUtils.toTwoDecimals(pecentile90 + pecentile90 * realisticBudget);
     }
 
+    // TODO: Separate insights for each budget by category id
+    private Float calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
+        double categoryBudget = budgetService.getAllByCategoryId(categoryId).stream()
+                .mapToDouble(BudgetRequest::quota)
+                .sum();
+        if (categoryBudget == 0) {
+            return null;
+        }
+
+        double categoryExpenses = expenseResponses
+                .stream().mapToDouble(ExpenseResponse::cost)
+                .sum();
+
+        if (categoryExpenses > categoryBudget) {
+            return 100.0f;
+        }
+
+        return (float) (categoryExpenses / categoryBudget)*100;
+    }
+
     private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
+        // TODO: Skip processing if there are empty categories
         CategoryInsightResultRow insightResponse = expenseTrackingService.insightsByCategory(expenseRequest, category.id());
+        List<ExpenseResponse> expenses = expenseTrackingService.getExpenseByDate(expenseRequest);
 
         if (insightResponse == null) {
             return null;
@@ -67,6 +91,7 @@ public class InsightsCalculatorJob {
 
         double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
         float adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
+        Float budgetUtilization = calculateBudgetUtilization(category.id(), expenses);
 
         return new CategoryInsightsResponse(
                 category.id(),
@@ -77,7 +102,8 @@ public class InsightsCalculatorJob {
                 adjustedSafeBudget,
                 insightResponse.getExpenseCount(),
                 LocalDate.now(),
-                MathUtils.toPercentage(safeBudgetConfidence)
+                MathUtils.toPercentage(safeBudgetConfidence),
+                budgetUtilization
         );
     }
 

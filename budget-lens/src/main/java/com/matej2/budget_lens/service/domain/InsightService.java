@@ -40,7 +40,8 @@ public class InsightService {
                         insightEntity.getPercentile90(),
                         insightEntity.getExpenseCount(),
                         insightEntity.getUpdatedAt(),
-                        insightEntity.getSafeBudgetConfidence()
+                        insightEntity.getSafeBudgetConfidence(),
+                        insightEntity.getBudgetUtilization()
                 );
 
             });

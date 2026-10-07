@@ -24,6 +24,7 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
         insightEntity.setExpenseCount(insight.expenseCount());
         insightEntity.setUpdatedAt(insight.updatedAt());
         insightEntity.setSafeBudgetConfidence(insight.safeBudgetConfidence());
+        insightEntity.setBudgetUtilization(insight.budgetUtilization());
 
         return insightEntity;
     }
@@ -44,7 +45,8 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
                 insightEntity.getPercentile90(),
                 insightEntity.getExpenseCount(),
                 insightEntity.getUpdatedAt(),
-                insightEntity.getSafeBudgetConfidence()
+                insightEntity.getSafeBudgetConfidence(),
+                insightEntity.getBudgetUtilization()
         );
     }
 }

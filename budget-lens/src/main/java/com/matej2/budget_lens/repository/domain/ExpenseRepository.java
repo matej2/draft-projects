@@ -15,6 +15,7 @@ import java.util.List;
 @RecordLimitEnabled(entityName = "Expense")
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
+    List<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate);
     List<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
     @Query(value = """
     SELECT SUM(cost)
