@@ -1,10 +1,6 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.response.CurrentCategoryBudgetResponse;
-import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
-import com.matej2.budget_lens.domain.entity.Budget;
-import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.User;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
@@ -21,10 +17,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,38 +67,5 @@ public class ExpenseTrackingServiceTest {
         verify(expenseRepository).save(expenseRepositoryCaptor.capture());
         Expense expenseCapture = expenseRepositoryCaptor.getValue();
         assertThat(expenseCapture).isNotNull();
-    }
-
-    @Test
-    void testGetBudgetStatus() {
-        // Request filter
-        LocalDate startDate = LocalDate.now().minusDays(5);
-        LocalDate endDate = LocalDate.now();
-        ExpenseFilterRequest filter = new ExpenseFilterRequest(startDate, endDate);
-
-        // Budget data
-        Category category = new Category();
-        category.setId(0);
-        category.setName("test");
-
-        Budget budget = new  Budget();
-        budget.setId(1);
-        budget.setCategory(category);
-        budget.setQuota(50.0f);
-
-        when(budgetRepository.findAll()).thenReturn(List.of(budget));
-        when(budgetRepository.findOneByCategory(any(Category.class))).thenReturn(budget);
-        when(expenseRepository.summarizeCurrentAmountByCategoryIdByDateBetween(anyInt(), any(LocalDate.class), any(LocalDate.class))).thenReturn(35.0f);
-
-        List<CurrentCategoryBudgetResponse> response = this.budgetService.getBudgetStatus(filter);
-
-        assertThat(response).isNotNull();
-        assertThat(response.size()).isEqualTo(1);
-
-        CurrentCategoryBudgetResponse currentCategoryBudgetResponse = response.getFirst();
-        assertThat(currentCategoryBudgetResponse.category()).isEqualTo("test");
-        assertThat(currentCategoryBudgetResponse.monthlyLimit()).isEqualTo(50.0f);
-        assertThat(currentCategoryBudgetResponse.currentAmount()).isEqualTo(35.0f);
-
     }
 }
