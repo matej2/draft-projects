@@ -210,7 +210,7 @@
                     <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Standard deviation in percentage">Variability [%] <i class="bi bi-info-circle"></i></th>
                     <th>Current budget utilization [%]</th>
                     <th>Safe budget confidence [%]</th>
-                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on expense count and variability (ratio 70:30). An additional 30% can be added based on the confidence.">Suggested safe budget <i class="bi bi-info-circle"></i></th>
+                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on expense count and variability (ratio 70:30). An additional 30% can be added based on the confidence.">Suggested safe budget [€] <i class="bi bi-info-circle"></i></th>
                     <th>Updated at</th>
                 </tr>
                 </thead>
@@ -234,15 +234,16 @@
                                 <div th:text="${{insight.stddevPercent()}}"></div>
                             </td>
                             <td>
-                                <div th:text="${{insight.budgetUtilization()}}"></div>
+                                <span th:text="${{insight.budgetUtilization()}}"></span>
+                                <i th:if="${insight.budgetUtilization() >= 100}" class="bi bi-graph-up-arrow"></i>
                             </td>
                             <td>
                                 <div th:if="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}" th:text="${insight.safeBudgetConfidence()}"></div>
-                                <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}">Not enough info</div>
+                                <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}"><i class="bi bi-ban"></i> Not enough info</div>
                             </td>
                             <td>
                                 <div th:if="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}" th:text="${insight.percentile90()}"></div>
-                                <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}">Not enough info</div>
+                                <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}"><i class="bi bi-ban"></i> Not enough info</div>
                             </td>
                             <td>
                                 <small th:text="${insight.updatedAt()}"></small>

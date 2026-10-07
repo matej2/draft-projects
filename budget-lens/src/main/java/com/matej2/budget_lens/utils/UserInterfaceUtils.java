@@ -7,7 +7,7 @@ public class UserInterfaceUtils {
         String result = "";
         boolean isInsightValid = checkInsightValidity(insight);
 
-        if (insight.safeBudgetConfidence() > 50 && isInsightValid) {
+        if (insight.safeBudgetConfidence() > 50 && isInsightValid && (insight.budgetUtilization() > 1 || insight.budgetUtilization() < 0.3)) {
             result += "candidate";
         }
         if (!checkInsightValidity(insight)) {
