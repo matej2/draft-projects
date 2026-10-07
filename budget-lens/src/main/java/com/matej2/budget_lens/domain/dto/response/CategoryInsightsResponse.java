@@ -7,11 +7,11 @@ public record CategoryInsightsResponse(
         Integer id,
         YearMonth yearMonth,
         CategoryResponse category,
-        Float stddevPercent,
-        Float median,
-        Float percentile90,
+        Double stddevPercent,
+        Double median,
+        Double percentile90,
         Long expenseCount,
         LocalDate updatedAt,
-        Float safeBudgetConfidence,
-        Float budgetUtilization
+        Double safeBudgetConfidence,
+        Double budgetUtilization
         ) {}

@@ -13,7 +13,6 @@ import com.matej2.budget_lens.service.domain.BudgetService;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightService;
-import com.matej2.budget_lens.utils.MathUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -43,25 +42,25 @@ public class InsightsCalculatorJob {
             // Optimal expense count is 30. Confidence is calculated as % towards that count.
             expenseCountRelativeToOptimal = insightResponse.getExpenseCount().floatValue() / 28.0;
         } else {
-            return 0f;
+            return 0d;
         }
 
         // Optimal expense standard deviation is 0 %. Confidence is calculated as % towards that number.
         double expenseStandardDeviationRelativeToOptimal = (1.0 - insightResponse.getStdDevPercent());
 
         // Calculations are combined using ratio 70:30
-        return MathUtils.toTwoDecimals(expenseCountRelativeToOptimal * 0.7 + expenseStandardDeviationRelativeToOptimal * 0.3);
+        return expenseCountRelativeToOptimal * 0.7 + expenseStandardDeviationRelativeToOptimal * 0.3;
     }
 
-    private Float calculateAdjustedBudget(double safeBudgetConfidence, float pecentile90) {
-        float budgetMultiplierPercent = 0.3f;
+    private double calculateAdjustedBudget(double safeBudgetConfidence, double pecentile90) {
+        double budgetMultiplierPercent = 0.3d;
         double realisticBudget = budgetMultiplierPercent - (budgetMultiplierPercent * safeBudgetConfidence);
 
-        return MathUtils.toTwoDecimals(pecentile90 + pecentile90 * realisticBudget);
+        return pecentile90 + pecentile90 * realisticBudget;
     }
 
     // TODO: Separate insights for each budget by category id
-    private Float calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
+    private Double calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
         double categoryBudget = budgetService.getAllByCategoryId(categoryId).stream()
                 .mapToDouble(BudgetRequest::quota)
                 .sum();
@@ -74,10 +73,10 @@ public class InsightsCalculatorJob {
                 .sum();
 
         if (categoryExpenses > categoryBudget) {
-            return 100.0f;
+            return 1.0d;
         }
 
-        return (float) (categoryExpenses / categoryBudget)*100;
+        return categoryExpenses / categoryBudget;
     }
 
     private CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
@@ -90,19 +89,19 @@ public class InsightsCalculatorJob {
         }
 
         double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
-        float adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
-        Float budgetUtilization = calculateBudgetUtilization(category.id(), expenses);
+        double adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
+        double budgetUtilization = calculateBudgetUtilization(category.id(), expenses);
 
         return new CategoryInsightsResponse(
                 category.id(),
                 yearMonth,
                 category,
-                MathUtils.toPercentage(insightResponse.getStdDevPercent()),
+                insightResponse.getStdDevPercent(),
                 insightResponse.getMedian(),
                 adjustedSafeBudget,
                 insightResponse.getExpenseCount(),
                 LocalDate.now(),
-                MathUtils.toPercentage(safeBudgetConfidence),
+                safeBudgetConfidence,
                 budgetUtilization
         );
     }

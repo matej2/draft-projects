@@ -32,14 +32,14 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
         budgetUtilization = :budgetUtilization
     """)
     void updateByCategoryIdAndDate(
-            @Param("standardDeviationPercent") float standardDeviationPercent,
+            @Param("standardDeviationPercent") Double standardDeviationPercent,
             @Param("category") Category category,
             @Param("yearMonth") YearMonth yearMonth,
-            @Param("median") float median,
-            @Param("percentile90") float percentile90,
+            @Param("median") Double median,
+            @Param("percentile90") Double percentile90,
             @Param("expenseCount") Long expenseCount,
             @Param("updatedAt") LocalDate updatedAt,
-            @Param("safeBudgetConfidence") Float safeBudgetConfidence,
-            @Param("budgetUtilization") Float budgetUtilization
+            @Param("safeBudgetConfidence") Double safeBudgetConfidence,
+            @Param("budgetUtilization") Double budgetUtilization
         );
 }

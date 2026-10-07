@@ -20,15 +20,15 @@ public class Insight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Float median;
-    private Float percentile90;
+    private Double median;
+    private Double percentile90;
     private YearMonth yearMonth;
-    private Float standardDeviationPercent;
+    private Double standardDeviationPercent;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
     Category category;
     private Long expenseCount;
     private LocalDate updatedAt;
-    private Float safeBudgetConfidence;
-    private Float budgetUtilization;
+    private Double safeBudgetConfidence;
+    private Double budgetUtilization;
 }
