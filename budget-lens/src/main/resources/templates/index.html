@@ -197,48 +197,49 @@
                     <th>Year/month</th>
                     <th>Category</th>
                     <th>Expense count</th>
-                    <th>Median</th>
-                    <th>Standard deviation percent</th>
+                    <th>Median [€]</th>
+                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Standard deviation in percentage">Variability [%] <i class="bi bi-info-circle"></i></th>
                     <th>Is cost variable?</th>
-                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on the 75th percentile">Safe budget quota <i class="bi bi-info-circle"></i></th>
-                    <th>Safe budget confience</th>
+                    <th>Safe budget confidence [%]</th>
+                    <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Budget calculated based on expense count and variability (ratio 70:30). An additional 30% can be added based on the confidence.">Suggested safe budget <i class="bi bi-info-circle"></i></th>
                     <th>Updated at</th>
                 </tr>
                 </thead>
                 <tbody>
                 <th:block th:each="group : ${insights}">
-                    <tr th:each="insight, stat: ${group.value}">
-                        <td th:if="${stat.first}" th:rowspan="${group.value.size()}" class="align-middle">
-                            <div th:text="${{group.key}}"></div>
-                        </td>
-                        <td>
-                            <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
-                        </td>
-                        <td>
-                            <div th:text="${{insight.expenseCount()}}"></div>
-                        </td>
-                        <td>
-                            <div th:text="${insight.median()}"></div>
-                        </td>
-                        <td>
-                            <div th:class="${insight.stddevPercent() > 30 ? 'bg-danger-subtle' : 'bg-success-subtle'}" th:text="${{insight.stddevPercent()}}"></div>
-                        </td>
-                        <td>
-                            <div th:text="${insight.stddevPercent() > 10 ? 'Variable' : 'Fixed'}"></div>
-                        </td>
-                        <td>
-                            <div th:if="${insight.expenseCount() > 2}" th:text="${insight.percentile90()}"></div>
-                            <div th:unless="${insight.expenseCount() > 2}">Not enough info</div>
-                        </td>
-                        <td>
-                            <div th:if="${insight.safeBudgetConfidence() > 0}" th:text="${insight.safeBudgetConfidence()}"></div>
-                            <div th:if="${insight.safeBudgetConfidence() <= 0}">Not enough info</div>
-                        </td>
-                        <td>
-                            <small th:text="${insight.updatedAt()}"></small>
-                        </td>
-                    </tr>
-
+                    <th:block  th:each="insight, stat: ${group.value}">
+                        <tr th:class="${insight.safeBudgetConfidence() > 50 ? 'table-success' : ''}">
+                            <td th:if="${stat.first}" th:rowspan="${group.value.size()}" class="align-middle">
+                                <div th:text="${{group.key}}"></div>
+                            </td>
+                            <td>
+                                <div th:text="${{categories.get(insight.category().id()-1).name()}}"></div>
+                            </td>
+                            <td>
+                                <div th:text="${{insight.expenseCount()}}"></div>
+                            </td>
+                            <td>
+                                <div th:text="${insight.median()}"></div>
+                            </td>
+                            <td>
+                                <div th:text="${{insight.stddevPercent()}}"></div>
+                            </td>
+                            <td>
+                                <div th:text="${insight.stddevPercent() > 10 ? 'Variable' : 'Fixed'}"></div>
+                            </td>
+                            <td>
+                                <div th:if="${insight.safeBudgetConfidence() > 0}" th:text="${insight.safeBudgetConfidence()}"></div>
+                                <div th:if="${insight.safeBudgetConfidence() <= 0}">Not enough info</div>
+                            </td>
+                            <td>
+                                <div th:if="${insight.expenseCount() > 2}" th:text="${insight.percentile90()}"></div>
+                                <div th:unless="${insight.expenseCount() > 2}">Not enough info</div>
+                            </td>
+                            <td>
+                                <small th:text="${insight.updatedAt()}"></small>
+                            </td>
+                        </tr>
+                    </th:block>
                 </th:block>
                 </tbody>
             </table>
