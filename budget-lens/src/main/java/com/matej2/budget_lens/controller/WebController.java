@@ -6,6 +6,7 @@ import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
+import com.matej2.budget_lens.utils.MathUtils;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.PageRequest;
@@ -59,6 +60,23 @@ public class WebController {
         return "index";
     }
 
+    private List<CategoryInsightsResponse> getFormatedInsights(List<CategoryInsightsResponse> insightList) {
+        return insightList.stream()
+                .map(i -> new CategoryInsightsResponse(
+                        i.id(),
+                        i.yearMonth(),
+                        i.category(),
+                        MathUtils.toPercentage(i.stddevPercent()),
+                        MathUtils.toTwoDecimals(i.median()),
+                        MathUtils.toTwoDecimals(i.percentile90()),
+                        i.expenseCount(),
+                        i.updatedAt(),
+                        MathUtils.toPercentage(i.safeBudgetConfidence()),
+                        MathUtils.toPercentage(i.budgetUtilization())
+                ))
+                .toList();
+    }
+
     private Map<YearMonth, List<CategoryInsightsResponse>> getGroupedInsights(List<CategoryInsightsResponse> insightList) {
         return insightList.stream()
                 .collect(Collectors.groupingBy(
@@ -69,11 +87,14 @@ public class WebController {
     }
 
     private @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
+        Map<YearMonth, List<CategoryInsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
+                getFormatedInsights(insightService.getAllInsights())
+        );
         return Map.of(
                 "expenses", expenses,
                 "frequencies", frequencyService.getAllFrequencies(),
                 "categories", categoryService.getAllCategories(),
-                "insights", getGroupedInsights(insightService.getAllInsights()),
+                "insights", groupedAndFormattedInsights,
                 "budgets", budgetService.getAll(),
                 "pageNumber", pageNumber,
                 "isAuthenticated", isAuthenticated(),
