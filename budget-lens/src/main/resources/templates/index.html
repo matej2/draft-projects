@@ -5,6 +5,15 @@
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        table .invalid td {
+            color: DarkGray
+        }
+
+        table .candidate td {
+            color: DarkGray
+        }
+    </style>
 
 </head>
 <body>
@@ -209,7 +218,7 @@
                 <tbody>
                 <th:block th:each="group : ${insights}">
                     <th:block  th:each="insight, stat: ${group.value}">
-                        <tr th:class="${insight.safeBudgetConfidence() > 50 ? 'table-success' : ''}">
+                        <tr th:class="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).getClassNamesForInsightRow(insight)}">
                             <td th:if="${stat.first}" th:rowspan="${group.value.size()}" class="align-middle">
                                 <div th:text="${{group.key}}"></div>
                             </td>
@@ -232,12 +241,12 @@
                                 <div th:text="${{insight.budgetUtilization()}}"></div>
                             </td>
                             <td>
-                                <div th:if="${insight.safeBudgetConfidence() > 0}" th:text="${insight.safeBudgetConfidence()}"></div>
-                                <div th:if="${insight.safeBudgetConfidence() <= 0}">Not enough info</div>
+                                <div th:if="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}" th:text="${insight.safeBudgetConfidence()}"></div>
+                                <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}">Not enough info</div>
                             </td>
                             <td>
-                                <div th:if="${insight.expenseCount() > 2}" th:text="${insight.percentile90()}"></div>
-                                <div th:unless="${insight.expenseCount() > 2}">Not enough info</div>
+                                <div th:if="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}" th:text="${insight.percentile90()}"></div>
+                                <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}">Not enough info</div>
                             </td>
                             <td>
                                 <small th:text="${insight.updatedAt()}"></small>
