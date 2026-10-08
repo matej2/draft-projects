@@ -234,8 +234,13 @@
                                 <div th:text="${{insight.stddevPercent()}}"></div>
                             </td>
                             <td>
-                                <span th:text="${{insight.budgetUtilization()}}"></span>
-                                <i th:if="${insight.budgetUtilization() >= 100}" class="bi bi-graph-up-arrow"></i>
+                                <th:block th:if="${insight.budgetUtilization()}" >
+                                    <span th:text="${{insight.budgetUtilization()}}"></span>
+                                    <i th:if="${insight.budgetUtilization() >= 100}" class="bi bi-graph-up-arrow"></i>
+                                </th:block>
+                                <th:block th:unless="${insight.budgetUtilization()}" >
+                                    No budget
+                                </th:block>
                             </td>
                             <td>
                                 <div th:if="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}" th:text="${insight.safeBudgetConfidence()}"></div>
