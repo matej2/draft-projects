@@ -1,7 +1,10 @@
 package com.matej2.budget_lens.service.domain;
 
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Insight;
+import com.matej2.budget_lens.domain.mapper.CategoryMapper;
 import com.matej2.budget_lens.domain.mapper.InsightMapper;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.InsightRepository;
@@ -20,7 +23,9 @@ import java.util.List;
 public class InsightService {
     private final InsightRepository insightRepository;
     private final CategoryRepository categoryRepository;
+
     private final InsightMapper insightMapper;
+    private final CategoryMapper categoryMapper;
 
     public void saveInsightList(List<CategoryInsightsResponse> insight, YearMonth yearMonth) {
         log.debug("Saved insights request for month");
@@ -57,4 +62,11 @@ public class InsightService {
                 .map(insightMapper::toResponse)
                 .toList();
     };
+
+    public List<CategoryInsightsResponse> getInsightByYearMonthAndCategory(YearMonth yearMonth, CategoryResponse categoryResponse) {
+        Category category = categoryMapper.toEntity(categoryResponse);
+        return insightRepository.findByYearMonthAndCategory(yearMonth, category).stream()
+                .map(insightMapper::toResponse)
+                .toList();
+    }
 }

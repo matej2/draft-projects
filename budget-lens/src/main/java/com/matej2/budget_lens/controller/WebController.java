@@ -2,8 +2,10 @@ package com.matej2.budget_lens.controller;
 
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.domain.dto.response.InsightsResponse;
+import com.matej2.budget_lens.domain.mapper.CategoryMapper;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
@@ -24,8 +26,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,6 +42,8 @@ public class WebController {
     private final CategoryService categoryService;
     private final InsightService insightService;
     private final BudgetService budgetService;
+
+    private final CategoryMapper categoryMapper;
 
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,6 +66,36 @@ public class WebController {
         model.addAllAttributes(attributes);
 
         return "index";
+    }
+
+    @GetMapping("/budget")
+    public String budget(Model model, String yearMonth, Integer categoryId) {
+        if (yearMonth == null || categoryId == null) {
+            throw new RuntimeException("Missing yearMonth or categoryId");
+        }
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .appendPattern("yyyy-MM")
+                .toFormatter(Locale.ENGLISH);
+        YearMonth expenseYearMonth = YearMonth.parse(yearMonth, formatter);
+        CategoryResponse categoryResponse = categoryMapper.toResponse(categoryService.getCategory(categoryId));
+
+        List<CategoryInsightsResponse> insights = insightService.getInsightByYearMonthAndCategory(expenseYearMonth, categoryResponse);
+        List<Frequency> frequencies = frequencyService.getAllFrequencies()
+
+        List<BudgetRequest> budgets = budgetService.getAllByCategoryId(categoryId);
+        Map<String, Integer> budgetByFrequency = budgets.stream()
+                        .collect(Collectors.toMap(
+                                BudgetRequest::
+                        ))
+
+        model.addAllAttributes(Map.of(
+                "insights", getFormatedInsights(insights),
+                "budgets", budgets,
+                "yearMonth", yearMonth
+        ));
+
+        return "budget";
     }
 
     private List<InsightsResponse> getFormatedInsights(List<CategoryInsightsResponse> insightList) {

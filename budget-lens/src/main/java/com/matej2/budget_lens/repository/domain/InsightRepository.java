@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 
 @Repository
 public interface InsightRepository extends JpaRepository<Insight, Integer> {
@@ -42,4 +43,7 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
             @Param("safeBudgetConfidence") Double safeBudgetConfidence,
             @Param("budgetUtilization") Double budgetUtilization
         );
+
+    public List<Insight> findByYearMonthAndCategory(YearMonth yearMonth, Category category);
+
 }

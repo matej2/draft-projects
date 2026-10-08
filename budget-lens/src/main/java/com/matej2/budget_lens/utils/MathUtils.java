@@ -5,7 +5,10 @@ import java.text.DecimalFormat;
 
 public class MathUtils {
 
-    public static Integer toPercentage(double number) {
+    public static Integer toPercentage(Double number) {
+        if (number == null) {
+            return null;
+        }
         return MathUtils.toTwoDecimals(number * 100);
     }
 

@@ -17,6 +17,7 @@ public class CategoryService {
 
     // TODO: Rename, set exception message
     public Category getCategory(Integer id) {
+        // TODO: Map category
         return categoryRepository.findById(id).orElseThrow();
     }
     public List<CategoryResponse> getAllCategories() {

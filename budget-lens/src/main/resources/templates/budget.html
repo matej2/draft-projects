@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        table .invalid td {
+            color: DarkGray
+        }
+
+        table .candidate td {
+            color: DarkGray
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="row bg-body-secondary rounded mb-3 p-3">
+        <div class="col">
+            <h1 th:text="'Insight list for ' + ${yearMonth}" class="mb-2"></h1>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Total existing budget</th>
+                    <th>Existing budget utilization</th>
+                    <th>Suggested new budget</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="insight : ${insights}">
+                    <tr th:class="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).getClassNamesForInsightRow(insight)}">
+                        <td>
+                            <div th:text="${{insight.category()}}"></div>
+                        </td>
+                        <td>
+                            <div>N/A</div>
+                        </td>
+                        <td>
+                            <div th:text="${{insight.budgetUtilization()}}"></div>
+                        </td>
+                    </tr>
+                    <tr>
+
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+    window.onload = function() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    };
+
+</script>
+</body>
+</html>

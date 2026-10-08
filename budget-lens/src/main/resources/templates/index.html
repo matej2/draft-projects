@@ -249,6 +249,7 @@
                             <td>
                                 <div th:if="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}" th:text="${insight.percentile90()}"></div>
                                 <div th:unless="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).checkInsightValidity(insight)}"><i class="bi bi-ban"></i> Not enough info</div>
+                                <a th:href="@{/budget(yearMonth=${group.key}, categoryId=${insight.category().id()})}" class="btn btn-link p-0">Budget details</a>
                             </td>
                             <td>
                                 <small th:text="${insight.updatedAt()}"></small>
