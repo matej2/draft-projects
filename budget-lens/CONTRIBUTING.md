@@ -20,3 +20,14 @@ Docker compose file uses this image. Its configuration adds environment variable
 Transactions are imported using CSV export file. These transactions are ordered by the frequency of the source (transaction owner). Only the top 20% of most frequent transactions will be sent to AI.
 
 AI will try to figure a ways to save spendings based on the budget.
+
+
+# Budget breakdown
+
+One of the most frequency way to breakdown a budget is 50/30/20:
+
+50% - neccessities such as rent, food, transportation, insurance
+30% - wants such as restaurants, hobbies, holidays, clothes, gym
+20% - long term savings such as emergency found, loan, car, investing
+
+Emergency found should be separated from the savings for car, investment saving and the rest.
