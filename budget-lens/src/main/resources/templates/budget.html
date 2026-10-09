@@ -20,6 +20,69 @@
 
 <div class="container mt-4">
     <div class="row bg-body-secondary rounded mb-3 p-3">
+        <div class="col-4 ">
+
+            <a class="btn btn-primary" href="#" th:if="${isAuthenticated}" th:href="@{/logout}">Logout</a>
+
+            <div th:if="${!isAuthenticated}">
+                <div class="mb-3">
+                    Login to add new budget
+                </div>
+                <a  class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
+            </div>
+
+            <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"
+                  th:object="${budgetRequest}" method="POST">
+
+                <h3>Add new budget</h3>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="note">Note:</label>
+                    <input class="form-control" type="text" id="note" th:field="*{note}" />
+                    <span th:if="${#fields.hasErrors('note')}" th:errors="*{note}" style="color: red;"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="quota">Cost (€):</label>
+                    <input class="form-control" type="number" step="0.01" id="quota" th:field="*{quota}" min="1" required />
+                    <span th:if="${#fields.hasErrors('quota')}" th:errors="*{quota}" style="color: red;"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="frequencyId">frequency:</label>
+                    <select  class="form-select" id="frequencyId" th:field="*{frequencyId}" required>
+                        <option value="">Choose frequency</option>
+                        <option th:each="freq : ${frequencies}"
+                                th:value="${freq.id}"
+                                th:text="${freq.description}"></option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('frequencyId')}" th:errors="*{frequencyId}" style="color: red;"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="categoryId">Kategorija:</label>
+                    <select  class="form-select" id="categoryId" th:field="*{categoryId}" required>
+                        <option value="">Choose category</option>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat.id}"
+                                th:text="${cat.name}"></option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" style="color: red;"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input class="btn btn-primary" type="submit" value="Submit" />
+                    <input class="btn btn-secondary" type="reset" value="Reset" />
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger">
+                    <p th:text="${error}"></p>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="row bg-body-secondary rounded mb-3 p-3">
         <div class="col">
             <h1 th:text="'Insight list for ' + ${yearMonth}" class="mb-2"></h1>
             <table class="table table-striped">
@@ -37,15 +100,26 @@
                             <div th:text="${{budget.safeBudgetConfidence()}}"></div>
                         </td>
                         <td>
-                            <div th:text="${{budget.budgetUtilization()}}"></div>
+                            <th:block th:if="${budget.budgetUtilization()}">
+                                <div th:text="${{budget.budgetUtilization()}}"></div>
+                            </th:block>
+                            <th:block th:unless="${budget.budgetUtilization()}">
+                                No data
+                            </th:block>
                         </td>
                         <td>
-                            <th:block th:each="frequencyBudget : ${budget.frequencyToBudget()}">
-                                <p>
-                                    <span th:text="${{frequencyBudget.key.description()}}"></span>
-                                    <span th:text="${{frequencyBudget.value}}"></span>
-                                </p>
+                            <th:block th:if="${budget.frequencyToBudget()}">
+                                <th:block th:each="frequencyBudget : ${budget.frequencyToBudget()}">
+                                    <p>
+                                        <span th:text="${{frequencyBudget.key.description()}}"></span>
+                                        <span th:text="${{frequencyBudget.value}}"></span>
+                                    </p>
+                                </th:block>
                             </th:block>
+                            <th:block th:unless="${budget.frequencyToBudget()}">
+                                No data
+                            </th:block>
+
                         </td>
                     </tr>
                 </th:block>

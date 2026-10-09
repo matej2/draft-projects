@@ -107,9 +107,13 @@ public class WebController {
         });
 
         model.addAllAttributes(Map.of(
-                "insights", getFormatedInsights(insights),
-                "budgets", insightBudgetResponses,
-                "yearMonth", yearMonth
+            "insights", getFormatedInsights(insights),
+            "budgets", insightBudgetResponses,
+            "yearMonth", yearMonth,
+            "isAuthenticated", isAuthenticated(),
+            "frequencies", frequencyService.getAllFrequencies(),
+            "categories", categoryService.getAllCategories(),
+                "budgetRequest", new BudgetRequest(null, null, null, null)
         ));
 
         return "budget";
