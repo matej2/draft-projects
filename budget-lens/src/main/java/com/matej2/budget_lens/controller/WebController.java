@@ -7,6 +7,7 @@ import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
 import com.matej2.budget_lens.utils.MathUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.PageRequest;
@@ -106,17 +107,27 @@ public class WebController {
             ));
         });
 
-        model.addAllAttributes(Map.of(
-            "insights", getFormatedInsights(insights),
-            "budgets", insightBudgetResponses,
-            "yearMonth", yearMonth,
-            "isAuthenticated", isAuthenticated(),
-            "frequencies", frequencyService.getAllFrequencies(),
-            "categories", categoryService.getAllCategories(),
+        Map<String, Object> modelAttributes = new HashMap<>(getInitialModelAttrMap("/"));
+        modelAttributes.putAll(Map.of(
+                "insights", getFormatedInsights(insights),
+                "budgets", insightBudgetResponses,
+                "yearMonth", yearMonth,
+                "isAuthenticated", isAuthenticated(),
+                "frequencies", frequencyService.getAllFrequencies(),
+                "categories", categoryService.getAllCategories(),
                 "budgetRequest", new BudgetRequest(null, null, null, null)
         ));
 
+        model.addAllAttributes(modelAttributes);
+
         return "budget";
+    }
+
+    private Map<String, Object> getInitialModelAttrMap(String returnUrl) {
+        return Map.of(
+                "returnUrl", returnUrl,
+                "isAuthenticated", isAuthenticated()
+        );
     }
 
     private List<InsightsResponse> getFormatedInsights(List<CategoryInsightsResponse> insightList) {
@@ -149,36 +160,50 @@ public class WebController {
         Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
                 getFormatedInsights(insightService.getAllInsights())
         );
-        return Map.of(
+
+        Map<String, Object> modelAttributes = new HashMap<>(getInitialModelAttrMap("/"));
+        modelAttributes.putAll(Map.of(
                 "expenses", expenses,
                 "frequencies", frequencyService.getAllFrequencies(),
                 "categories", categoryService.getAllCategories(),
                 "insights", groupedAndFormattedInsights,
                 "budgets", budgetService.getAll(),
                 "pageNumber", pageNumber,
-                "isAuthenticated", isAuthenticated(),
                 "budgetRequest", new BudgetRequest(null, null, null, null)
-        );
+        ));
+
+        return modelAttributes;
+    }
+
+    private String getRedirectString(HttpServletRequest request) {
+        String refUrl = request.getHeader("Referer");
+        String redirectString = "redirect:/";
+
+        if (refUrl != null) {
+            redirectString = String.format("redirect:%s", refUrl);
+        }
+
+        return redirectString;
     }
 
     @PostMapping("/submitExpense")
     public String submitExpense(
+            HttpServletRequest request,
             @ModelAttribute BudgetRequest budgetRequest,
             RedirectAttributes redirectAttributes
     ) {
-        // Public endpoint with rate limit
         try {
             this.budgetService.add(budgetRequest);
         } catch (RecordOverLimitExeption e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        return "redirect:/";
+        return getRedirectString(request);
     }
 
     @DeleteMapping("/deleteExpense/{id}")
-    public String deleteExpense(@PathVariable Integer id){
+    public String deleteExpense(HttpServletRequest request, @PathVariable Integer id){
         this.expenseTrackingService.deleteExpense(id);
-        return "redirect:/";
+        return getRedirectString(request);
     }
 
     @PostMapping("/uploadCsv")
