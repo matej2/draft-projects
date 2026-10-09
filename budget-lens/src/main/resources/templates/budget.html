@@ -25,27 +25,28 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Total existing budget</th>
+                    <th>Safe budget confidence</th>
                     <th>Existing budget utilization</th>
                     <th>Suggested new budget</th>
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="insight : ${insights}">
-                    <tr th:class="${T(com.matej2.budget_lens.utils.UserInterfaceUtils).getClassNamesForInsightRow(insight)}">
-                        <td>
-                            <div th:text="${{insight.category()}}"></div>
-                        </td>
-                        <td>
-                            <div>N/A</div>
-                        </td>
-                        <td>
-                            <div th:text="${{insight.budgetUtilization()}}"></div>
-                        </td>
-                    </tr>
+                <th:block th:each="budget : ${budgets}">
                     <tr>
-
+                        <td>
+                            <div th:text="${{budget.safeBudgetConfidence()}}"></div>
+                        </td>
+                        <td>
+                            <div th:text="${{budget.budgetUtilization()}}"></div>
+                        </td>
+                        <td>
+                            <th:block th:each="frequencyBudget : ${budget.frequencyToBudget()}">
+                                <p>
+                                    <span th:text="${{frequencyBudget.key.description()}}"></span>
+                                    <span th:text="${{frequencyBudget.value}}"></span>
+                                </p>
+                            </th:block>
+                        </td>
                     </tr>
                 </th:block>
                 </tbody>

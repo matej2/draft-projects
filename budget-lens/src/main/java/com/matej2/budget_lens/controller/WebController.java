@@ -1,10 +1,7 @@
 package com.matej2.budget_lens.controller;
 
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
-import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
-import com.matej2.budget_lens.domain.dto.response.InsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.*;
 import com.matej2.budget_lens.domain.mapper.CategoryMapper;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
@@ -28,10 +25,7 @@ import java.io.IOException;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -79,19 +73,42 @@ public class WebController {
                 .toFormatter(Locale.ENGLISH);
         YearMonth expenseYearMonth = YearMonth.parse(yearMonth, formatter);
         CategoryResponse categoryResponse = categoryMapper.toResponse(categoryService.getCategory(categoryId));
+        List<InsightBudgetResponse> insightBudgetResponses = new ArrayList<>();
 
         List<CategoryInsightsResponse> insights = insightService.getInsightByYearMonthAndCategory(expenseYearMonth, categoryResponse);
-        List<Frequency> frequencies = frequencyService.getAllFrequencies()
 
-        List<BudgetRequest> budgets = budgetService.getAllByCategoryId(categoryId);
-        Map<String, Integer> budgetByFrequency = budgets.stream()
-                        .collect(Collectors.toMap(
-                                BudgetRequest::
-                        ))
+
+        List<FrequencyResponse> frequencies = frequencyService.getAllFrequencies();
+        FrequencyResponse monthlyFrequency = frequencies.stream()
+                .filter(f -> f.number() == 12)
+                .findFirst()
+                .orElseThrow();
+
+        Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
+        insights
+                .forEach(
+                        insight -> {
+                            double budgetYearlyValue = insight.percentile90() * monthlyFrequency.number();
+                            frequencies.forEach(f -> {
+                                long relativeNumber = Math.round(budgetYearlyValue / f.number());
+                                frequencyToBudget.put(f, Math.toIntExact(relativeNumber));
+                            });
+                        }
+
+        );
+
+        insights.forEach(insight -> {
+            insightBudgetResponses.add(new InsightBudgetResponse(
+                    frequencyToBudget,
+                    MathUtils.toPercentage(insight.safeBudgetConfidence()),
+                    MathUtils.toPercentage(insight.budgetUtilization()),
+                    insight.updatedAt()
+            ));
+        });
 
         model.addAllAttributes(Map.of(
                 "insights", getFormatedInsights(insights),
-                "budgets", budgets,
+                "budgets", insightBudgetResponses,
                 "yearMonth", yearMonth
         ));
 
