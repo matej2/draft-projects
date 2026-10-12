@@ -55,4 +55,15 @@ public class ApplicationConfig {
                 .toFormatter(Locale.ENGLISH);
     }
 
+    @Bean
+    @Qualifier("openaiRestTemplate")
+    public RestTemplate openaiRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().add("Authorization", "Bearer " + openaiApiKey);
+            return execution.execute(request, body);
+        });
+        return restTemplate;
+    }
+
 }

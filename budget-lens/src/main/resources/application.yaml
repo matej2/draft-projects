@@ -42,3 +42,8 @@ management:
 
 scheduling:
   enabled: true
+
+
+openai:
+  model: gpt-6-luna
+  key: ${CHATGPT_KEY}
