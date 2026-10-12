@@ -17,17 +17,7 @@ import java.util.List;
 public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     List<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate);
     List<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
-    @Query(value = """
-    SELECT SUM(cost)
-    FROM Expense e INNER JOIN Category c
-        ON e.category.id = c.id
-    WHERE
-        c.id = :categoryId AND
-        e.expenseDate >= :startDate AND
-        e.expenseDate < :endDate
-    GROUP BY c.id
-    """)
-    Float summarizeCurrentAmountByCategoryIdByDateBetween(Integer categoryId, LocalDate startDate, LocalDate endDate);
+
     @Query(value = """
     SELECT NEW com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow(
         ((stddev_pop(e.cost) / SQRT(COUNT(e.id))) / AVG(e.cost)) as stddev_percent,

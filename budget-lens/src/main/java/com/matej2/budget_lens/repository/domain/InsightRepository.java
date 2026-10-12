@@ -44,6 +44,6 @@ public interface InsightRepository extends JpaRepository<Insight, Integer> {
             @Param("budgetUtilization") Double budgetUtilization
         );
 
-    public List<Insight> findByYearMonthAndCategory(YearMonth yearMonth, Category category);
+    List<Insight> findByYearMonthAndCategory(YearMonth yearMonth, Category category);
 
 }

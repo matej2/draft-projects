@@ -34,7 +34,7 @@ public class RecordLimiterAspect {
         return repositoryInterfaces.getFirst().getAnnotation(RecordLimitEnabled.class);
     }
 
-    private long getCurrentRecordCount(RecordLimit recordLimit, long recordCount) throws Throwable {
+    private long getCurrentRecordCount(RecordLimit recordLimit, long recordCount) {
         long actualRecordCount =  recordLimit.getCurrentCount() == null ?  0L : recordLimit.getCurrentCount();
         return actualRecordCount + recordCount;
 

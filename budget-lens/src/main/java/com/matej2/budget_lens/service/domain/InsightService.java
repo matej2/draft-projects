@@ -61,7 +61,7 @@ public class InsightService {
         return insightRepository.findAll(Sort.by(orders)).stream()
                 .map(insightMapper::toResponse)
                 .toList();
-    };
+    }
 
     public List<CategoryInsightsResponse> getInsightByYearMonthAndCategory(YearMonth yearMonth, CategoryResponse categoryResponse) {
         Category category = categoryMapper.toEntity(categoryResponse);

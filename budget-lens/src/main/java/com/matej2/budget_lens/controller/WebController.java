@@ -98,14 +98,12 @@ public class WebController {
 
         );
 
-        insights.forEach(insight -> {
-            insightBudgetResponses.add(new InsightBudgetResponse(
-                    frequencyToBudget,
-                    MathUtils.toPercentage(insight.safeBudgetConfidence()),
-                    MathUtils.toPercentage(insight.budgetUtilization()),
-                    insight.updatedAt()
-            ));
-        });
+        insights.forEach(insight -> insightBudgetResponses.add(new InsightBudgetResponse(
+                frequencyToBudget,
+                MathUtils.toPercentage(insight.safeBudgetConfidence()),
+                MathUtils.toPercentage(insight.budgetUtilization()),
+                insight.updatedAt()
+        )));
 
         Map<String, Object> modelAttributes = new HashMap<>(getInitialModelAttrMap("/"));
         modelAttributes.putAll(Map.of(
