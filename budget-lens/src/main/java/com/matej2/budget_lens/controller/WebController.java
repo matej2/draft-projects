@@ -114,7 +114,7 @@ public class WebController {
                 "yearMonth", yearMonth,
                 "isAuthenticated", isAuthenticated(),
                 "frequencies", frequencyService.getAllFrequencies(),
-                "categories", categoryService.getAllCategories(),
+                "categories", List.of(categoryResponse),
                 "budgetRequest", new BudgetRequest(null, null, null, null)
         ));
 

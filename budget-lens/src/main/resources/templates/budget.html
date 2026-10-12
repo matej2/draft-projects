@@ -84,7 +84,7 @@
 
         <div class="row bg-body-secondary rounded mb-3 p-3">
         <div class="col">
-            <h1 th:text="'Insight list for ' + ${yearMonth}" class="mb-2"></h1>
+            <h1 th:text="'Insight list for ' + ${yearMonth} + ': Category ' + ${categories.get(0).name()}" class="mb-2"></h1>
             <table class="table table-striped">
                 <thead>
                 <tr>
