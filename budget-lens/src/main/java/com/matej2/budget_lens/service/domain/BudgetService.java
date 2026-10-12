@@ -23,6 +23,7 @@ public class BudgetService {
         Category categoryEntity = categoryService.getCategory(budget.categoryId());
         Frequency frequency = frequencyService.getFrequencyOrThrow(budget.frequencyId());
 
+        // TODO: Move mapping to frequency service
         Budget budgetEntity = budgetMapper.toEntity(budget,  categoryEntity, frequency);
         this.budgetRepository.save(budgetEntity);
     }

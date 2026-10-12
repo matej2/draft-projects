@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matej2.budget_lens.repository.UserRepository;
 import com.matej2.budget_lens.service.CustomUserDetailsService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +12,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Locale;
 
 @Configuration
 public class ApplicationConfig {
@@ -41,6 +45,14 @@ public class ApplicationConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    public DateTimeFormatter dateTimeFormatter() {
+        return new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .appendPattern("yyyy-MM")
+                .toFormatter(Locale.ENGLISH);
     }
 
 }

@@ -1,21 +1,20 @@
 package com.matej2.budget_lens.controller;
 
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.response.*;
+import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
+import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
 import com.matej2.budget_lens.domain.mapper.CategoryMapper;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
-import com.matej2.budget_lens.utils.MathUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.matej2.budget_lens.utils.ControllerUtils.getRedirectString;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,13 +39,11 @@ public class WebController {
     private final InsightService insightService;
     private final BudgetService budgetService;
 
+    private final WebModelProvider webModelProvider;
+    private final DateTimeFormatter dateTimeFormatter;
+
     private final CategoryMapper categoryMapper;
 
-    private boolean isAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        return !(authentication instanceof AnonymousAuthenticationToken);
-    }
 
     @GetMapping
     public String home(Model model, Integer pageNumber) {
@@ -57,132 +56,53 @@ public class WebController {
                 Sort.by("expenseDate").descending());
         List<ExpenseResponse> expenses = expenseTrackingService.getExpense(sortedByDate);
 
-        Map<String, Object> attributes = getAttributesForExpenses(pageNumber, expenses);
+        Map<String, Object> attributes = webModelProvider.getAttributesForExpenses(pageNumber, expenses);
         model.addAllAttributes(attributes);
 
         return "index";
     }
 
-    @GetMapping("/budget")
-    public String budget(Model model, String yearMonth, Integer categoryId) {
-        if (yearMonth == null || categoryId == null) {
-            throw new RuntimeException("Missing yearMonth or categoryId");
-        }
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .parseCaseInsensitive()
-                .appendPattern("yyyy-MM")
-                .toFormatter(Locale.ENGLISH);
-        YearMonth expenseYearMonth = YearMonth.parse(yearMonth, formatter);
-        CategoryResponse categoryResponse = categoryMapper.toResponse(categoryService.getCategory(categoryId));
-        List<InsightBudgetResponse> insightBudgetResponses = new ArrayList<>();
+    private Map<FrequencyResponse, Integer> generateFrequencyToBudgetMapping(CategoryInsightsResponse insight) {
+        List<FrequencyResponse> allFrequencies = frequencyService.getAllFrequencies();
+        Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
 
-        List<CategoryInsightsResponse> insights = insightService.getInsightByYearMonthAndCategory(expenseYearMonth, categoryResponse);
-
-
-        List<FrequencyResponse> frequencies = frequencyService.getAllFrequencies();
-        FrequencyResponse monthlyFrequency = frequencies.stream()
+        FrequencyResponse monthlyFrequency = allFrequencies.stream()
                 .filter(f -> f.number() == 12)
                 .findFirst()
                 .orElseThrow();
 
+        double budgetYearlyValue = insight.percentile90() * monthlyFrequency.number();
+
+        for (FrequencyResponse frequency : allFrequencies) {
+            long relativeBudget = Math.round(budgetYearlyValue / frequency.number());
+            frequencyToBudget.put(frequency, Math.toIntExact(relativeBudget));
+        }
+
+        return frequencyToBudget;
+    }
+
+    @GetMapping("/budget")
+    public String budget(Model model, @NonNull String yearMonth, @NonNull Integer categoryId) {
+        YearMonth expenseYearMonth = YearMonth.parse(yearMonth, dateTimeFormatter);
+        CategoryResponse categoryResponse = categoryMapper.toResponse(categoryService.getCategory(categoryId));
+        List<CategoryInsightsResponse> insightsByDateAndCategory = insightService.getInsightByYearMonthAndCategory(expenseYearMonth, categoryResponse);
+
         Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
-        insights
-                .forEach(
-                        insight -> {
-                            double budgetYearlyValue = insight.percentile90() * monthlyFrequency.number();
-                            frequencies.forEach(f -> {
-                                long relativeNumber = Math.round(budgetYearlyValue / f.number());
-                                frequencyToBudget.put(f, Math.toIntExact(relativeNumber));
-                            });
-                        }
+        for (CategoryInsightsResponse categoryInsight : insightsByDateAndCategory) {
+            frequencyToBudget.putAll(generateFrequencyToBudgetMapping(categoryInsight));
+        }
 
-        );
-
-        insights.forEach(insight -> insightBudgetResponses.add(new InsightBudgetResponse(
-                frequencyToBudget,
-                MathUtils.toPercentage(insight.safeBudgetConfidence()),
-                MathUtils.toPercentage(insight.budgetUtilization()),
-                insight.updatedAt()
-        )));
-
-        Map<String, Object> modelAttributes = new HashMap<>(getInitialModelAttrMap("/"));
-        modelAttributes.putAll(Map.of(
-                "insights", getFormatedInsights(insights),
-                "budgets", insightBudgetResponses,
-                "yearMonth", yearMonth,
-                "isAuthenticated", isAuthenticated(),
-                "frequencies", frequencyService.getAllFrequencies(),
-                "categories", List.of(categoryResponse),
-                "budgetRequest", new BudgetRequest(null, null, null, null)
+        model.addAllAttributes(webModelProvider.getAttributesForBudget(
+            insightsByDateAndCategory,
+            frequencyToBudget,
+            yearMonth,
+            categoryResponse
         ));
-
-        model.addAllAttributes(modelAttributes);
 
         return "budget";
     }
 
-    private Map<String, Object> getInitialModelAttrMap(String returnUrl) {
-        return Map.of(
-                "returnUrl", returnUrl,
-                "isAuthenticated", isAuthenticated()
-        );
-    }
 
-    private List<InsightsResponse> getFormatedInsights(List<CategoryInsightsResponse> insightList) {
-        return insightList.stream()
-                .map(i -> new InsightsResponse(
-                        i.id(),
-                        i.yearMonth(),
-                        i.category(),
-                        MathUtils.toPercentage(i.stddevPercent()),
-                        MathUtils.toTwoDecimals(i.median()),
-                        MathUtils.toTwoDecimals(i.percentile90()),
-                        i.expenseCount(),
-                        i.updatedAt(),
-                        MathUtils.toPercentage(i.safeBudgetConfidence()),
-                        MathUtils.toPercentage(i.budgetUtilization())
-                ))
-                .toList();
-    }
-
-    private Map<YearMonth, List<InsightsResponse>> getGroupedInsights(List<InsightsResponse> insightList) {
-        return insightList.stream()
-                .collect(Collectors.groupingBy(
-                        InsightsResponse::yearMonth,
-                        LinkedHashMap::new,
-                        Collectors.toList()
-                ));
-    }
-
-    private @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
-        Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
-                getFormatedInsights(insightService.getAllInsights())
-        );
-
-        Map<String, Object> modelAttributes = new HashMap<>(getInitialModelAttrMap("/"));
-        modelAttributes.putAll(Map.of(
-                "expenses", expenses,
-                "frequencies", frequencyService.getAllFrequencies(),
-                "categories", categoryService.getAllCategories(),
-                "insights", groupedAndFormattedInsights,
-                "budgets", budgetService.getAll(),
-                "pageNumber", pageNumber,
-                "budgetRequest", new BudgetRequest(null, null, null, null)
-        ));
-
-        return modelAttributes;
-    }
-
-    private String getRedirectString(HttpServletRequest request) {
-        String refUrl = request.getHeader("Referer");
-        String redirectString = "redirect:/";
-
-        if (refUrl != null) {
-            redirectString = String.format("redirect:%s", refUrl);
-        }
-
-        return redirectString;
-    }
 
     @PostMapping("/submitExpense")
     public String submitExpense(
