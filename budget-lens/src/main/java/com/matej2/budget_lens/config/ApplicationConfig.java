@@ -3,8 +3,11 @@ package com.matej2.budget_lens.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matej2.budget_lens.repository.UserRepository;
 import com.matej2.budget_lens.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestClient;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -57,13 +61,12 @@ public class ApplicationConfig {
 
     @Bean
     @Qualifier("openaiRestTemplate")
-    public RestTemplate openaiRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().add("Authorization", "Bearer " + openaiApiKey);
-            return execution.execute(request, body);
-        });
-        return restTemplate;
+    public RestClient openaiRestTemplate(RestClient.Builder builder,
+                                         @Value("${openai.api.key}") String openaiApiKey) {
+        return builder
+                .baseUrl("https://api.openai.com/v1/")
+                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + openaiApiKey)
+                .build();
     }
 
 }
