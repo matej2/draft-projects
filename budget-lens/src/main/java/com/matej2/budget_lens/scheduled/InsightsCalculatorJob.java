@@ -1,9 +1,16 @@
 package com.matej2.budget_lens.scheduled;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.victools.jsonschema.generator.*;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
+import com.matej2.budget_lens.domain.integration.AiCategorizationRequest;
+import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
@@ -11,6 +18,9 @@ import com.matej2.budget_lens.service.domain.InsightCalculatorService;
 import com.matej2.budget_lens.service.domain.InsightService;
 import com.matej2.budget_lens.service.integration.ChatGPTService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +40,8 @@ public class InsightsCalculatorJob {
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
     private final ChatGPTService chatService;
+    private final ExpenseMapper expenseMapper;
+    private final ObjectMapper objectMapper;
 
     private void saveInsights(List<CategoryInsightsResponse> insightList, YearMonth yearMonth) {
         insightService.saveInsightList(insightList, yearMonth);
@@ -74,9 +86,45 @@ public class InsightsCalculatorJob {
         });
     }
 
+    private String sendBatchToAi(List<AiCategorizationRequest> expenseBatch) {
+        chatService.getResponse();
+    }
+
+
+
+    private AiCategorizationRequest mapToRequest(Expense expense) {
+        return new AiCategorizationRequest(
+                expense.getId(),
+                expense.getNote(),
+                expense.getSource(),
+                expense.getExpenseDate()
+        ) ;
+    }
+
+    private void processBatch() {
+        Page<Expense> expensePage;
+        do {
+            Pageable sortedByDate = PageRequest.of(
+                    0,
+                    30);
+            expensePage = this.expenseRepository.findAll(sortedByDate);
+
+            List<Expense> expenseDataSlice = expensePage.getContent();
+            List<AiCategorizationRequest> mappedExpenseList = expenseDataSlice.stream()
+                    .map(this::mapToRequest)
+                    .toList();
+
+            sendBatchToAi(mappedExpenseList);
+        } while(expensePage.hasNext());
+
+    }
+
     @Scheduled(fixedDelayString = "1h")
     public void categorizeInsights() {
-        chatService.getResponse();
+        List<Calendar> treeMonths = generateCalendarInstancesForLastTreeMonths();
+        for (Calendar calendar : treeMonths) {
+
+        }
     }
 
     @Scheduled(fixedDelayString = "15m")
