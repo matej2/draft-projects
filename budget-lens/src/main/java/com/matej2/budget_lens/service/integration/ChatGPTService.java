@@ -1,29 +1,35 @@
 package com.matej2.budget_lens.service.integration;
 
-import com.matej2.budget_lens.domain.integration.ChatRequest;
-import com.matej2.budget_lens.domain.integration.ChatResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.Response;
+import com.openai.models.responses.ResponseCreateParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 @Service
 public class ChatGPTService {
-    @Qualifier("openaiRestTemplate")
-    @Autowired
-    private RestClient restClient;
 
-    @Value("${openai.model}")
-    private String model;
+    @Value("${spring.ai.openai.api-key}")
+    private String apiKey;
 
-    @Value("${openai.api.url}")
-    private String apiUrl;
+    public void getResponse() {
+        OpenAIClient client = OpenAIOkHttpClient.builder()
+                .apiKey(apiKey)
+                .build();
 
-    public ChatResponse processTransactionSummary() {
-        ChatRequest request = new ChatRequest();
-        ChatResponse response = restClient.postForObject(apiUrl, request, ChatResponse.class);
+        ResponseCreateParams params =
+                ResponseCreateParams
+                        .builder()
+                        .input("Say this is a test")
+                        .model("gpt-6-astra")
+                        .build();
 
-        return response.getChoices().get(0).getMessage().getContent();
+        Response response = client.responses().create(params);
+        response.output().stream()
+                .flatMap(item -> item.message().stream())
+                .flatMap(message -> message.content().stream())
+                .flatMap(content -> content.outputText().stream())
+                .forEach(outputText -> System.out.println(outputText.text()));
     }
 }

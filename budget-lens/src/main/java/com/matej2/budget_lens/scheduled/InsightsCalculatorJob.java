@@ -9,6 +9,7 @@ import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;
 import com.matej2.budget_lens.service.domain.InsightService;
+import com.matej2.budget_lens.service.integration.ChatGPTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,7 @@ public class InsightsCalculatorJob {
     private final ExpenseRepository expenseRepository;
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
+    private final ChatGPTService chatService;
 
     private void saveInsights(List<CategoryInsightsResponse> insightList, YearMonth yearMonth) {
         insightService.saveInsightList(insightList, yearMonth);
@@ -70,6 +72,11 @@ public class InsightsCalculatorJob {
 
             saveInsights(categoryInsightsResponseList, yearMonth);
         });
+    }
+
+    @Scheduled(fixedDelayString = "1h")
+    public void categorizeInsights() {
+        chatService.getResponse();
     }
 
     @Scheduled(fixedDelayString = "15m")

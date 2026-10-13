@@ -17,6 +17,9 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  ai:
+    openai:
+      api-key: <apikey>
 server:
   port: ${APP_PORT}
 
@@ -42,8 +45,3 @@ management:
 
 scheduling:
   enabled: true
-
-
-openai:
-  model: gpt-6-luna
-  key: ${CHATGPT_KEY}
