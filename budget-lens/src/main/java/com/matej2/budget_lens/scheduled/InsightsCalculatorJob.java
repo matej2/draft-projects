@@ -1,9 +1,7 @@
 package com.matej2.budget_lens.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.victools.jsonschema.generator.*;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
@@ -86,12 +84,6 @@ public class InsightsCalculatorJob {
         });
     }
 
-    private String sendBatchToAi(List<AiCategorizationRequest> expenseBatch) {
-        chatService.getResponse();
-    }
-
-
-
     private AiCategorizationRequest mapToRequest(Expense expense) {
         return new AiCategorizationRequest(
                 expense.getId(),
@@ -101,7 +93,7 @@ public class InsightsCalculatorJob {
         ) ;
     }
 
-    private void processBatch() {
+    private void processBatch() throws JsonProcessingException {
         Page<Expense> expensePage;
         do {
             Pageable sortedByDate = PageRequest.of(
@@ -114,9 +106,8 @@ public class InsightsCalculatorJob {
                     .map(this::mapToRequest)
                     .toList();
 
-            sendBatchToAi(mappedExpenseList);
+            chatService.getResponse(mappedExpenseList);
         } while(expensePage.hasNext());
-
     }
 
     @Scheduled(fixedDelayString = "1h")
