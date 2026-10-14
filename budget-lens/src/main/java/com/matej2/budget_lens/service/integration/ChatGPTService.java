@@ -24,7 +24,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ChatGPTService {
     private final ObjectMapper objectMapper;
-    private final OpenAIOkHttpClient openAIOkHttpClient;
 
     @Value("${spring.ai.openai.api-key}")
     private String apiKey;
@@ -36,7 +35,6 @@ public class ChatGPTService {
         );
 
         configBuilder.with(Option.FORBIDDEN_ADDITIONAL_PROPERTIES_BY_DEFAULT);
-        //configBuilder.with(Option.NONSTATIC_NONVOID_NONGETTER_METHODS);
 
         SchemaGeneratorConfig config = configBuilder.build();
         return new SchemaGenerator(config);

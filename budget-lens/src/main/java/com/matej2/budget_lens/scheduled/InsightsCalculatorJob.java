@@ -1,20 +1,20 @@
 package com.matej2.budget_lens.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.integration.AiCategorizationRequest;
-import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
+import com.matej2.budget_lens.domain.mapper.AICategorizationMapper;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;
 import com.matej2.budget_lens.service.domain.InsightService;
 import com.matej2.budget_lens.service.integration.ChatGPTService;
+import com.matej2.budget_lens.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +24,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
 
 import static com.matej2.budget_lens.utils.DateUtils.getFirstDayOfTheMonth;
 import static com.matej2.budget_lens.utils.DateUtils.getLastDayOfTheMonth;
@@ -38,33 +40,11 @@ public class InsightsCalculatorJob {
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
     private final ChatGPTService chatService;
-    private final ExpenseMapper expenseMapper;
-    private final ObjectMapper objectMapper;
+    private final AICategorizationMapper aicategorizationMapper;
 
-    private void saveInsights(List<CategoryInsightsResponse> insightList, YearMonth yearMonth) {
-        insightService.saveInsightList(insightList, yearMonth);
-    }
-
-    private List<Calendar> generateCalendarInstancesForLastTreeMonths() {
-        List<Calendar> result = new ArrayList<>();
-        Calendar calendarMonth = Calendar.getInstance();
-
-        java.util.stream.IntStream
-                .rangeClosed(0, 6)
-                .forEach(
-                i -> {
-                    calendarMonth.add(Calendar.MONTH, -i);
-                    result.add((Calendar)calendarMonth.clone());
-                    calendarMonth.setTime(new Date());
-                }
-        );
-
-        return result;
-    }
-
-    @Scheduled(fixedDelayString = "1m")
+    @Scheduled(fixedDelayString = "15m")
     public void calculateInsights() {
-        List<Calendar> treeMonths = generateCalendarInstancesForLastTreeMonths();
+        List<Calendar> treeMonths = DateUtils.generateCalendarInstancesForLastTreeMonths();
 
         treeMonths.forEach(month -> {
             LocalDate firstLocalDate = getFirstDayOfTheMonth(month);
@@ -80,45 +60,37 @@ public class InsightsCalculatorJob {
                     .filter(Objects::nonNull)
                     .toList();
 
-            saveInsights(categoryInsightsResponseList, yearMonth);
+            insightService.saveInsightList(categoryInsightsResponseList, yearMonth);
         });
     }
 
-    private AiCategorizationRequest mapToRequest(Expense expense) {
-        return new AiCategorizationRequest(
-                expense.getId(),
-                expense.getNote(),
-                expense.getSource(),
-                expense.getExpenseDate()
-        ) ;
-    }
-
-    private void processBatch() throws JsonProcessingException {
+    private void processBatchForDateRange(LocalDate firstLocalDate, LocalDate lastLocalDate) throws JsonProcessingException {
         Page<Expense> expensePage;
         do {
             Pageable sortedByDate = PageRequest.of(
                     0,
                     30);
-            expensePage = this.expenseRepository.findAll(sortedByDate);
+            expensePage = this.expenseRepository.findByExpenseDateBetween(firstLocalDate, lastLocalDate, sortedByDate);
 
-            List<Expense> expenseDataSlice = expensePage.getContent();
-            List<AiCategorizationRequest> mappedExpenseList = expenseDataSlice.stream()
-                    .map(this::mapToRequest)
+            List<AiCategorizationRequest> mappedExpenseList =  expensePage.getContent().stream()
+                    .map(aicategorizationMapper::mapToRequest)
                     .toList();
 
             chatService.getResponse(mappedExpenseList);
         } while(expensePage.hasNext());
     }
 
-    @Scheduled(fixedDelayString = "1h")
-    public void categorizeInsights() {
-        List<Calendar> treeMonths = generateCalendarInstancesForLastTreeMonths();
+    @Scheduled(fixedDelayString = "3h")
+    public void categorizeInsights() throws JsonProcessingException {
+        List<Calendar> treeMonths = DateUtils.generateCalendarInstancesForLastTreeMonths();
         for (Calendar calendar : treeMonths) {
-
+            LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
+            LocalDate lastLocalDate = getLastDayOfTheMonth(calendar);
+            processBatchForDateRange(firstLocalDate, lastLocalDate);
         }
     }
 
-    @Scheduled(fixedDelayString = "15m")
+    @Scheduled(fixedDelayString = "1h")
     public void calculateRecordLimits() {
         long expenseCount = expenseRepository.count();
         RecordLimit recordLimit = recordLimiter.findOneByClassName("Expense");

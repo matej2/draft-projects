@@ -72,7 +72,7 @@ public class ExpenseTrackingService {
         return filteredExpense.stream().map(expenseMapper::toResponse).toList();
     }
     public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate, pageable);
+        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate, pageable).getContent();
 
         return filteredExpense.stream().map(expenseMapper::toResponse).toList();
     }

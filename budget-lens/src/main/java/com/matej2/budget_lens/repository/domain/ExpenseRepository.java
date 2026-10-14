@@ -3,6 +3,7 @@ package com.matej2.budget_lens.repository.domain;
 import com.matej2.budget_lens.config.annotation.RecordLimitEnabled;
 import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,7 @@ import java.util.List;
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     List<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate);
-    List<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     @Query(value = """
     SELECT NEW com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow(
