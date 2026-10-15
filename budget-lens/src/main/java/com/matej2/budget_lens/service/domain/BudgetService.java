@@ -38,10 +38,4 @@ public class BudgetService {
                 .toList();
     }
 
-    public List<BudgetResponse> getAllByCategoryId(Integer categoryId) {
-        return budgetRepository
-                .findAllByCategoryId(categoryId).stream()
-                .map(budgetMapper::toResponse)
-                .toList();
-    }
 }

@@ -5,7 +5,6 @@ import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
-import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.integration.AiCategorizationRequest;
@@ -93,10 +92,10 @@ public class InsightsCalculatorJob {
     }
 
     public ExpenseResponse buildExpenseRequest(AiCategorizationResponse expenseRequest) {
-        Category category = categoryService.getCategory(expenseRequest.categoryId());
+        CategoryResponse category = categoryService.getCategory(expenseRequest.categoryId());
         ExpenseResponse existingExpense = expenseService.getExpenseById(expenseRequest.expenseId());
 
-        return existingExpense.withCategory(category.getId());
+        return existingExpense.withCategory(category.id());
     }
 
     private void saveCategorization(List<AiCategorizationResponse> categorizationResponses) {

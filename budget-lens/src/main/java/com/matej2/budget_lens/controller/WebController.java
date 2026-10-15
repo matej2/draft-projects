@@ -84,7 +84,7 @@ public class WebController {
     @GetMapping("/budget")
     public String budget(Model model, @NonNull String yearMonth, @NonNull Integer categoryId) {
         YearMonth expenseYearMonth = YearMonth.parse(yearMonth, dateTimeFormatter);
-        CategoryResponse categoryResponse = categoryMapper.toResponse(categoryService.getCategory(categoryId));
+        CategoryResponse categoryResponse = categoryService.getCategory(categoryId);
         List<CategoryInsightsResponse> insightsByDateAndCategory = insightService.getInsightByYearMonthAndCategory(expenseYearMonth, categoryResponse);
 
         Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();

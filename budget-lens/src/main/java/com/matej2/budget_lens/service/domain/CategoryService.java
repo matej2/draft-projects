@@ -15,10 +15,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
-    // TODO: Rename, set exception message
-    public Category getCategory(Integer id) {
-        // TODO: Map category
-        return categoryRepository.findById(id).orElseThrow();
+    public CategoryResponse getCategory(Integer id) {
+        return categoryMapper.toResponse(categoryRepository.findById(id).orElseThrow());
     }
     public List<CategoryResponse> getAllCategories() {
         List<Category> allCategories = categoryRepository.findAll();
