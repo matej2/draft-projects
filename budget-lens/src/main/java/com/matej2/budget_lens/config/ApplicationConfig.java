@@ -1,6 +1,7 @@
 package com.matej2.budget_lens.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.matej2.budget_lens.repository.UserRepository;
 import com.matej2.budget_lens.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +45,10 @@ public class ApplicationConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        return objectMapper;
     }
 
     @Bean

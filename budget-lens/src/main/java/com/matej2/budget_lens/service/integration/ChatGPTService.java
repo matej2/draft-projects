@@ -1,6 +1,7 @@
 package com.matej2.budget_lens.service.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.victools.jsonschema.generator.*;
@@ -9,16 +10,15 @@ import com.matej2.budget_lens.domain.integration.AiCategorizationResponse;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.core.JsonValue;
-import com.openai.models.responses.Response;
-import com.openai.models.responses.ResponseCreateParams;
-import com.openai.models.responses.ResponseFormatTextJsonSchemaConfig;
-import com.openai.models.responses.ResponseTextConfig;
+import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,13 +47,14 @@ public class ChatGPTService {
         return objectMapper.writeValueAsString(schemaNode);
     }
 
-    public void getResponse(List<AiCategorizationRequest> aiCategorizationRequestList) throws JsonProcessingException {
+    public AiCategorizationResponse getResponse(List<AiCategorizationRequest> aiCategorizationRequestList) throws JsonProcessingException {
         OpenAIClient client = OpenAIOkHttpClient.builder()
                 .apiKey(apiKey)
                 .build();
 
         String aiCategorizationRequest = objectMapper.writeValueAsString(aiCategorizationRequestList);
         String outputSchema = generateSchema(AiCategorizationResponse.class);
+        Map<String, Object> schemaMap = objectMapper.readValue(outputSchema, new TypeReference<Map<String, Object>>() {});
 
         ResponseCreateParams params =
                 ResponseCreateParams
@@ -83,7 +84,7 @@ public class ChatGPTService {
                                         .name("expenseList")
                                         .strict(true)
                                         .schema(
-                                                Objects.requireNonNull(JsonValue.from(outputSchema)
+                                                Objects.requireNonNull(JsonValue.from(schemaMap)
                                                         .convert(ResponseFormatTextJsonSchemaConfig.Schema.class)))
                                         .build())
                                 .build())
