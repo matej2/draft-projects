@@ -39,6 +39,18 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
         );
     }
 
+
+    public ExpenseRequest toRequest(ExpenseResponse expenseResponse) {
+        return new ExpenseRequest(
+                expenseResponse.note(),
+                expenseResponse.cost(),
+                expenseResponse.expenseDate(),
+                expenseResponse.frequency(),
+                expenseResponse.category(),
+                expenseResponse.owner()
+        );
+    }
+
      public Expense toExpense(CSVImportRow row, Category uncategorized) {
         Expense expense = new Expense();
         LocalDate date = LocalDate.parse(row.getDate());

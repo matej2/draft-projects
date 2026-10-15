@@ -4,13 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
+import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
+import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.RecordLimit;
 import com.matej2.budget_lens.domain.integration.AiCategorizationRequest;
+import com.matej2.budget_lens.domain.integration.AiCategorizationResponse;
 import com.matej2.budget_lens.domain.mapper.AICategorizationMapper;
+import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
+import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;
 import com.matej2.budget_lens.service.domain.InsightService;
 import com.matej2.budget_lens.service.integration.ChatGPTService;
@@ -24,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -36,11 +42,13 @@ import static com.matej2.budget_lens.utils.DateUtils.getLastDayOfTheMonth;
 public class InsightsCalculatorJob {
     private final CategoryService categoryService;
     private final InsightService insightService;
+    private final ExpenseTrackingService expenseService;
     private final ExpenseRepository expenseRepository;
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
     private final ChatGPTService chatService;
     private final AICategorizationMapper aicategorizationMapper;
+    private final ExpenseMapper expenseMapper;
 
     @Scheduled(fixedDelayString = "15m")
     public void calculateInsights() {
@@ -64,8 +72,10 @@ public class InsightsCalculatorJob {
         });
     }
 
-    private void processBatchForDateRange(LocalDate firstLocalDate, LocalDate lastLocalDate) throws JsonProcessingException {
+    private List<AiCategorizationResponse> processBatchForDateRange(LocalDate firstLocalDate, LocalDate lastLocalDate) throws JsonProcessingException {
         Page<Expense> expensePage;
+        List<AiCategorizationResponse> categorizationResponses = new ArrayList<>();
+
         do {
             Pageable sortedByDate = PageRequest.of(
                     0,
@@ -76,8 +86,24 @@ public class InsightsCalculatorJob {
                     .map(aicategorizationMapper::mapToRequest)
                     .toList();
 
-            chatService.getResponse(mappedExpenseList);
+            categorizationResponses.add(chatService.getResponse(mappedExpenseList));
         } while(expensePage.hasNext());
+
+        return categorizationResponses;
+    }
+
+    public ExpenseResponse buildExpenseRequest(AiCategorizationResponse expenseRequest) {
+        Category category = categoryService.getCategory(expenseRequest.categoryId());
+        ExpenseResponse existingExpense = expenseService.getExpenseById(expenseRequest.expenseId());
+
+        return existingExpense.withCategory(category.getId());
+    }
+
+    private void saveCategorization(List<AiCategorizationResponse> categorizationResponses) {
+        categorizationResponses.forEach(categorizationResponse -> {
+            ExpenseResponse newExpense = buildExpenseRequest(categorizationResponse);
+            expenseService.addExpense(expenseMapper.toRequest(newExpense));
+        });
     }
 
     @Scheduled(fixedDelayString = "3h")
@@ -86,7 +112,8 @@ public class InsightsCalculatorJob {
         for (Calendar calendar : treeMonths) {
             LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
             LocalDate lastLocalDate = getLastDayOfTheMonth(calendar);
-            processBatchForDateRange(firstLocalDate, lastLocalDate);
+            List<AiCategorizationResponse> categorizationResponses = processBatchForDateRange(firstLocalDate, lastLocalDate);
+            saveCategorization(categorizationResponses);
         }
     }
 

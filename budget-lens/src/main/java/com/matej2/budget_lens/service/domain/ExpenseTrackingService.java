@@ -77,6 +77,10 @@ public class ExpenseTrackingService {
         return filteredExpense.stream().map(expenseMapper::toResponse).toList();
     }
 
+    public ExpenseResponse getExpenseById(Integer id) {
+        return this.expenseRepository.findById(id).stream().map(expenseMapper::toResponse).findFirst().orElseThrow();
+    }
+
     public synchronized void deleteExpense(Integer id) {
         expenseRepository.deleteById(id);
     }

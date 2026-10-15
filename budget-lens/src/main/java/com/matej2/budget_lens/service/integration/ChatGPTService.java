@@ -91,10 +91,13 @@ public class ChatGPTService {
                         .build();
 
         Response response = client.responses().create(params);
-        response.output().stream()
+        String responseStr = response.output().stream()
                 .flatMap(item -> item.message().stream())
                 .flatMap(message -> message.content().stream())
                 .flatMap(content -> content.outputText().stream())
-                .forEach(outputText -> System.out.println(outputText.text()));
+                .map(ResponseOutputText::text)
+                .collect(Collectors.joining());
+
+        return this.objectMapper.readValue(responseStr, AiCategorizationResponse.class);
     }
 }
