@@ -7,6 +7,8 @@ import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Frequency;
 import com.matej2.budget_lens.domain.mapper.BudgetMapper;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
+import com.matej2.budget_lens.repository.domain.CategoryRepository;
+import com.matej2.budget_lens.repository.domain.FrequencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +19,17 @@ import java.util.List;
 public class BudgetService {
     private final BudgetRepository budgetRepository;
     private final BudgetMapper budgetMapper;
-    private final CategoryService categoryService;
-    private final FrequencyService frequencyService;
+    private final CategoryRepository categoryRepository;
+    private final FrequencyRepository frequencyRepository;
 
     public void add(BudgetRequest budget) {
-        Category categoryEntity = categoryService.getCategory(budget.categoryId());
-        Frequency frequency = frequencyService.getFrequencyOrThrow(budget.frequencyId());
+        Category categoryEntity = categoryRepository.findById(budget.categoryId()).orElseThrow();
+        Frequency frequencyEntity = frequencyRepository.findById(budget.frequencyId()).orElseThrow();
 
-        // TODO: Move mapping to frequency service
-        Budget budgetEntity = budgetMapper.toEntity(budget,  categoryEntity, frequency);
-        this.budgetRepository.save(budgetEntity);
+        Budget existingBudgetEntity = budgetMapper.toEntity(budget);
+        Budget completeBudgetEntity = budgetMapper.add(existingBudgetEntity, categoryEntity, frequencyEntity);
+
+        this.budgetRepository.save(completeBudgetEntity);
     }
 
     public List<BudgetResponse> getAll() {

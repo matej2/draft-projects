@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class BudgetMapper implements Mapper<BudgetRequest, BudgetResponse, Budget> {
 
-    public Budget toEntity(BudgetRequest dto, Category category, Frequency frequency) {
+    public Budget toEntity(BudgetRequest dto) {
         Budget budgetEntity = new Budget();
         budgetEntity.setNote(dto.note());
         budgetEntity.setQuota(dto.quota());
-        budgetEntity.setCategory(category);
-        budgetEntity.setFrequency(frequency);
         return budgetEntity;
     }
 
-    public Budget toEntity(BudgetRequest dto) {
-        throw new  UnsupportedOperationException("Not supported yet.");
+    public Budget add(Budget budget, Category category, Frequency frequency) {
+        budget.setCategory(category);
+        budget.setFrequency(frequency);
+        return budget;
     }
 
     public BudgetResponse toResponse(Budget entity) {
