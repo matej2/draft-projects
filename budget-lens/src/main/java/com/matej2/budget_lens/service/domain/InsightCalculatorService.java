@@ -49,7 +49,6 @@ public class InsightCalculatorService {
         return pecentile90 + pecentile90 * realisticBudget;
     }
 
-    // TODO: Separate insights for each budget by category id
     public Double calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
         double categoryBudget = budgetRepository.findAllByCategoryId(categoryId).stream()
                 .mapToDouble(Budget::getQuota)
@@ -70,12 +69,15 @@ public class InsightCalculatorService {
     }
 
     public CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
-        // TODO: Skip processing if there are empty categories
         CategoryInsightResultRow insightResponse = expenseRepository.insightsByCategoryIdByDateBetween(
                 category.id(),
                 expenseRequest.startDate(),
                 expenseRequest.endDate()
         );
+        if (insightResponse == null) {
+            return null;
+        }
+
         List<Expense> expenses = expenseRepository.findByExpenseDateBetween(
                 expenseRequest.startDate(),
                 expenseRequest.endDate()
@@ -84,13 +86,12 @@ public class InsightCalculatorService {
                 .map(expenseMapper::toResponse)
                 .toList();
 
-        if (insightResponse == null) {
-            return null;
-        }
-
         double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
         double adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
-        Double budgetUtilization = calculateBudgetUtilization(category.id(), expenseResponses);
+        Double budgetUtilization = null;
+        if (!expenseResponses.isEmpty()) {
+            budgetUtilization = calculateBudgetUtilization(category.id(), expenseResponses);
+        }
 
         return new CategoryInsightsResponse(
                 category.id(),
