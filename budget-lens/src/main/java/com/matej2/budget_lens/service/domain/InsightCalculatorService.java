@@ -1,7 +1,7 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.domain.dto.response.BudgetResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
@@ -47,7 +47,7 @@ public class InsightCalculatorService {
     // TODO: Separate insights for each budget by category id
     public Double calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
         double categoryBudget = budgetService.getAllByCategoryId(categoryId).stream()
-                .mapToDouble(BudgetRequest::quota)
+                .mapToDouble(BudgetResponse::quota)
                 .sum();
         if (categoryBudget == 0) {
             return null;

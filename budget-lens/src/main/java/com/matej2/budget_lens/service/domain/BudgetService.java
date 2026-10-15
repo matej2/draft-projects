@@ -1,6 +1,7 @@
 package com.matej2.budget_lens.service.domain;
 
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
+import com.matej2.budget_lens.domain.dto.response.BudgetResponse;
 import com.matej2.budget_lens.domain.entity.Budget;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Frequency;
@@ -28,14 +29,13 @@ public class BudgetService {
         this.budgetRepository.save(budgetEntity);
     }
 
-    /// TODO: Replace with dto class
-    public List<BudgetRequest> getAll() {
+    public List<BudgetResponse> getAll() {
         return this.budgetRepository.findAll().stream()
                 .map(budgetMapper::toResponse)
                 .toList();
     }
 
-    public List<BudgetRequest> getAllByCategoryId(Integer categoryId) {
+    public List<BudgetResponse> getAllByCategoryId(Integer categoryId) {
         return budgetRepository
                 .findAllByCategoryId(categoryId).stream()
                 .map(budgetMapper::toResponse)

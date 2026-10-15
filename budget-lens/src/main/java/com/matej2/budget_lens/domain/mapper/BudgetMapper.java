@@ -1,13 +1,14 @@
 package com.matej2.budget_lens.domain.mapper;
 
 import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
+import com.matej2.budget_lens.domain.dto.response.BudgetResponse;
 import com.matej2.budget_lens.domain.entity.Budget;
 import com.matej2.budget_lens.domain.entity.Category;
 import com.matej2.budget_lens.domain.entity.Frequency;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BudgetMapper implements Mapper<BudgetRequest, BudgetRequest, Budget> {
+public class BudgetMapper implements Mapper<BudgetRequest, BudgetResponse, Budget> {
 
     public Budget toEntity(BudgetRequest dto, Category category, Frequency frequency) {
         Budget budgetEntity = new Budget();
@@ -22,8 +23,8 @@ public class BudgetMapper implements Mapper<BudgetRequest, BudgetRequest, Budget
         throw new  UnsupportedOperationException("Not supported yet.");
     }
 
-    public BudgetRequest toResponse(Budget entity) {
-        return new BudgetRequest(
+    public BudgetResponse toResponse(Budget entity) {
+        return new BudgetResponse(
                 entity.getNote(),
                 entity.getQuota(),
                 entity.getCategory().getId(),
