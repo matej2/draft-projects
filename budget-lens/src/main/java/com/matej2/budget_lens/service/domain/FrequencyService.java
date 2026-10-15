@@ -24,7 +24,4 @@ public class FrequencyService {
         return this.frequencyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Expense not found"));
     }
 
-    public Frequency getFrequencyByNumber(Integer number) {
-        return this.frequencyRepository.findByNumber(number);
-    }
 }
