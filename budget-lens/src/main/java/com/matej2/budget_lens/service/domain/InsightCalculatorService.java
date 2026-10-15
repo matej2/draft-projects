@@ -1,11 +1,15 @@
 package com.matej2.budget_lens.service.domain;
 
 import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
-import com.matej2.budget_lens.domain.dto.response.BudgetResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
+import com.matej2.budget_lens.domain.entity.Budget;
+import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
+import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
+import com.matej2.budget_lens.repository.domain.BudgetRepository;
+import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +20,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class InsightCalculatorService {
-    private final BudgetService budgetService;
-    private final ExpenseTrackingService expenseTrackingService;
+    private final BudgetRepository budgetRepository;
+    private final ExpenseRepository expenseRepository;
+    private final ExpenseMapper  expenseMapper;
 
     private double calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
         // Safe budget confidence calculation
@@ -46,8 +51,8 @@ public class InsightCalculatorService {
 
     // TODO: Separate insights for each budget by category id
     public Double calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
-        double categoryBudget = budgetService.getAllByCategoryId(categoryId).stream()
-                .mapToDouble(BudgetResponse::quota)
+        double categoryBudget = budgetRepository.findAllByCategoryId(categoryId).stream()
+                .mapToDouble(Budget::getQuota)
                 .sum();
         if (categoryBudget == 0) {
             return null;
@@ -66,8 +71,18 @@ public class InsightCalculatorService {
 
     public CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
         // TODO: Skip processing if there are empty categories
-        CategoryInsightResultRow insightResponse = expenseTrackingService.insightsByCategory(expenseRequest, category.id());
-        List<ExpenseResponse> expenses = expenseTrackingService.getExpenseByDate(expenseRequest);
+        CategoryInsightResultRow insightResponse = expenseRepository.insightsByCategoryIdByDateBetween(
+                category.id(),
+                expenseRequest.startDate(),
+                expenseRequest.endDate()
+        );
+        List<Expense> expenses = expenseRepository.findByExpenseDateBetween(
+                expenseRequest.startDate(),
+                expenseRequest.endDate()
+        );
+        List<ExpenseResponse> expenseResponses = expenses.stream()
+                .map(expenseMapper::toResponse)
+                .toList();
 
         if (insightResponse == null) {
             return null;
@@ -75,7 +90,7 @@ public class InsightCalculatorService {
 
         double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
         double adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
-        Double budgetUtilization = calculateBudgetUtilization(category.id(), expenses);
+        Double budgetUtilization = calculateBudgetUtilization(category.id(), expenseResponses);
 
         return new CategoryInsightsResponse(
                 category.id(),

@@ -9,6 +9,7 @@ import com.matej2.budget_lens.domain.entity.Expense;
 import com.matej2.budget_lens.domain.entity.User;
 import com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow;
 import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
+import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.utils.CSVHelper;
 import com.opencsv.CSVReader;
@@ -35,12 +36,13 @@ public class ExpenseTrackingService {
     private final ExpenseMapper expenseMapper;
 
     private final CategoryService  categoryService;
+    private final CategoryRepository  categoryRepository;
 
     public synchronized void addExpense(ExpenseRequest expense){
-        Category category = this.categoryService.getCategory(expense.categoryId());
+        Category categoryEntity = categoryRepository.findById(expense.categoryId()).orElseThrow();
 
         Expense mappedExpense = expenseMapper.toEntity(expense);
-        mappedExpense.setCategory(category);
+        mappedExpense.setCategory(categoryEntity);
 
         Authentication authenticationContext  =  SecurityContextHolder.getContext().getAuthentication();
         if (authenticationContext != null && authenticationContext.getPrincipal() instanceof User authenticatedUser) {
@@ -66,11 +68,6 @@ public class ExpenseTrackingService {
         this.expenseRepository.save(mappedExpense);
     }
 
-    public List<ExpenseResponse> getExpenseByDate(ExpenseFilterRequest expenseRequest) {
-        List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(expenseRequest.startDate(), expenseRequest.endDate());
-
-        return filteredExpense.stream().map(expenseMapper::toResponse).toList();
-    }
     public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
         List<Expense> filteredExpense = this.expenseRepository.findByExpenseDateBetween(startDate, endDate, pageable).getContent();
 
