@@ -1,0 +1,22 @@
+
+<th:block th:fragment="header">
+    <header class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="#" th:href="${pageUrlMapping.get('Home')}" class="nav-link"><i class="h2 bi bi-piggy-bank-fill"></i> Budget Lens</a>
+        </div>
+
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <th:block th:each="pageUrl : ${pageUrlMapping}">
+                <li class="nav-item"><a href="#" th:href="@{${pageUrl.getValue()}}" class="nav-link" th:text="${pageUrl.getKey()}"></a></li>
+            </th:block>
+            <th:block th:unless="${isAuthenticated}">
+                <li><a class="nav-item nav-link" href="#" th:href="@{/login}">Login</a></li>
+            </th:block>
+            <th:block>
+                <th:block th:if="${isAuthenticated}">
+                    <li><a class="nav-item nav-link" href="#" th:href="@{/logout}">Logout</a></li>
+                </th:block>
+            </th:block>
+        </ul>
+    </header>
+</th:block>

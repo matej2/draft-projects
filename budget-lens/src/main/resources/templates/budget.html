@@ -1,15 +1,12 @@
-<th:block th:insert="layout/index2 :: index(~{ :: .content})">
+<th:block th:insert="layout/main :: index(~{ :: .content})">
     <div class="content">
         <div class="row bg-body-secondary rounded mb-3 p-3">
             <div class="col-4 ">
-
-                <a class="btn btn-primary" href="#" th:if="${isAuthenticated}" th:href="@{/logout}">Logout</a>
 
                 <div th:if="${!isAuthenticated}">
                     <div class="mb-3">
                         Login to add new budget
                     </div>
-                    <a  class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
                 </div>
 
                 <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"

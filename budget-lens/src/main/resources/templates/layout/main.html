@@ -19,6 +19,9 @@
 </head>
 <body>
 
+<th:block th:insert="layout/header :: header">
+</th:block>
+
 <div class="container mt-4">
     <th:block th:replace="${content}"></th:block>
 </div>
