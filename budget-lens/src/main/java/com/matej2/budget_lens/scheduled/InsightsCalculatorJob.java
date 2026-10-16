@@ -99,10 +99,16 @@ public class InsightsCalculatorJob {
     }
 
     private void saveCategorization(List<AiCategorizationResponse> categorizationResponses) {
-        categorizationResponses.forEach(categorizationResponse -> {
-            ExpenseResponse newExpense = buildExpenseRequest(categorizationResponse);
-            expenseService.addExpense(expenseMapper.toRequest(newExpense));
-        });
+        expenseRepository.saveAll(
+                getEntity(categorizationResponses)
+        );
+    }
+
+    public List<Expense> getEntity(List<AiCategorizationResponse> categorizationResponses) {
+        return categorizationResponses.stream()
+                .map(this::buildExpenseRequest)
+                .map(expenseMapper::toEntity)
+                .toList();
     }
 
     @Scheduled(fixedDelayString = "3h")
@@ -112,6 +118,7 @@ public class InsightsCalculatorJob {
             LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
             LocalDate lastLocalDate = getLastDayOfTheMonth(calendar);
             List<AiCategorizationResponse> categorizationResponses = processBatchForDateRange(firstLocalDate, lastLocalDate);
+
             saveCategorization(categorizationResponses);
         }
     }

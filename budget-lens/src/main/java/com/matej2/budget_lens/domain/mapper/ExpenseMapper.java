@@ -23,6 +23,15 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
         return expense;
     }
 
+    public Expense toEntity(ExpenseResponse expenseResponse) {
+        Expense expense = new Expense();
+        expense.setNote(expenseResponse.note());
+        expense.setCost(expenseResponse.cost());
+        expense.setExpenseDate(expenseResponse.expenseDate());
+
+        return expense;
+    }
+
     @Override
     public ExpenseResponse toResponse(Expense expense) {
         Frequency frequency = new Frequency();
@@ -39,19 +48,12 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
         );
     }
 
-
-    public ExpenseRequest toRequest(ExpenseResponse expenseResponse) {
-        return new ExpenseRequest(
-                expenseResponse.note(),
-                expenseResponse.cost(),
-                expenseResponse.expenseDate(),
-                expenseResponse.frequency(),
-                expenseResponse.category(),
-                expenseResponse.owner()
-        );
+    public Expense add(Expense expense, Category category) {
+        expense.setCategory(category);
+        return expense;
     }
 
-     public Expense toExpense(CSVImportRow row, Category uncategorized) {
+    public Expense toExpense(CSVImportRow row, Category uncategorized) {
         Expense expense = new Expense();
         LocalDate date = LocalDate.parse(row.getDate());
         expense.setExpenseDate(date);
