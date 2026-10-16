@@ -1,143 +1,114 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <style>
-        table .invalid td {
-            color: DarkGray
-        }
+<th:block th:insert="layout/index2 :: index(~{ :: .content})">
+    <div class="content">
+        <div class="row bg-body-secondary rounded mb-3 p-3">
+            <div class="col-4 ">
 
-        table .candidate td {
-            color: DarkGray
-        }
-    </style>
+                <a class="btn btn-primary" href="#" th:if="${isAuthenticated}" th:href="@{/logout}">Logout</a>
 
-</head>
-<body>
-
-<div class="container mt-4">
-    <div class="row bg-body-secondary rounded mb-3 p-3">
-        <div class="col-4 ">
-
-            <a class="btn btn-primary" href="#" th:if="${isAuthenticated}" th:href="@{/logout}">Logout</a>
-
-            <div th:if="${!isAuthenticated}">
-                <div class="mb-3">
-                    Login to add new budget
+                <div th:if="${!isAuthenticated}">
+                    <div class="mb-3">
+                        Login to add new budget
+                    </div>
+                    <a  class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
                 </div>
-                <a  class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
+
+                <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"
+                      th:object="${budgetRequest}" method="POST">
+
+                    <h3>Add new budget</h3>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="note">Note:</label>
+                        <input class="form-control" type="text" id="note" th:field="*{note}" />
+                        <span th:if="${#fields.hasErrors('note')}" th:errors="*{note}" style="color: red;"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="quota">Cost (€):</label>
+                        <input class="form-control" type="number" step="0.01" id="quota" th:field="*{quota}" min="1" required />
+                        <span th:if="${#fields.hasErrors('quota')}" th:errors="*{quota}" style="color: red;"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="frequencyId">frequency:</label>
+                        <select  class="form-select" id="frequencyId" th:field="*{frequencyId}" required>
+                            <option value="">Choose frequency</option>
+                            <option th:each="freq : ${frequencies}"
+                                    th:value="${freq.id}"
+                                    th:text="${freq.description}"></option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('frequencyId')}" th:errors="*{frequencyId}" style="color: red;"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="categoryId">Kategorija:</label>
+                        <select  class="form-select" id="categoryId" th:field="*{categoryId}" required>
+                            <option value="">Choose category</option>
+                            <option th:each="cat : ${categories}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.name}"></option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" style="color: red;"></span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input class="btn btn-primary" type="submit" value="Submit" />
+                        <input class="btn btn-secondary" type="reset" value="Reset" />
+                    </div>
+
+                    <div th:if="${error}" class="alert alert-danger">
+                        <p th:text="${error}"></p>
+                    </div>
+
+                </form>
             </div>
 
-            <form th:if="${isAuthenticated}" action="#" th:action="@{/submitExpense}"
-                  th:object="${budgetRequest}" method="POST">
+            <div class="row bg-body-secondary rounded mb-3 p-3">
+                <div class="col">
+                    <h1 th:text="'Insight list for ' + ${yearMonth} + ': Category ' + ${categories.get(0).name()}" class="mb-2"></h1>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Safe budget confidence</th>
+                            <th>Existing budget utilization</th>
+                            <th>Suggested new budget</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="budget : ${budgets}">
+                            <tr>
+                                <td>
+                                    <div th:text="${{budget.safeBudgetConfidence()}}"></div>
+                                </td>
+                                <td>
+                                    <th:block th:if="${budget.budgetUtilization()}">
+                                        <div th:text="${{budget.budgetUtilization()}}"></div>
+                                    </th:block>
+                                    <th:block th:unless="${budget.budgetUtilization()}">
+                                        No data
+                                    </th:block>
+                                </td>
+                                <td>
+                                    <th:block th:if="${budget.frequencyToBudget()}">
+                                        <th:block th:each="frequencyBudget : ${budget.frequencyToBudget()}">
+                                            <p>
+                                                <span th:text="${{frequencyBudget.key.description()}}"></span>
+                                                <span th:text="${{frequencyBudget.value}}"></span>
+                                            </p>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:unless="${budget.frequencyToBudget()}">
+                                        No data
+                                    </th:block>
 
-                <h3>Add new budget</h3>
-
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="note">Note:</label>
-                    <input class="form-control" type="text" id="note" th:field="*{note}" />
-                    <span th:if="${#fields.hasErrors('note')}" th:errors="*{note}" style="color: red;"></span>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="quota">Cost (€):</label>
-                    <input class="form-control" type="number" step="0.01" id="quota" th:field="*{quota}" min="1" required />
-                    <span th:if="${#fields.hasErrors('quota')}" th:errors="*{quota}" style="color: red;"></span>
-                </div>
-
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="frequencyId">frequency:</label>
-                    <select  class="form-select" id="frequencyId" th:field="*{frequencyId}" required>
-                        <option value="">Choose frequency</option>
-                        <option th:each="freq : ${frequencies}"
-                                th:value="${freq.id}"
-                                th:text="${freq.description}"></option>
-                    </select>
-                    <span th:if="${#fields.hasErrors('frequencyId')}" th:errors="*{frequencyId}" style="color: red;"></span>
-                </div>
-
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="categoryId">Kategorija:</label>
-                    <select  class="form-select" id="categoryId" th:field="*{categoryId}" required>
-                        <option value="">Choose category</option>
-                        <option th:each="cat : ${categories}"
-                                th:value="${cat.id}"
-                                th:text="${cat.name}"></option>
-                    </select>
-                    <span th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" style="color: red;"></span>
-                </div>
-
-                <div class="input-group mb-3">
-                    <input class="btn btn-primary" type="submit" value="Submit" />
-                    <input class="btn btn-secondary" type="reset" value="Reset" />
-                </div>
-
-                <div th:if="${error}" class="alert alert-danger">
-                    <p th:text="${error}"></p>
-                </div>
-
-            </form>
+            </div>
         </div>
-
-        <div class="row bg-body-secondary rounded mb-3 p-3">
-        <div class="col">
-            <h1 th:text="'Insight list for ' + ${yearMonth} + ': Category ' + ${categories.get(0).name()}" class="mb-2"></h1>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Safe budget confidence</th>
-                    <th>Existing budget utilization</th>
-                    <th>Suggested new budget</th>
-                </tr>
-                </thead>
-                <tbody>
-                <th:block th:each="budget : ${budgets}">
-                    <tr>
-                        <td>
-                            <div th:text="${{budget.safeBudgetConfidence()}}"></div>
-                        </td>
-                        <td>
-                            <th:block th:if="${budget.budgetUtilization()}">
-                                <div th:text="${{budget.budgetUtilization()}}"></div>
-                            </th:block>
-                            <th:block th:unless="${budget.budgetUtilization()}">
-                                No data
-                            </th:block>
-                        </td>
-                        <td>
-                            <th:block th:if="${budget.frequencyToBudget()}">
-                                <th:block th:each="frequencyBudget : ${budget.frequencyToBudget()}">
-                                    <p>
-                                        <span th:text="${{frequencyBudget.key.description()}}"></span>
-                                        <span th:text="${{frequencyBudget.value}}"></span>
-                                    </p>
-                                </th:block>
-                            </th:block>
-                            <th:block th:unless="${budget.frequencyToBudget()}">
-                                No data
-                            </th:block>
-
-                        </td>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
-        </div>
-
     </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-<script>
-    window.onload = function() {
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    };
-
-</script>
-</body>
-</html>
+</th:block>
