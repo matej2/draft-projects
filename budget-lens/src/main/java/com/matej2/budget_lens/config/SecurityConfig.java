@@ -7,11 +7,11 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,31 +26,58 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
     private final RsaKeyProperties rsaKeys;
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationManager userAuthenticationManager;
+    private final AuthenticationManager clientAuthenticationManager;
+
+    public SecurityConfig(
+            RsaKeyProperties rsaKeys,
+            JwtAuthenticationFilter jwtAuthFilter,
+            @Qualifier("userAuthenticationManager") AuthenticationManager authenticationManager,
+            @Qualifier("clientAuthenticationManager") AuthenticationManager clientAuthenticationManager
+    ) {
+        this.rsaKeys = rsaKeys;
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.clientAuthenticationManager = clientAuthenticationManager;
+        this.userAuthenticationManager = authenticationManager;
+    }
 
     @Bean
     @Order(1)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) {
         return http
-                .securityMatcher("/api/**", "/auth/**", "/error")
+                .securityMatcher("/api/**", "/auth/authenticate", "/error")
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .requestMatchers("/auth/authenticate", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
+                .authenticationManager(userAuthenticationManager)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
     @Order(2)
+    public SecurityFilterChain registerSecurityFilterChain(HttpSecurity http) {
+        return http
+                .securityMatcher("/auth/register")
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    @Order(3)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -58,7 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/budget").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .authenticationProvider(authenticationProvider)
+                .authenticationManager(userAuthenticationManager)
                 .formLogin(Customizer.withDefaults())
                 .logout((logout) -> logout.logoutSuccessUrl("/"))
                 .build();

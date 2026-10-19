@@ -2,14 +2,14 @@ package com.matej2.budget_lens.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.matej2.budget_lens.repository.UserRepository;
-import com.matej2.budget_lens.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,22 +20,31 @@ import java.util.Locale;
 
 @Configuration
 public class ApplicationConfig {
-    @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+    @Bean("userAuthenticationProvider")
+    public AuthenticationProvider userAuthenticationProvider( @Qualifier("customUserDetailsService") UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository  userRepository) {
-        return new CustomUserDetailsService(userRepository);
+    @Bean("clientAuthenticationProvider")
+    public AuthenticationProvider clientAuthenticationProvider( @Qualifier("clientDetailsService") UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
-        return config.getAuthenticationManager();
+    @Bean("userAuthenticationManager")
+    @Primary
+    public AuthenticationManager userAuthenticationManager(@Qualifier("userAuthenticationProvider") AuthenticationProvider authProvider) {
+        return new ProviderManager(authProvider);
+    }
+
+    @Bean("clientAuthenticationManager")
+    public AuthenticationManager clientAuthenticationManager(@Qualifier("clientAuthenticationProvider") AuthenticationProvider authProvider) {
+        return new ProviderManager(authProvider);
     }
 
     @Bean

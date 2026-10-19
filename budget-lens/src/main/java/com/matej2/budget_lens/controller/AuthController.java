@@ -22,6 +22,7 @@ public class AuthController {
     private final AuthenticationService authService;
 
 
+    // TODO: set basic authentication
     @PostMapping("/register")
     public HttpStatus register(
             @RequestBody RegisterRequest request
