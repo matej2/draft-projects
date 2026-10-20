@@ -45,12 +45,6 @@ public class AuthenticationService {
     public void register(RegisterRequest request) {
         log.info("Register request for user {} received", request.email());
 
-        clientAuthenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password())
-        );
-
         User user = User.builder()
                 .firstname(request.firstName())
                 .lastname(request.lastName())
