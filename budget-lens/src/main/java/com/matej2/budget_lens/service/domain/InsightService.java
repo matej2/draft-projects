@@ -28,8 +28,6 @@ public class InsightService {
     private final CategoryMapper categoryMapper;
 
     public void saveInsightList(List<CategoryInsightsResponse> insight, YearMonth yearMonth) {
-        log.debug("Saved insights request for month");
-
         List<Insight> insightEntities = insight.stream()
                 .map(i ->  insightMapper.toEntity(
                         i,
@@ -38,6 +36,8 @@ public class InsightService {
                 .toList();
 
         insightRepository.upsertAll(insightEntities);
+
+        log.info("Saved {} insights for month {}", insightEntities.size(), yearMonth);
     }
 
     public List<CategoryInsightsResponse> getAllInsights() {

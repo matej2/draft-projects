@@ -50,6 +50,8 @@ public class ExpenseTrackingService {
         }
 
         this.expenseRepository.save(mappedExpense);
+
+        log.info("Saved expense: {}, category: {}", mappedExpense.getNote(), mappedExpense.getCategory());
     }
 
     public synchronized List<ExpenseResponse> getExpense(Pageable pageable) {
@@ -66,6 +68,7 @@ public class ExpenseTrackingService {
         mappedExpense.setId(id);
 
         this.expenseRepository.save(mappedExpense);
+        log.info("Updated expense: {}, category: {}", mappedExpense.getNote(), mappedExpense.getCategory());
     }
 
     public List<ExpenseResponse> getExpenseByDate(LocalDate startDate, LocalDate endDate, Pageable pageable) {
@@ -80,6 +83,7 @@ public class ExpenseTrackingService {
 
     public synchronized void deleteExpense(Integer id) {
         expenseRepository.deleteById(id);
+        log.info("Delete expense with id: {}", id);
     }
 
     public CategoryInsightResultRow insightsByCategory(final ExpenseFilterRequest expenseFilter, Integer categoryId) {
@@ -92,8 +96,6 @@ public class ExpenseTrackingService {
 
 
     public void saveFromFile(MultipartFile file) throws IOException {
-        log.info("File uploaded successfully: file name {}, file size {}", file.getName(), file.getSize());
-
         if (CSVHelper.hasCSVFormat(file)) {
 
             List<CSVImportRow> result;
@@ -111,5 +113,6 @@ public class ExpenseTrackingService {
 
             this.expenseRepository.saveAll(expenseList);
         }
+        log.info("Imported expense data from file: file name {}, file size {}, content type: {}", file.getName(), file.getSize(), file.getContentType());
     }
 }

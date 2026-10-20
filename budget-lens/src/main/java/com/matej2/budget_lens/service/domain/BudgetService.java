@@ -10,12 +10,14 @@ import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.FrequencyRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BudgetService {
     private final BudgetRepository budgetRepository;
     private final BudgetMapper budgetMapper;
@@ -30,6 +32,7 @@ public class BudgetService {
         Budget completeBudgetEntity = budgetMapper.add(existingBudgetEntity, categoryEntity, frequencyEntity);
 
         this.budgetRepository.save(completeBudgetEntity);
+        log.info("Saved budget {} for category {}", budget.note(), budget.categoryId());
     }
 
     public List<BudgetResponse> getAll() {
