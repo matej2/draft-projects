@@ -20,6 +20,7 @@ import com.matej2.budget_lens.service.domain.InsightService;
 import com.matej2.budget_lens.service.integration.ChatGPTService;
 import com.matej2.budget_lens.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,9 @@ public class InsightsCalculatorJob {
     private final ChatGPTService chatService;
     private final AICategorizationMapper aicategorizationMapper;
     private final ExpenseMapper expenseMapper;
+
+    @Value("${spring.ai.enabled}")
+    private boolean isAiEnabled;
 
     @Scheduled(fixedDelayString = "15m")
     public void calculateInsights() {
@@ -113,6 +117,9 @@ public class InsightsCalculatorJob {
 
     @Scheduled(fixedDelayString = "3h")
     public void categorizeInsights() throws JsonProcessingException {
+        if (!isAiEnabled) {
+            return;
+        }
         List<Calendar> treeMonths = DateUtils.generateCalendarInstancesForLastTreeMonths();
         for (Calendar calendar : treeMonths) {
             LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
