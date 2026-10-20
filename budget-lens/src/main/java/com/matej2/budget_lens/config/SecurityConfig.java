@@ -50,7 +50,6 @@ public class SecurityConfig {
         return http
                 .securityMatcher("/api/**", "/auth/authenticate", "/error")
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/authenticate", "/error").permitAll()
                         .anyRequest().authenticated()
@@ -67,7 +66,6 @@ public class SecurityConfig {
         return http
                 .securityMatcher("/auth/register")
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
@@ -81,7 +79,6 @@ public class SecurityConfig {
     @Order(3)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/budget").permitAll()
                         .anyRequest().authenticated())
