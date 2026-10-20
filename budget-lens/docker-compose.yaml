@@ -51,9 +51,69 @@ services:
       APP_PORT: 8080
     ports:
       - "8080:8080"
+  opensearch:
+    image: opensearchproject/opensearch:3.8.0
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD}
+      - DISABLE_SECURITY_PLUGIN=true
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data # Creates volume called opensearch-data and mounts it to the container
+    networks:
+      - opensearch-net
 
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest # Make sure the version of opensearch-dashboards matches the version of opensearch installed on other nodes
+    ports:
+      - 5601:5601 # Map host port 5601 to container port 5601
+    expose:
+      - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
+    environment:
+      OPENSEARCH_HOSTS: '["https://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
+      OPENSEARCH_USERNAME: admin
+      OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD}
+    networks:
+      - opensearch-net
+
+  logstash:
+    image: opensearchproject/logstash-oss-with-opensearch-output-plugin:latest
+    container_name: logstash
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    environment:
+      - OPENSEARCH_PASSWORD=${OPENSEARCH_PASSWORD}
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+      - "5044:5044"   # Beats input, used by Filebeat
+    depends_on:
+      - opensearch
+    networks:
+      - opensearch-net
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.15.3
+    container_name: filebeat
+    user: root   # required to read /var/run/docker.sock and container logs
+    command: [ "--strict.perms=false" ]
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat-data:/usr/share/filebeat/data   # persists the registry (resume position)
+    mem_limit: 256m
+    depends_on:
+      - logstash
+    networks:
+      - opensearch-net
 volumes:
   postgres_data:
+  opensearch-data:
+  filebeat-data:
+
+networks:
+  opensearch-net:
 
 configs:
   pgadmin-servers:

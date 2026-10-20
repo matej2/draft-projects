@@ -1,0 +1,48 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true          # let containers configure themselves via labels
+      templates:
+        # Default: collect logs from every container unless it opts out
+        - condition:
+            not:
+              equals:
+                docker.container.labels.co_elastic_logs/disable: "true"
+          config:
+            - type: container
+              paths:
+                - "/var/lib/docker/containers/${data.docker.container.id}/*.log"
+              exclude_lines: ["^\\s*$"]     # drop empty lines
+
+processors:
+  # Enrich every event with container name, image, labels, etc.
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  # Keep the payload lean before it hits the wire
+  - drop_fields:
+      fields: ["agent", "ecs", "input", "log.offset", "stream"]
+      ignore_missing: true
+
+# --- Output: send to Logstash, not directly to OpenSearch ---
+output.logstash:
+  hosts: ["logstash:5044"]
+  loadbalance: true
+  bulk_max_size: 2048
+  # In production, enable TLS between Filebeat and Logstash:
+  # ssl.enabled: true
+  # ssl.certificate_authorities: ["/usr/share/filebeat/certs/ca.crt"]
+
+# --- Reliability / backpressure tuning ---
+queue.mem:
+  events: 4096
+  flush.min_events: 512
+  flush.timeout: 5s
+
+filebeat.registry.path: /usr/share/filebeat/data/registry
+
+# --- Local logging (Filebeat's own logs, not the ones it ships) ---
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /usr/share/filebeat/logs
+  keepfiles: 7

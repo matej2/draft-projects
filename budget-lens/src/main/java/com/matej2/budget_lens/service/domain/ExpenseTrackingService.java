@@ -113,6 +113,6 @@ public class ExpenseTrackingService {
 
             this.expenseRepository.saveAll(expenseList);
         }
-        log.info("Imported expense data from file: file name {}, file size {}, content type: {}", file.getName(), file.getSize(), file.getContentType());
+        log.info("Imported expense data from file: file name {}, file size {}, content type: {}", file.getOriginalFilename(), file.getSize(), file.getContentType());
     }
 }
