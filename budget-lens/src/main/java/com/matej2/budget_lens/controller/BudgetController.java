@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.controller;
 
-import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
+import com.matej2.budget_lens.model.request.BudgetRequest;
 import com.matej2.budget_lens.service.domain.BudgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

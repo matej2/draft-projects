@@ -1,13 +1,13 @@
 package com.matej2.budget_lens.service;
 
 
-import com.matej2.budget_lens.domain.dto.request.AuthenticationRequest;
-import com.matej2.budget_lens.domain.dto.request.RegisterRequest;
-import com.matej2.budget_lens.domain.dto.response.AuthenticationResponse;
-import com.matej2.budget_lens.domain.entity.Role;
-import com.matej2.budget_lens.domain.entity.Token;
-import com.matej2.budget_lens.domain.entity.TokenType;
-import com.matej2.budget_lens.domain.entity.User;
+import com.matej2.budget_lens.model.authentication.AuthenticationRequest;
+import com.matej2.budget_lens.model.authentication.RegisterRequest;
+import com.matej2.budget_lens.model.authentication.AuthenticationResponse;
+import com.matej2.budget_lens.model.entity.Role;
+import com.matej2.budget_lens.model.entity.Token;
+import com.matej2.budget_lens.model.entity.TokenType;
+import com.matej2.budget_lens.model.entity.User;
 import com.matej2.budget_lens.repository.TokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

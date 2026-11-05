@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
-import com.matej2.budget_lens.domain.mapper.FrequencyMapper;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.FrequencyResponse;
+import com.matej2.budget_lens.mapper.FrequencyMapper;
 import com.matej2.budget_lens.repository.domain.FrequencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

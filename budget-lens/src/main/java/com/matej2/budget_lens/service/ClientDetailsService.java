@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.service;
 
-import com.matej2.budget_lens.domain.entity.Client;
+import com.matej2.budget_lens.model.entity.Client;
 import com.matej2.budget_lens.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;

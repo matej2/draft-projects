@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.controller.advice;
 
-import com.matej2.budget_lens.domain.dto.exception.ErrorResponse;
+import com.matej2.budget_lens.exception.ErrorResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.exception.ResourceNotFoundException;

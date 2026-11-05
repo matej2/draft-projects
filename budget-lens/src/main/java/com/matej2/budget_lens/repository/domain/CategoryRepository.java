@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.repository.domain;
 
-import com.matej2.budget_lens.domain.entity.Category;
+import com.matej2.budget_lens.model.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

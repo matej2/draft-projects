@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.repository;
 
-import com.matej2.budget_lens.domain.entity.User;
+import com.matej2.budget_lens.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

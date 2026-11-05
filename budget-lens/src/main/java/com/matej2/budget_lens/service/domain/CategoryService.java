@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
-import com.matej2.budget_lens.domain.entity.Category;
-import com.matej2.budget_lens.domain.mapper.CategoryMapper;
+import com.matej2.budget_lens.model.response.CategoryResponse;
+import com.matej2.budget_lens.model.entity.Category;
+import com.matej2.budget_lens.mapper.CategoryMapper;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

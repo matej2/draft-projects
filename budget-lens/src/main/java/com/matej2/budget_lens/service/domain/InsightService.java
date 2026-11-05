@@ -1,11 +1,11 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
-import com.matej2.budget_lens.domain.entity.Category;
-import com.matej2.budget_lens.domain.entity.Insight;
-import com.matej2.budget_lens.domain.mapper.CategoryMapper;
-import com.matej2.budget_lens.domain.mapper.InsightMapper;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.CategoryResponse;
+import com.matej2.budget_lens.model.entity.Category;
+import com.matej2.budget_lens.model.entity.Insight;
+import com.matej2.budget_lens.mapper.CategoryMapper;
+import com.matej2.budget_lens.mapper.InsightMapper;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.InsightRepository;
 import lombok.RequiredArgsConstructor;

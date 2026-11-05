@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.repository.domain;
 
-import com.matej2.budget_lens.domain.entity.Insight;
+import com.matej2.budget_lens.model.entity.Insight;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

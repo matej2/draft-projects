@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.controller;
 
-import com.matej2.budget_lens.domain.dto.request.AuthenticationRequest;
-import com.matej2.budget_lens.domain.dto.response.AuthenticationResponse;
-import com.matej2.budget_lens.domain.dto.request.RegisterRequest;
+import com.matej2.budget_lens.model.authentication.AuthenticationRequest;
+import com.matej2.budget_lens.model.authentication.AuthenticationResponse;
+import com.matej2.budget_lens.model.authentication.RegisterRequest;
 import com.matej2.budget_lens.service.AuthenticationService;
 import com.matej2.budget_lens.service.TokenService;
 import lombok.RequiredArgsConstructor;

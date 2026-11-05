@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.service;
 
-import com.matej2.budget_lens.domain.entity.User;
+import com.matej2.budget_lens.model.entity.User;
 import com.matej2.budget_lens.repository.UserRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;

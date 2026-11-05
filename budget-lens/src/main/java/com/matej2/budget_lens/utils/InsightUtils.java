@@ -1,9 +1,9 @@
 package com.matej2.budget_lens.utils;
 
-import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
-import com.matej2.budget_lens.domain.dto.response.InsightBudgetResponse;
-import com.matej2.budget_lens.domain.dto.response.InsightsResponse;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.FrequencyResponse;
+import com.matej2.budget_lens.model.response.InsightBudgetResponse;
+import com.matej2.budget_lens.model.response.InsightsResponse;
 
 import java.time.YearMonth;
 import java.util.LinkedHashMap;

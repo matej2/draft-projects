@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.repository.domain;
 
-import com.matej2.budget_lens.domain.entity.Insight;
+import com.matej2.budget_lens.model.entity.Insight;
 
 import java.util.List;
 

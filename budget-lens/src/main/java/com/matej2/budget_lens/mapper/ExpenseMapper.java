@@ -1,0 +1,66 @@
+package com.matej2.budget_lens.mapper;
+
+import com.matej2.budget_lens.model.csv.CSVImportRow;
+import com.matej2.budget_lens.model.request.ExpenseRequest;
+import com.matej2.budget_lens.model.response.ExpenseResponse;
+import com.matej2.budget_lens.model.entity.Category;
+import com.matej2.budget_lens.model.entity.Expense;
+import com.matej2.budget_lens.model.entity.Frequency;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+
+@Component
+public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Expense>{
+
+    @Override
+    public Expense toEntity(ExpenseRequest expenseRequest) {
+        Expense expense = new Expense();
+        expense.setNote(expenseRequest.note());
+        expense.setCost(expenseRequest.cost());
+        expense.setExpenseDate(expenseRequest.expenseDate());
+
+        return expense;
+    }
+
+    public Expense toEntity(ExpenseResponse expenseResponse) {
+        Expense expense = new Expense();
+        expense.setNote(expenseResponse.note());
+        expense.setCost(expenseResponse.cost());
+        expense.setExpenseDate(expenseResponse.expenseDate());
+
+        return expense;
+    }
+
+    @Override
+    public ExpenseResponse toResponse(Expense expense) {
+        Frequency frequency = new Frequency();
+        // Calculate total cost in a year
+
+        return new ExpenseResponse(
+                expense.getId(),
+                expense.getNote(),
+                expense.getCost(),
+                expense.getExpenseDate(),
+                frequency.getId(),
+                expense.getCategory() == null ? null: expense.getCategory().getId(),
+                1
+        );
+    }
+
+    public Expense add(Expense expense, Category category) {
+        expense.setCategory(category);
+        return expense;
+    }
+
+    public Expense toExpense(CSVImportRow row, Category uncategorized) {
+        Expense expense = new Expense();
+        LocalDate date = LocalDate.parse(row.getDate());
+        expense.setExpenseDate(date);
+        expense.setNote(String.format("%s: %s",row.getRefNum(), row.getDescription()));
+        expense.setCost(row.getNegativeTraffic());
+        expense.setCategory(uncategorized);
+
+        return expense;
+    }
+}

@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.utils;
 
-import com.matej2.budget_lens.domain.dto.response.InsightsResponse;
+import com.matej2.budget_lens.model.response.InsightsResponse;
 
 public class UserInterfaceUtils {
     public static String getClassNamesForInsightRow(InsightsResponse insight) {

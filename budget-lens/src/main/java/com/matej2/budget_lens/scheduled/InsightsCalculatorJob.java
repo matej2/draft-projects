@@ -1,16 +1,16 @@
 package com.matej2.budget_lens.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.matej2.budget_lens.domain.dto.request.ExpenseFilterRequest;
-import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
-import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
-import com.matej2.budget_lens.domain.entity.Expense;
-import com.matej2.budget_lens.domain.entity.RecordLimit;
-import com.matej2.budget_lens.domain.integration.AiCategorizationRequest;
-import com.matej2.budget_lens.domain.integration.AiCategorizationResponse;
-import com.matej2.budget_lens.domain.mapper.AICategorizationMapper;
-import com.matej2.budget_lens.domain.mapper.ExpenseMapper;
+import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.CategoryResponse;
+import com.matej2.budget_lens.model.response.ExpenseResponse;
+import com.matej2.budget_lens.model.entity.Expense;
+import com.matej2.budget_lens.model.entity.RecordLimit;
+import com.matej2.budget_lens.model.integration.AiCategorizationRequest;
+import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
+import com.matej2.budget_lens.mapper.AICategorizationMapper;
+import com.matej2.budget_lens.mapper.ExpenseMapper;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.repository.domain.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;

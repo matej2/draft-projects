@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.request.ExpenseRequest;
-import com.matej2.budget_lens.domain.entity.Expense;
-import com.matej2.budget_lens.domain.entity.User;
+import com.matej2.budget_lens.model.request.ExpenseRequest;
+import com.matej2.budget_lens.model.entity.Expense;
+import com.matej2.budget_lens.model.entity.User;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import org.junit.jupiter.api.Test;

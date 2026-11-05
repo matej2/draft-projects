@@ -1,7 +1,7 @@
 package com.matej2.budget_lens.utils;
 
-import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
-import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
+import com.matej2.budget_lens.model.response.CategoryResponse;
+import com.matej2.budget_lens.model.response.FrequencyResponse;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package com.matej2.budget_lens.controller;
 
-import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.response.*;
+import com.matej2.budget_lens.model.request.BudgetRequest;
+import com.matej2.budget_lens.model.response.*;
 import com.matej2.budget_lens.service.domain.BudgetService;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.FrequencyService;
@@ -66,7 +66,7 @@ public class WebModelProvider {
         return modelAttributes;
     }
 
-    public Map<String, Object> getAttributesForBudget(List<CategoryInsightsResponse>  categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget,  String yearMonth, CategoryResponse categoryResponse ) {
+    public Map<String, Object> getAttributesForBudget(List<CategoryInsightsResponse>  categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget, String yearMonth, CategoryResponse categoryResponse ) {
         String pageTitle = String.format("%s budgets", categoryResponse.name());
         Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes(pageTitle));
         modelAttributes.putAll(Map.of(

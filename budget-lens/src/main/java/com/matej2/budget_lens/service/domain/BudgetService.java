@@ -1,11 +1,11 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.domain.dto.request.BudgetRequest;
-import com.matej2.budget_lens.domain.dto.response.BudgetResponse;
-import com.matej2.budget_lens.domain.entity.Budget;
-import com.matej2.budget_lens.domain.entity.Category;
-import com.matej2.budget_lens.domain.entity.Frequency;
-import com.matej2.budget_lens.domain.mapper.BudgetMapper;
+import com.matej2.budget_lens.model.request.BudgetRequest;
+import com.matej2.budget_lens.model.response.BudgetResponse;
+import com.matej2.budget_lens.model.entity.Budget;
+import com.matej2.budget_lens.model.entity.Category;
+import com.matej2.budget_lens.model.entity.Frequency;
+import com.matej2.budget_lens.mapper.BudgetMapper;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.FrequencyRepository;
