@@ -1,4 +1,4 @@
-package com.matej2.budget_lens.config;
+package com.matej2.budget_lens.config.security;
 
 import com.matej2.budget_lens.config.filter.JwtAuthenticationFilter;
 import com.nimbusds.jose.jwk.JWK;

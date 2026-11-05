@@ -1,6 +1,6 @@
 package com.matej2.budget_lens.service;
 
-import com.matej2.budget_lens.config.RsaKeyProperties;
+import com.matej2.budget_lens.config.security.RsaKeyProperties;
 import com.matej2.budget_lens.domain.entity.User;
 import io.jsonwebtoken.security.SignatureException;
 import org.junit.jupiter.api.BeforeEach;

@@ -14,10 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Locale;
-
 @Configuration
 public class ApplicationConfig {
     @Bean("userAuthenticationProvider")
@@ -60,12 +56,6 @@ public class ApplicationConfig {
         return objectMapper;
     }
 
-    @Bean
-    public DateTimeFormatter dateTimeFormatter() {
-        return new DateTimeFormatterBuilder()
-                .parseCaseInsensitive()
-                .appendPattern("yyyy-MM")
-                .toFormatter(Locale.ENGLISH);
-    }
+
 
 }

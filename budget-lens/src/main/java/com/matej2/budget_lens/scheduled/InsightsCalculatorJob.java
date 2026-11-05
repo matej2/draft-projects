@@ -115,7 +115,7 @@ public class InsightsCalculatorJob {
                 .toList();
     }
 
-    @Scheduled(fixedDelayString = "3h")
+    @Scheduled(fixedDelayString = "1h")
     public void categorizeInsights() throws JsonProcessingException {
         if (!isAiEnabled) {
             return;
@@ -130,7 +130,7 @@ public class InsightsCalculatorJob {
         }
     }
 
-    @Scheduled(fixedDelayString = "1h")
+    @Scheduled(fixedDelayString = "15m")
     public void calculateRecordLimits() {
         long expenseCount = expenseRepository.count();
         RecordLimit recordLimit = recordLimiter.findOneByClassName("Expense");

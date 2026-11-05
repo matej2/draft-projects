@@ -5,7 +5,6 @@ import com.matej2.budget_lens.domain.dto.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.domain.dto.response.CategoryResponse;
 import com.matej2.budget_lens.domain.dto.response.ExpenseResponse;
 import com.matej2.budget_lens.domain.dto.response.FrequencyResponse;
-import com.matej2.budget_lens.domain.mapper.CategoryMapper;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
 import com.matej2.budget_lens.service.domain.*;
@@ -42,8 +41,6 @@ public class WebController {
     private final WebModelProvider webModelProvider;
     private final DateTimeFormatter dateTimeFormatter;
 
-    private final CategoryMapper categoryMapper;
-
 
     @GetMapping
     public String home(Model model, Integer pageNumber) {
@@ -62,25 +59,6 @@ public class WebController {
         return "index";
     }
 
-    private Map<FrequencyResponse, Integer> generateFrequencyToBudgetMapping(CategoryInsightsResponse insight) {
-        List<FrequencyResponse> allFrequencies = frequencyService.getAllFrequencies();
-        Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
-
-        FrequencyResponse monthlyFrequency = allFrequencies.stream()
-                .filter(f -> f.number() == 12)
-                .findFirst()
-                .orElseThrow();
-
-        double budgetYearlyValue = insight.percentile90() * monthlyFrequency.number();
-
-        for (FrequencyResponse frequency : allFrequencies) {
-            long relativeBudget = Math.round(budgetYearlyValue / frequency.number());
-            frequencyToBudget.put(frequency, Math.toIntExact(relativeBudget));
-        }
-
-        return frequencyToBudget;
-    }
-
     @GetMapping("/budget")
     public String budget(Model model, @NonNull String yearMonth, @NonNull Integer categoryId) {
         YearMonth expenseYearMonth = YearMonth.parse(yearMonth, dateTimeFormatter);
@@ -89,7 +67,7 @@ public class WebController {
 
         Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
         for (CategoryInsightsResponse categoryInsight : insightsByDateAndCategory) {
-            frequencyToBudget.putAll(generateFrequencyToBudgetMapping(categoryInsight));
+            frequencyToBudget.putAll(frequencyService.generateFrequencyToBudgetMapping(categoryInsight));
         }
 
         model.addAllAttributes(webModelProvider.getAttributesForBudget(
@@ -101,8 +79,6 @@ public class WebController {
 
         return "budget";
     }
-
-
 
     @PostMapping("/submitExpense")
     public String submitExpense(
@@ -125,13 +101,13 @@ public class WebController {
     }
 
     @PostMapping("/uploadCsv")
-    public String uploadCsv(@RequestParam("file") MultipartFile file) {
+    public String uploadCsv(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         try {
             this.expenseTrackingService.saveFromFile(file);
         } catch (IOException e) {
             throw new CSVParsingException(e.getMessage());
         }
-        return "redirect:/";
+        return getRedirectString(request);
     }
 
 }

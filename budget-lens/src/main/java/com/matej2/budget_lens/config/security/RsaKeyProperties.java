@@ -1,4 +1,4 @@
-package com.matej2.budget_lens.config;
+package com.matej2.budget_lens.config.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

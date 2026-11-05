@@ -1,6 +1,6 @@
 package com.matej2.budget_lens;
 
-import com.matej2.budget_lens.config.RsaKeyProperties;
+import com.matej2.budget_lens.config.security.RsaKeyProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

@@ -40,22 +40,19 @@ public class WebModelProvider {
         );
     }
 
-    private Map<String, Object> getInitialAttributes(String returnUrl, String pageTitle) {
+    private Map<String, Object> getInitialAttributes(String pageTitle) {
         return Map.of(
-                "returnUrl", returnUrl,
                 "isAuthenticated", isAuthenticated(),
-                "pageTitle", pageTitle,
-                "pageUrlMapping",  getPageUrlMapping()
+                "pageTitle", pageTitle
         );
     }
-
 
     public @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
         Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
                 getFormatedInsights(insightService.getAllInsights())
         );
 
-        Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes("/", "Main"));
+        Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes("Main"));
         modelAttributes.putAll(Map.of(
                 "expenses", expenses,
                 "frequencies", frequencyService.getAllFrequencies(),
@@ -71,7 +68,7 @@ public class WebModelProvider {
 
     public Map<String, Object> getAttributesForBudget(List<CategoryInsightsResponse>  categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget,  String yearMonth, CategoryResponse categoryResponse ) {
         String pageTitle = String.format("%s budgets", categoryResponse.name());
-        Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes("/", pageTitle));
+        Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes(pageTitle));
         modelAttributes.putAll(Map.of(
                 "insights", getFormatedInsights(categoryInsights),
                 "budgets", getFormattedBudgetInsight(categoryInsights, frequencyToBudget),
