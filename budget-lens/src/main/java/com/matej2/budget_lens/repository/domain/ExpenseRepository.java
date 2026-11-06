@@ -20,7 +20,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     Page<Expense> findByExpenseDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     @Query(value = """
-    SELECT NEW com.matej2.budget_lens.domain.jpa.CategoryInsightResultRow(
+    SELECT NEW com.matej2.budget_lens.model.jpa.CategoryInsightResultRow(
         stddev_samp(e.cost) / AVG(e.cost) as stddev_percent,
         AVG(e.cost) as avg_cost,
         percentile_cont(0.5) WITHIN GROUP (
