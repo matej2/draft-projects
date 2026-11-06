@@ -21,17 +21,17 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 
     @Query(value = """
     SELECT NEW com.matej2.budget_lens.model.jpa.CategoryInsightResultRow(
-        stddev_samp(e.cost) / AVG(e.cost) as stddev_percent,
-        AVG(e.cost) as avg_cost,
+        (stddev_pop(e.cost) /  AVG(e.cost)),
+        AVG(e.cost),
         percentile_cont(0.5) WITHIN GROUP (
             ORDER BY
                 e.cost
-        ) as p50,
+        ),
         percentile_cont(0.75) WITHIN GROUP (
             ORDER BY
                 e.cost
-        ) as p90,
-        COUNT(e.id) as expenseCount
+        ),
+        COUNT(e.id)
     ) FROM Expense e INNER JOIN Category c
             ON e.category.id = c.id
         WHERE
