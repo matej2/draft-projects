@@ -12,7 +12,7 @@ import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
 import com.matej2.budget_lens.mapper.AICategorizationMapper;
 import com.matej2.budget_lens.mapper.ExpenseMapper;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
-import com.matej2.budget_lens.repository.domain.RecordLimiter;
+import com.matej2.budget_lens.repository.RecordLimiter;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;

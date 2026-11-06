@@ -3,7 +3,7 @@ package com.matej2.budget_lens.config.filter;
 import com.matej2.budget_lens.config.annotation.RecordLimitEnabled;
 import com.matej2.budget_lens.model.entity.RecordLimit;
 import com.matej2.budget_lens.exception.RecordOverLimitExeption;
-import com.matej2.budget_lens.repository.domain.RecordLimiter;
+import com.matej2.budget_lens.repository.RecordLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

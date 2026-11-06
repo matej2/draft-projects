@@ -87,7 +87,7 @@ public class ExpenseTrackingService {
     }
 
     public CategoryInsightResultRow insightsByCategory(final ExpenseFilterRequest expenseFilter, Integer categoryId) {
-        return expenseRepository.insightsByCategoryIdByDateBetween(
+        return expenseRepository.calculateInsightsByCategoryIdByDateBetween(
                 categoryId,
                 expenseFilter.startDate(),
                 expenseFilter.endDate()

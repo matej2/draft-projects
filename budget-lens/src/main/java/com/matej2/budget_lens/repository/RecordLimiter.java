@@ -1,4 +1,4 @@
-package com.matej2.budget_lens.repository.domain;
+package com.matej2.budget_lens.repository;
 
 import com.matej2.budget_lens.model.entity.RecordLimit;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -69,7 +69,7 @@ public class InsightCalculatorService {
     }
 
     public CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
-        CategoryInsightResultRow insightResponse = expenseRepository.insightsByCategoryIdByDateBetween(
+        CategoryInsightResultRow insightResponse = expenseRepository.calculateInsightsByCategoryIdByDateBetween(
                 category.id(),
                 expenseRequest.startDate(),
                 expenseRequest.endDate()
