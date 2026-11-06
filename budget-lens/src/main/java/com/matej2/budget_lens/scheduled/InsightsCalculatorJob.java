@@ -1,18 +1,17 @@
 package com.matej2.budget_lens.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
-import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.model.response.CategoryResponse;
-import com.matej2.budget_lens.model.response.ExpenseResponse;
+import com.matej2.budget_lens.mapper.AICategorizationMapper;
+import com.matej2.budget_lens.mapper.ExpenseMapper;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.entity.RecordLimit;
 import com.matej2.budget_lens.model.integration.AiCategorizationRequest;
 import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
-import com.matej2.budget_lens.mapper.AICategorizationMapper;
-import com.matej2.budget_lens.mapper.ExpenseMapper;
-import com.matej2.budget_lens.repository.domain.ExpenseRepository;
+import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.repository.RecordLimiter;
+import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;
@@ -75,7 +74,7 @@ public class InsightsCalculatorJob {
         });
     }
 
-    private List<AiCategorizationResponse> processBatchForDateRange(LocalDate firstLocalDate, LocalDate lastLocalDate) throws JsonProcessingException {
+    private List<AiCategorizationResponse> getExpenseCategorizationForDateRange(LocalDate firstLocalDate, LocalDate lastLocalDate) throws JsonProcessingException {
         Page<Expense> expensePage;
         List<AiCategorizationResponse> categorizationResponses = new ArrayList<>();
 
@@ -95,24 +94,12 @@ public class InsightsCalculatorJob {
         return categorizationResponses;
     }
 
-    public ExpenseResponse buildExpenseRequest(AiCategorizationResponse expenseRequest) {
-        CategoryResponse category = categoryService.getCategory(expenseRequest.categoryId());
-        ExpenseResponse existingExpense = expenseService.getExpenseById(expenseRequest.expenseId());
-
-        return existingExpense.withCategory(category.id());
-    }
-
     private void saveCategorization(List<AiCategorizationResponse> categorizationResponses) {
         expenseRepository.saveAll(
-                getEntity(categorizationResponses)
+                categorizationResponses.stream().map(
+                        this.expenseService::applyAiCategorization
+                ).toList()
         );
-    }
-
-    public List<Expense> getEntity(List<AiCategorizationResponse> categorizationResponses) {
-        return categorizationResponses.stream()
-                .map(this::buildExpenseRequest)
-                .map(expenseMapper::toEntity)
-                .toList();
     }
 
     @Scheduled(fixedDelayString = "1h")
@@ -124,7 +111,7 @@ public class InsightsCalculatorJob {
         for (Calendar calendar : treeMonths) {
             LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
             LocalDate lastLocalDate = getLastDayOfTheMonth(calendar);
-            List<AiCategorizationResponse> categorizationResponses = processBatchForDateRange(firstLocalDate, lastLocalDate);
+            List<AiCategorizationResponse> categorizationResponses = getExpenseCategorizationForDateRange(firstLocalDate, lastLocalDate);
 
             saveCategorization(categorizationResponses);
         }

@@ -1,11 +1,11 @@
 package com.matej2.budget_lens.mapper;
 
 import com.matej2.budget_lens.model.csv.CSVImportRow;
-import com.matej2.budget_lens.model.request.ExpenseRequest;
-import com.matej2.budget_lens.model.response.ExpenseResponse;
 import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.entity.Frequency;
+import com.matej2.budget_lens.model.request.ExpenseRequest;
+import com.matej2.budget_lens.model.response.ExpenseResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

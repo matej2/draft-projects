@@ -1,8 +1,10 @@
 package com.matej2.budget_lens.service.domain;
 
 import com.matej2.budget_lens.model.csv.CSVImportRow;
+import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
 import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
 import com.matej2.budget_lens.model.request.ExpenseRequest;
+import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.model.response.ExpenseResponse;
 import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
@@ -114,5 +116,13 @@ public class ExpenseTrackingService {
             this.expenseRepository.saveAll(expenseList);
         }
         log.info("Imported expense data from file: file name {}, file size {}, content type: {}", file.getOriginalFilename(), file.getSize(), file.getContentType());
+    }
+
+    public Expense applyAiCategorization(AiCategorizationResponse expenseRequest) {
+        CategoryResponse category = categoryService.getCategory(expenseRequest.categoryId());
+        ExpenseResponse existingExpense = this.getExpenseById(expenseRequest.expenseId())
+                .withCategory(category.id());
+
+        return this.expenseMapper.toEntity(existingExpense);
     }
 }

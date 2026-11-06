@@ -52,11 +52,10 @@ services:
     ports:
       - "8080:8080"
   opensearch:
-    image: opensearchproject/opensearch:3.8.0
+    image: opensearchproject/opensearch:latest
     environment:
       - discovery.type=single-node
       - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_PASSWORD}
-      - DISABLE_SECURITY_PLUGIN=true
     ports:
       - "9200:9200"
       - "9600:9600"
@@ -73,8 +72,6 @@ services:
       - "5601" # Expose port 5601 for web access to OpenSearch Dashboards
     environment:
       OPENSEARCH_HOSTS: '["https://opensearch:9200"]' # Define the OpenSearch nodes that OpenSearch Dashboards will query
-      OPENSEARCH_USERNAME: admin
-      OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD}
     networks:
       - opensearch-net
 
