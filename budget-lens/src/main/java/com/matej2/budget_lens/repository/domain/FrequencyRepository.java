@@ -4,4 +4,5 @@ import com.matej2.budget_lens.model.entity.Frequency;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FrequencyRepository  extends JpaRepository<Frequency, Integer> {
+    Frequency findOneByNumber(Integer number);
 }

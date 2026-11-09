@@ -1,8 +1,9 @@
 package com.matej2.budget_lens.service.domain;
 
+import com.matej2.budget_lens.mapper.FrequencyMapper;
+import com.matej2.budget_lens.model.entity.Frequency;
 import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
 import com.matej2.budget_lens.model.response.FrequencyResponse;
-import com.matej2.budget_lens.mapper.FrequencyMapper;
 import com.matej2.budget_lens.repository.domain.FrequencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,19 +23,18 @@ public class FrequencyService {
     }
 
     public Map<FrequencyResponse, Integer> generateFrequencyToBudgetMapping(CategoryInsightsResponse insight) {
-        List<FrequencyResponse> allFrequencies = this.getAllFrequencies();
+        Frequency monthlyFrequency = frequencyRepository.findOneByNumber(12);
+        List<Frequency> allFrequencies = frequencyRepository.findAll();
         Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
 
-        FrequencyResponse monthlyFrequency = allFrequencies.stream()
-                .filter(f -> f.number() == 12)
-                .findFirst()
-                .orElseThrow();
+        double budgetYearlyValue = insight.percentile90() * monthlyFrequency.getNumber();
 
-        double budgetYearlyValue = insight.percentile90() * monthlyFrequency.number();
-
-        for (FrequencyResponse frequency : allFrequencies) {
-            long relativeBudget = Math.round(budgetYearlyValue / frequency.number());
-            frequencyToBudget.put(frequency, Math.toIntExact(relativeBudget));
+        for (Frequency frequency : allFrequencies) {
+            long relativeBudget = Math.round(budgetYearlyValue / frequency.getNumber());
+            frequencyToBudget.put(
+                    this.frequencyMapper.toResponse(frequency),
+                    Math.toIntExact(relativeBudget)
+            );
         }
 
         return frequencyToBudget;

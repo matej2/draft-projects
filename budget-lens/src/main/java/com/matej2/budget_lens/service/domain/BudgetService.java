@@ -24,14 +24,15 @@ public class BudgetService {
     private final CategoryRepository categoryRepository;
     private final FrequencyRepository frequencyRepository;
 
-    public void add(BudgetRequest budget) {
+    public void save(BudgetRequest budget) {
         Category categoryEntity = categoryRepository.findById(budget.categoryId()).orElseThrow();
         Frequency frequencyEntity = frequencyRepository.findById(budget.frequencyId()).orElseThrow();
 
         Budget existingBudgetEntity = budgetMapper.toEntity(budget);
-        Budget completeBudgetEntity = budgetMapper.add(existingBudgetEntity, categoryEntity, frequencyEntity);
+        existingBudgetEntity.setCategory(categoryEntity);
+        existingBudgetEntity.setFrequency(frequencyEntity);
 
-        this.budgetRepository.save(completeBudgetEntity);
+        this.budgetRepository.save(existingBudgetEntity);
         log.info("Saved budget {} for category {}", budget.note(), budget.categoryId());
     }
 

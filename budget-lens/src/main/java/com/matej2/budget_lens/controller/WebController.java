@@ -33,6 +33,7 @@ import static com.matej2.budget_lens.utils.ControllerUtils.getRedirectString;
 @RequiredArgsConstructor
 public class WebController {
     private final ExpenseTrackingService expenseTrackingService;
+    private final FileProcessorService fileProcessorService;
     private final FrequencyService frequencyService;
     private final CategoryService categoryService;
     private final InsightService insightService;
@@ -51,7 +52,7 @@ public class WebController {
                 pageNumber,
                 15,
                 Sort.by("expenseDate").descending());
-        List<ExpenseResponse> expenses = expenseTrackingService.getExpense(sortedByDate);
+        List<ExpenseResponse> expenses = expenseTrackingService.getExpenseList(sortedByDate);
 
         Map<String, Object> attributes = webModelProvider.getAttributesForExpenses(pageNumber, expenses);
         model.addAllAttributes(attributes);
@@ -87,7 +88,7 @@ public class WebController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-            this.budgetService.add(budgetRequest);
+            this.budgetService.save(budgetRequest);
         } catch (RecordOverLimitExeption e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -103,7 +104,7 @@ public class WebController {
     @PostMapping("/uploadCsv")
     public String uploadCsv(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         try {
-            this.expenseTrackingService.saveFromFile(file);
+            this.fileProcessorService.saveExpenseListFromFile(file);
         } catch (IOException e) {
             throw new CSVParsingException(e.getMessage());
         }

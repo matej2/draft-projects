@@ -9,6 +9,7 @@ import com.matej2.budget_lens.model.response.FrequencyResponse;
 import com.matej2.budget_lens.exception.CSVParsingException;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
+import com.matej2.budget_lens.service.domain.FileProcessorService;
 import com.matej2.budget_lens.service.domain.FrequencyService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,6 +38,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExpenseTrackingController {
     private final ExpenseTrackingService expenseTrackingService;
+    private final FileProcessorService fileProcessorService;
     private final FrequencyService frequencyService;
     private final CategoryService  categoryService;
     @Value("${spring.jpa.hibernate.ddl-auto}")
@@ -54,7 +56,7 @@ public class ExpenseTrackingController {
     })
     public List<ExpenseResponse> getExpense(@Nullable @RequestBody ExpenseFilterRequest expenseFilterRequest, Pageable pageable){
         if (expenseFilterRequest == null) {
-            return this.expenseTrackingService.getExpense(pageable);
+            return this.expenseTrackingService.getExpenseList(pageable);
         }
         return this.expenseTrackingService.getExpenseByDate(expenseFilterRequest.startDate(), expenseFilterRequest.endDate(), pageable);
     }
@@ -71,7 +73,7 @@ public class ExpenseTrackingController {
     @PostMapping("/expense/upload")
     public void uploadExpense(@RequestParam("file") MultipartFile file) {
         try {
-            this.expenseTrackingService.saveFromFile(file);
+            this.fileProcessorService.saveExpenseListFromFile(file);
         } catch (IOException e) {
             throw new CSVParsingException(e.getMessage());
         }

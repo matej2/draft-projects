@@ -1,13 +1,11 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
-import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.model.response.CategoryResponse;
-import com.matej2.budget_lens.model.response.ExpenseResponse;
 import com.matej2.budget_lens.model.entity.Budget;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.jpa.CategoryInsightResultRow;
-import com.matej2.budget_lens.mapper.ExpenseMapper;
+import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,54 +20,70 @@ import java.util.List;
 public class InsightCalculatorService {
     private final BudgetRepository budgetRepository;
     private final ExpenseRepository expenseRepository;
-    private final ExpenseMapper  expenseMapper;
 
-    private double calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
-        // Safe budget confidence calculation
-        double expenseCountRelativeToOptimal;
+    private double getConfidenceBasedOnCount(double expenseCount) {
+        byte optimalExpenseCount = 30;
+        double expenseCountConfidence;
 
-        if (insightResponse.getExpenseCount() > 2 && insightResponse.getExpenseCount() < 30) {
-            // Optimal expense count is 30. Confidence is calculated as % towards that count.
-            expenseCountRelativeToOptimal = insightResponse.getExpenseCount().floatValue() / 28.0;
-        } else {
+        if (expenseCount < 2) {
             return 0d;
         }
 
-        // Optimal expense standard deviation is 0 %. Confidence is calculated as % towards that number.
-        double expenseStandardDeviationRelativeToOptimal = (1.0 - insightResponse.getStdDevPercent());
-
-        // Calculations are combined using ratio 70:30
-        return expenseCountRelativeToOptimal * 0.7 + expenseStandardDeviationRelativeToOptimal * 0.3;
+        if (expenseCount < optimalExpenseCount) {
+            expenseCountConfidence = expenseCount / 28.0;
+        } else {
+            expenseCountConfidence = 1d;
+        }
+        return expenseCountConfidence;
     }
 
-    private double calculateAdjustedBudget(double safeBudgetConfidence, double pecentile90) {
+    private double getConfidenceBasedOnStandardDeviation(double stdDev) {
+        if (stdDev >= 1d) {
+            return 0d;
+        }
+
+        return 1.0 - stdDev;
+    }
+
+    private double calculateSafeBudgetConfidence(CategoryInsightResultRow insightResponse) {
+        double expenseCountConfidence = this.getConfidenceBasedOnCount(insightResponse.getExpenseCount());
+        if (expenseCountConfidence == 0) {
+            return 0d;
+        }
+
+        double expenseStandardDeviationConfidence = this.getConfidenceBasedOnStandardDeviation(insightResponse.getStdDevPercent());
+
+        return expenseCountConfidence * 0.7 + expenseStandardDeviationConfidence * 0.3;
+    }
+
+    private double calculateSafeBudget(double safeBudgetConfidence, double pecentile90) {
         double budgetMultiplierPercent = 0.3d;
         double realisticBudget = budgetMultiplierPercent - (budgetMultiplierPercent * safeBudgetConfidence);
 
         return pecentile90 + pecentile90 * realisticBudget;
     }
 
-    public Double calculateBudgetUtilization(Integer categoryId, List<ExpenseResponse> expenseResponses) {
-        double categoryBudget = budgetRepository.findAllByCategoryId(categoryId).stream()
+    public Double calculateBudgetUtilization(Integer categoryId, List<Expense> expenseResponses) {
+        double totalCategoryBudget = budgetRepository.findAllByCategoryId(categoryId).stream()
                 .mapToDouble(Budget::getQuota)
                 .sum();
-        if (categoryBudget == 0) {
+        if (totalCategoryBudget == 0) {
             return null;
         }
 
-        double categoryExpenses = expenseResponses
-                .stream().mapToDouble(ExpenseResponse::cost)
+        double totalCategoryExpenses = expenseResponses
+                .stream().mapToDouble(Expense::getCost)
                 .sum();
 
-        if (categoryExpenses > categoryBudget) {
+        if (totalCategoryExpenses > totalCategoryBudget) {
             return 1.0d;
         }
 
-        return categoryExpenses / categoryBudget;
+        return totalCategoryExpenses / totalCategoryBudget;
     }
 
     public CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
-        CategoryInsightResultRow insightResponse = expenseRepository.calculateInsightsByCategoryIdByDateBetween(
+        CategoryInsightResultRow insightResponse = expenseRepository.getInsightsByCategoryIdByDateBetween(
                 category.id(),
                 expenseRequest.startDate(),
                 expenseRequest.endDate()
@@ -78,19 +92,16 @@ public class InsightCalculatorService {
             return null;
         }
 
-        List<Expense> expenses = expenseRepository.findByExpenseDateBetween(
-                expenseRequest.startDate(),
-                expenseRequest.endDate()
+        List<Expense> expenseList = expenseRepository.findByExpenseDateBetween(
+                expenseRequest.startDate(), expenseRequest.endDate()
         );
-        List<ExpenseResponse> expenseResponses = expenses.stream()
-                .map(expenseMapper::toResponse)
-                .toList();
 
         double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
-        double adjustedSafeBudget = calculateAdjustedBudget(safeBudgetConfidence, insightResponse.getPercentile90());
+        double adjustedSafeBudget = calculateSafeBudget(safeBudgetConfidence, insightResponse.getPercentile90());
+
         Double budgetUtilization = null;
-        if (!expenseResponses.isEmpty()) {
-            budgetUtilization = calculateBudgetUtilization(category.id(), expenseResponses);
+        if (!expenseList.isEmpty()) {
+            budgetUtilization = calculateBudgetUtilization(category.id(), expenseList);
         }
 
         return new CategoryInsightsResponse(

@@ -40,7 +40,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             e.expenseDate < :endDate
         GROUP BY c.id
     """)
-    CategoryInsightResultRow calculateInsightsByCategoryIdByDateBetween(
+    CategoryInsightResultRow getInsightsByCategoryIdByDateBetween(
             @Param("categoryId") Integer categoryId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);

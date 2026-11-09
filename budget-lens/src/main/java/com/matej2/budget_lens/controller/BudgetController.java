@@ -13,6 +13,6 @@ public class BudgetController {
 
     @PostMapping("/")
     public void saveBudget(BudgetRequest budgetRequest) {
-        this.budgetService.add(budgetRequest);
+        this.budgetService.save(budgetRequest);
     }
 }

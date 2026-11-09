@@ -1,34 +1,24 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.model.csv.CSVImportRow;
-import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
-import com.matej2.budget_lens.model.request.ExpenseFilterRequest;
-import com.matej2.budget_lens.model.request.ExpenseRequest;
-import com.matej2.budget_lens.model.response.CategoryResponse;
-import com.matej2.budget_lens.model.response.ExpenseResponse;
+import com.matej2.budget_lens.mapper.ExpenseMapper;
 import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.entity.User;
-import com.matej2.budget_lens.model.jpa.CategoryInsightResultRow;
-import com.matej2.budget_lens.mapper.ExpenseMapper;
+import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
+import com.matej2.budget_lens.model.request.ExpenseRequest;
+import com.matej2.budget_lens.model.response.CategoryResponse;
+import com.matej2.budget_lens.model.response.ExpenseResponse;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
-import com.matej2.budget_lens.utils.CSVHelper;
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-
-import static com.matej2.budget_lens.utils.CsvUtils.getCsvReader;
 
 @Service
 @RequiredArgsConstructor
@@ -43,20 +33,20 @@ public class ExpenseTrackingService {
     public synchronized void addExpense(ExpenseRequest expense){
         Category categoryEntity = categoryRepository.findById(expense.categoryId()).orElseThrow();
 
-        Expense mappedExpense = expenseMapper.toEntity(expense);
-        mappedExpense.setCategory(categoryEntity);
+        Expense existingExpense = expenseMapper.toEntity(expense);
+        existingExpense.setCategory(categoryEntity);
 
         Authentication authenticationContext  =  SecurityContextHolder.getContext().getAuthentication();
         if (authenticationContext != null && authenticationContext.getPrincipal() instanceof User authenticatedUser) {
-            mappedExpense.setOwner(authenticatedUser);
+            existingExpense.setOwner(authenticatedUser);
         }
 
-        this.expenseRepository.save(mappedExpense);
+        this.expenseRepository.save(existingExpense);
 
-        log.info("Saved expense: {}, category: {}", mappedExpense.getNote(), mappedExpense.getCategory());
+        log.info("Saved expense: {}, category: {}", existingExpense.getNote(), existingExpense.getCategory());
     }
 
-    public synchronized List<ExpenseResponse> getExpense(Pageable pageable) {
+    public synchronized List<ExpenseResponse> getExpenseList(Pageable pageable) {
         return this.expenseRepository.findAll(pageable).stream()
                 .map(expenseMapper::toResponse)
                 .toList();
@@ -64,10 +54,10 @@ public class ExpenseTrackingService {
 
     // In real world scenario I would use mapper that would update only defined properties
     // For simplicity purposes I override whole record
-    public synchronized void updateExpense(Integer id, ExpenseRequest expenseRequest) {
+    public synchronized void updateExpense(Integer expenseId, ExpenseRequest expenseRequest) {
         Expense mappedExpense = expenseMapper.toEntity(expenseRequest);
 
-        mappedExpense.setId(id);
+        mappedExpense.setId(expenseId);
 
         this.expenseRepository.save(mappedExpense);
         log.info("Updated expense: {}, category: {}", mappedExpense.getNote(), mappedExpense.getCategory());
@@ -86,36 +76,6 @@ public class ExpenseTrackingService {
     public synchronized void deleteExpense(Integer id) {
         expenseRepository.deleteById(id);
         log.info("Delete expense with id: {}", id);
-    }
-
-    public CategoryInsightResultRow insightsByCategory(final ExpenseFilterRequest expenseFilter, Integer categoryId) {
-        return expenseRepository.calculateInsightsByCategoryIdByDateBetween(
-                categoryId,
-                expenseFilter.startDate(),
-                expenseFilter.endDate()
-        );
-    }
-
-
-    public void saveFromFile(MultipartFile file) throws IOException {
-        if (CSVHelper.hasCSVFormat(file)) {
-
-            List<CSVImportRow> result;
-
-            try(CSVReader reader = getCsvReader(file.getInputStream())) {
-                 result = new CsvToBeanBuilder<CSVImportRow>(reader)
-                        .withType(CSVImportRow.class)
-                        .build()
-                        .parse();
-            }
-
-            Category uncategorizedCategory = this.categoryService.getUncategorizedCategory();
-
-            List<Expense> expenseList = result.stream().map(r-> expenseMapper.toExpense(r, uncategorizedCategory)).toList();
-
-            this.expenseRepository.saveAll(expenseList);
-        }
-        log.info("Imported expense data from file: file name {}, file size {}, content type: {}", file.getOriginalFilename(), file.getSize(), file.getContentType());
     }
 
     public Expense applyAiCategorization(AiCategorizationResponse expenseRequest) {
