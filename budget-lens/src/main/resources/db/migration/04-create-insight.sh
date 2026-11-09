@@ -11,8 +11,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
       standard_deviation real,
       standard_deviation_percent real,
       category integer references category(id),
-      median real,
-      percentile90 real,
+      median numeric,
+      percentile90 numeric,
       is_cost_variable boolean
     );
 

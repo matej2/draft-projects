@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -17,8 +18,8 @@ public class SavingsGoal {
     String name;
     @Min(0)
     @Nonnull
-    Float targetAmount;
-    Float currentAmount;
+    BigDecimal targetAmount;
+    BigDecimal currentAmount;
     @Nonnull
     LocalDate deadline;
 }

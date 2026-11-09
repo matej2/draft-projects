@@ -8,6 +8,7 @@ import com.matej2.budget_lens.model.request.ExpenseRequest;
 import com.matej2.budget_lens.model.response.ExpenseResponse;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Component
@@ -52,7 +53,7 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
     }
 
     public Expense toExpense(CSVImportRow row, Category uncategorized) {
-        Expense expense = new Expense(row.getNegativeTraffic());
+        Expense expense = new Expense(new BigDecimal(row.getNegativeTraffic()));
         LocalDate date = LocalDate.parse(row.getDate());
         expense.setExpenseDate(date);
         expense.setNote(String.format("%s: %s",row.getRefNum(), row.getDescription()));

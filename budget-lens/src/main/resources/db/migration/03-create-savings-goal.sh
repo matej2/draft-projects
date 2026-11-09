@@ -9,8 +9,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE TABLE IF NOT EXISTS savingsgoal (
       id serial primary key,
       name varchar(100),
-      target_amount real,
-      current_amount real,
+      target_amount numeric,
+      current_amount numeric,
       deadline date
     );
 

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
@@ -25,9 +26,9 @@ public class Insight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @DecimalMin(value = "0.00")
-    private Double median;
+    private BigDecimal median;
     @DecimalMin(value = "0.00")
-    private Double percentile90;
+    private BigDecimal percentile90;
     @Nonnull
     private YearMonth yearMonth;
     @DecimalMin(value = "0.00")

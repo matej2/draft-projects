@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -18,7 +19,7 @@ public class Expense {
     private String note;
     @Nonnull
     @PositiveOrZero
-    private Float cost;
+    private BigDecimal cost;
     private LocalDate expenseDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)

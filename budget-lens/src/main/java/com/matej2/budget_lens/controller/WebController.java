@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class WebController {
         CategoryResponse categoryResponse = categoryService.getCategory(categoryId);
         List<CategoryInsightsResponse> insightsByDateAndCategory = insightService.getInsightByYearMonthAndCategory(expenseYearMonth, categoryResponse);
 
-        Map<FrequencyResponse, Integer> frequencyToBudget = new HashMap<>();
+        Map<FrequencyResponse, BigDecimal> frequencyToBudget = new HashMap<>();
         for (CategoryInsightsResponse categoryInsight : insightsByDateAndCategory) {
             frequencyToBudget.putAll(frequencyService.generateFrequencyToBudgetMapping(categoryInsight));
         }

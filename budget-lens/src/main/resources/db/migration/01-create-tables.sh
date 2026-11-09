@@ -40,7 +40,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     CREATE TABLE IF NOT EXISTS expense (
         id serial primary key,
         note varchar(100),
-        cost real,
+        cost numeric,
         expense_date date,
         category integer references category(id),
         owner integer references registereduser(id),

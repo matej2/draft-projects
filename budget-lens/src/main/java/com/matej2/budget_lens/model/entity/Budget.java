@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "budget")
 @Data
@@ -15,7 +17,7 @@ public class Budget {
     private String note;
     @Nonnull
     @PositiveOrZero
-    private Float quota;
+    private BigDecimal quota;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
     @Nonnull

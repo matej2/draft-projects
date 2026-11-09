@@ -10,6 +10,7 @@ import com.matej2.budget_lens.utils.MathUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.Map;
 
@@ -62,8 +63,8 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
                 categoryInsightsResponse.yearMonth(),
                 categoryInsightsResponse.category(),
                 MathUtils.toPercentage(categoryInsightsResponse.stddevPercent()),
-                MathUtils.toTwoDecimals(categoryInsightsResponse.median()),
-                MathUtils.toTwoDecimals(categoryInsightsResponse.percentile90()),
+                categoryInsightsResponse.median(),
+                categoryInsightsResponse.percentile90(),
                 categoryInsightsResponse.expenseCount(),
                 categoryInsightsResponse.updatedAt(),
                 MathUtils.toPercentage(categoryInsightsResponse.safeBudgetConfidence()),
@@ -71,7 +72,7 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
         );
     }
 
-    public static InsightBudgetResponse toResponse(CategoryInsightsResponse categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget) {
+    public static InsightBudgetResponse toResponse(CategoryInsightsResponse categoryInsights, Map<FrequencyResponse, BigDecimal> frequencyToBudget) {
         return new InsightBudgetResponse(
                 frequencyToBudget,
                 MathUtils.toPercentage(categoryInsights.safeBudgetConfidence()),

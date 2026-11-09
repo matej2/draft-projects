@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -50,7 +51,7 @@ public class WebModelProvider {
                 .toList();
     }
 
-    private List<InsightBudgetResponse> mapToInsightBudgetResponse(List<CategoryInsightsResponse> categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget) {
+    private List<InsightBudgetResponse> mapToInsightBudgetResponse(List<CategoryInsightsResponse> categoryInsights, Map<FrequencyResponse, BigDecimal> frequencyToBudget) {
         return categoryInsights.stream().map(
                 insight -> InsightMapper.toResponse(insight, frequencyToBudget)
         ).toList();
@@ -84,7 +85,7 @@ public class WebModelProvider {
         return modelAttributes;
     }
 
-    public Map<String, Object> getAttributesForBudget(List<CategoryInsightsResponse>  categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget, String yearMonth, CategoryResponse categoryResponse ) {
+    public Map<String, Object> getAttributesForBudget(List<CategoryInsightsResponse>  categoryInsights, Map<FrequencyResponse, BigDecimal> frequencyToBudget, String yearMonth, CategoryResponse categoryResponse ) {
         String pageTitle = String.format("%s budgets", categoryResponse.name());
         Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes(pageTitle));
         modelAttributes.putAll(Map.of(

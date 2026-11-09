@@ -11,6 +11,8 @@ import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -56,30 +58,34 @@ public class InsightCalculatorService {
         return expenseCountConfidence * 0.7 + expenseStandardDeviationConfidence * 0.3;
     }
 
-    private double calculateSafeBudget(double safeBudgetConfidence, double pecentile90) {
+    private BigDecimal calculateSafeBudget(double safeBudgetConfidence, BigDecimal pecentile90) {
         double budgetMultiplierPercent = 0.3d;
         double realisticBudget = budgetMultiplierPercent - (budgetMultiplierPercent * safeBudgetConfidence);
 
-        return pecentile90 + pecentile90 * realisticBudget;
+        return pecentile90.add(pecentile90.multiply(BigDecimal.valueOf(realisticBudget)));
     }
 
     public Double calculateBudgetUtilization(Integer categoryId, List<Expense> expenseResponses) {
-        double totalCategoryBudget = budgetRepository.findAllByCategoryId(categoryId).stream()
-                .mapToDouble(Budget::getQuota)
-                .sum();
-        if (totalCategoryBudget == 0) {
+        BigDecimal totalCategoryBudget = budgetRepository.findAllByCategoryId(categoryId).stream()
+                .map(Budget::getQuota)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (totalCategoryBudget.compareTo(BigDecimal.valueOf(0L)) > 0) {
             return null;
         }
 
-        double totalCategoryExpenses = expenseResponses
-                .stream().mapToDouble(Expense::getCost)
-                .sum();
+        BigDecimal totalCategoryExpenses = expenseResponses
+                .stream()
+                .map(Expense::getCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if (totalCategoryExpenses > totalCategoryBudget) {
+        if (totalCategoryExpenses.compareTo(totalCategoryBudget) > 0) {
             return 1.0d;
+
         }
 
-        return totalCategoryExpenses / totalCategoryBudget;
+        BigDecimal utilization = totalCategoryExpenses.divide(totalCategoryBudget, RoundingMode.HALF_UP);
+        return utilization.doubleValue();
+
     }
 
     public CategoryInsightsResponse calculateInsightDetails(CategoryResponse category, ExpenseFilterRequest expenseRequest, YearMonth yearMonth) {
@@ -97,7 +103,7 @@ public class InsightCalculatorService {
         );
 
         double safeBudgetConfidence = calculateSafeBudgetConfidence(insightResponse);
-        double adjustedSafeBudget = calculateSafeBudget(safeBudgetConfidence, insightResponse.getPercentile90());
+        BigDecimal adjustedSafeBudget = calculateSafeBudget(safeBudgetConfidence, insightResponse.getPercentile90());
 
         Double budgetUtilization = null;
         if (!expenseList.isEmpty()) {
