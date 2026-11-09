@@ -1,5 +1,6 @@
 package com.matej2.budget_lens.controller;
 
+import com.matej2.budget_lens.mapper.InsightMapper;
 import com.matej2.budget_lens.model.request.BudgetRequest;
 import com.matej2.budget_lens.model.response.*;
 import com.matej2.budget_lens.service.domain.BudgetService;
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.matej2.budget_lens.utils.InsightUtils.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -28,16 +29,12 @@ public class WebModelProvider {
     private final InsightService insightService;
     private final BudgetService budgetService;
 
+    private final InsightMapper insightMapper;
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return !(authentication instanceof AnonymousAuthenticationToken);
-    }
-
-    private Map<String, Object> getPageUrlMapping() {
-        return Map.of(
-                "Home", "/"
-        );
     }
 
     private Map<String, Object> getInitialAttributes(String pageTitle) {
@@ -47,9 +44,30 @@ public class WebModelProvider {
         );
     }
 
+    private List<InsightsResponse> mapToInsightResponseList(List<CategoryInsightsResponse> categoryInsightsResponses) {
+        return categoryInsightsResponses.stream()
+                .map(insightMapper::toResponse)
+                .toList();
+    }
+
+    private List<InsightBudgetResponse> mapToInsightBudgetResponse(List<CategoryInsightsResponse> categoryInsights, Map<FrequencyResponse, Integer> frequencyToBudget) {
+        return categoryInsights.stream().map(
+                insight -> InsightMapper.toResponse(insight, frequencyToBudget)
+        ).toList();
+    }
+
+    private static Map<YearMonth, List<InsightsResponse>> groupInsightsByDate(List<InsightsResponse> insightList) {
+        return insightList.stream()
+                .collect(Collectors.groupingBy(
+                        InsightsResponse::yearMonth,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+    }
+
     public @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
-        Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = getGroupedInsights(
-                getFormatedInsights(insightService.getAllInsights())
+        Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = groupInsightsByDate(
+                mapToInsightResponseList(insightService.getAllInsights())
         );
 
         Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes("Main"));
@@ -70,8 +88,8 @@ public class WebModelProvider {
         String pageTitle = String.format("%s budgets", categoryResponse.name());
         Map<String, Object> modelAttributes = new HashMap<>(getInitialAttributes(pageTitle));
         modelAttributes.putAll(Map.of(
-                "insights", getFormatedInsights(categoryInsights),
-                "budgets", getFormattedBudgetInsight(categoryInsights, frequencyToBudget),
+                "insights", mapToInsightResponseList(categoryInsights),
+                "budgets", mapToInsightBudgetResponse(categoryInsights, frequencyToBudget),
                 "yearMonth", yearMonth,
                 "isAuthenticated", isAuthenticated(),
                 "frequencies", frequencyService.getAllFrequencies(),

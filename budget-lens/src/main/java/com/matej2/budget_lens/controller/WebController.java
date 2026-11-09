@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.matej2.budget_lens.utils.ControllerUtils.getRedirectString;
+import static com.matej2.budget_lens.utils.HttpUtils.getRedirectString;
 
 @Controller
 @RequiredArgsConstructor

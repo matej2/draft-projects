@@ -5,7 +5,7 @@ import com.matej2.budget_lens.model.csv.CSVImportRow;
 import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
-import com.matej2.budget_lens.utils.CSVHelper;
+import com.matej2.budget_lens.utils.CsvUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class FileProcessorService {
     private final ExpenseRepository expenseRepository;
 
     public void saveExpenseListFromFile(MultipartFile file) throws IOException {
-        if (CSVHelper.hasCSVFormat(file)) {
+        if (CsvUtils.hasCSVFormat(file)) {
 
             List<CSVImportRow> result;
 

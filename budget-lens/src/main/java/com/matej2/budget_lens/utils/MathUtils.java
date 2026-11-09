@@ -5,17 +5,11 @@ import java.text.DecimalFormat;
 
 public class MathUtils {
 
-    public static Integer toPercentage(Double number) {
-        if (number == null) {
-            return null;
-        }
+    public static Integer toPercentage(double number) {
         return MathUtils.toTwoDecimals(number * 100);
     }
 
-    public static Integer toTwoDecimals(Double number) {
-        if (number == null) {
-            return null;
-        }
+    public static Integer toTwoDecimals(double number) {
         DecimalFormat df = new DecimalFormat("#");
         df.setRoundingMode(RoundingMode.HALF_UP);
 

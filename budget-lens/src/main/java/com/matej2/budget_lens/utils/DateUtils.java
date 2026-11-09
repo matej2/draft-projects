@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DateUtils {
-    public static LocalDate convertToLocalDate(Date dateToConvert) {
+    private static LocalDate convertToLocalDate(Date dateToConvert) {
         return LocalDate.ofInstant(
                 dateToConvert.toInstant(), ZoneId.systemDefault());
     }
