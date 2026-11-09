@@ -3,7 +3,6 @@ package com.matej2.budget_lens.service.domain;
 import com.matej2.budget_lens.mapper.ExpenseMapper;
 import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
-import com.matej2.budget_lens.model.entity.User;
 import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
 import com.matej2.budget_lens.model.request.ExpenseRequest;
 import com.matej2.budget_lens.model.response.CategoryResponse;
@@ -13,8 +12,6 @@ import com.matej2.budget_lens.repository.domain.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,11 +32,6 @@ public class ExpenseTrackingService {
 
         Expense existingExpense = expenseMapper.toEntity(expense);
         existingExpense.setCategory(categoryEntity);
-
-        Authentication authenticationContext  =  SecurityContextHolder.getContext().getAuthentication();
-        if (authenticationContext != null && authenticationContext.getPrincipal() instanceof User authenticatedUser) {
-            existingExpense.setOwner(authenticatedUser);
-        }
 
         this.expenseRepository.save(existingExpense);
 

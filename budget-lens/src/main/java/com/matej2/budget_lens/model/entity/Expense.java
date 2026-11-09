@@ -1,6 +1,8 @@
 package com.matej2.budget_lens.model.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,13 +16,12 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String note;
+    @Nonnull
+    @PositiveOrZero
     private Float cost;
     private LocalDate expenseDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category", nullable = false)
     private Category category;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner")
-    private User owner;
     private String source;
 }

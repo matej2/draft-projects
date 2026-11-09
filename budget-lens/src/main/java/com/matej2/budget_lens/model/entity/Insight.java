@@ -1,6 +1,10 @@
 package com.matej2.budget_lens.model.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -20,15 +24,27 @@ public class Insight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @DecimalMin(value = "0.00")
     private Double median;
+    @DecimalMin(value = "0.00")
     private Double percentile90;
+    @Nonnull
     private YearMonth yearMonth;
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "1.00")
     private Double standardDeviationPercent;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
+    @Nonnull
     Category category;
+    @Min(0)
     private Long expenseCount;
+    @Nonnull
     private LocalDate updatedAt;
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "1.00")
     private Double safeBudgetConfidence;
+    @DecimalMin(value = "0.00")
+    @DecimalMax(value = "1.00")
     private Double budgetUtilization;
 }

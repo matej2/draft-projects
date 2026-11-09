@@ -28,7 +28,7 @@ public class BudgetService {
         Category categoryEntity = categoryRepository.findById(budget.categoryId()).orElseThrow();
         Frequency frequencyEntity = frequencyRepository.findById(budget.frequencyId()).orElseThrow();
 
-        Budget existingBudgetEntity = budgetMapper.toEntity(budget);
+        Budget existingBudgetEntity = budgetMapper.toEntity(budget, categoryEntity, frequencyEntity);
         existingBudgetEntity.setCategory(categoryEntity);
         existingBudgetEntity.setFrequency(frequencyEntity);
 

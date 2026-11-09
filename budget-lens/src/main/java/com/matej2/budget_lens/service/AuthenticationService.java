@@ -2,9 +2,8 @@ package com.matej2.budget_lens.service;
 
 
 import com.matej2.budget_lens.model.authentication.AuthenticationRequest;
-import com.matej2.budget_lens.model.authentication.RegisterRequest;
 import com.matej2.budget_lens.model.authentication.AuthenticationResponse;
-import com.matej2.budget_lens.model.entity.Role;
+import com.matej2.budget_lens.model.authentication.RegisterRequest;
 import com.matej2.budget_lens.model.entity.Token;
 import com.matej2.budget_lens.model.entity.TokenType;
 import com.matej2.budget_lens.model.entity.User;
@@ -46,11 +45,8 @@ public class AuthenticationService {
         log.info("Register request for user {} received", request.email());
 
         User user = User.builder()
-                .firstname(request.firstName())
-                .lastname(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
                 .build();
 
         if (userDetailService.findByEmail(request.email()) != null) {

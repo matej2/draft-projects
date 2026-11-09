@@ -23,18 +23,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String firstname;
-    private String lastname;
+    @Nonnull
     private String email;
+    @Nonnull
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @Override
     @Nonnull
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("user"));
     }
 
     @Override

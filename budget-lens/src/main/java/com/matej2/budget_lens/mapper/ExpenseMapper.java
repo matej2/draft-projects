@@ -15,18 +15,16 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
 
     @Override
     public Expense toEntity(ExpenseRequest expenseRequest) {
-        Expense expense = new Expense();
+        Expense expense = new Expense(expenseRequest.cost());
         expense.setNote(expenseRequest.note());
-        expense.setCost(expenseRequest.cost());
         expense.setExpenseDate(expenseRequest.expenseDate());
 
         return expense;
     }
 
     public Expense toEntity(ExpenseResponse expenseResponse) {
-        Expense expense = new Expense();
+        Expense expense = new Expense(expenseResponse.cost());
         expense.setNote(expenseResponse.note());
-        expense.setCost(expenseResponse.cost());
         expense.setExpenseDate(expenseResponse.expenseDate());
 
         return expense;
@@ -54,11 +52,10 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
     }
 
     public Expense toExpense(CSVImportRow row, Category uncategorized) {
-        Expense expense = new Expense();
+        Expense expense = new Expense(row.getNegativeTraffic());
         LocalDate date = LocalDate.parse(row.getDate());
         expense.setExpenseDate(date);
         expense.setNote(String.format("%s: %s",row.getRefNum(), row.getDescription()));
-        expense.setCost(row.getNegativeTraffic());
         expense.setCategory(uncategorized);
 
         return expense;

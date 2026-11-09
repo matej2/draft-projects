@@ -19,15 +19,16 @@ public class InsightMapper implements Mapper<CategoryInsightsResponse, CategoryI
     private final CategoryMapper categoryMapper;
 
     public  Insight toEntity(CategoryInsightsResponse insight, Category category, YearMonth yearMonth) {
-        Insight insightEntity = new Insight();
+        Insight insightEntity = new Insight(
+                yearMonth,
+                category,
+                insight.updatedAt()
+        );
         insightEntity.setId(insight.id());
-        insightEntity.setYearMonth(yearMonth);
-        insightEntity.setCategory(category);
         insightEntity.setStandardDeviationPercent(insight.stddevPercent());
         insightEntity.setMedian(insight.median());
         insightEntity.setPercentile90(insight.percentile90());
         insightEntity.setExpenseCount(insight.expenseCount());
-        insightEntity.setUpdatedAt(insight.updatedAt());
         insightEntity.setSafeBudgetConfidence(insight.safeBudgetConfidence());
         insightEntity.setBudgetUtilization(insight.budgetUtilization());
 
