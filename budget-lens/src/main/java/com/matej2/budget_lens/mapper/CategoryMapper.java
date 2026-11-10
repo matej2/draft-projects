@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 public class CategoryMapper implements Mapper<CategoryResponse, CategoryResponse, Category> {
     @Override
     public Category toEntity(CategoryResponse requestDto) {
-        Category category = new Category(requestDto.name());
+        Category category = new Category();
+        category.setName(requestDto.name());
         category.setId(requestDto.id());
 
         return category;

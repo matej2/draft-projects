@@ -38,10 +38,17 @@ public class WebModelProvider {
         return !(authentication instanceof AnonymousAuthenticationToken);
     }
 
+    private Map<String, Object> getPageUrlMapping() {
+        return Map.of(
+                "Home", "/"
+        );
+    }
+
     private Map<String, Object> getInitialAttributes(String pageTitle) {
         return Map.of(
                 "isAuthenticated", isAuthenticated(),
-                "pageTitle", pageTitle
+                "pageTitle", pageTitle,
+                "pageUrlMapping",  getPageUrlMapping()
         );
     }
 

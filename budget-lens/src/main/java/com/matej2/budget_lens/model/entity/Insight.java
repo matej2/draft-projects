@@ -6,6 +6,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.time.YearMonth;
                 columnNames = {"year_month", "category"})
 )
 @Data
+@NoArgsConstructor
 public class Insight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

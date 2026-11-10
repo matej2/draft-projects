@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 public class BudgetMapper implements Mapper<BudgetRequest, BudgetResponse, Budget> {
 
     public Budget toEntity(BudgetRequest dto, Category category, Frequency frequency) {
-        Budget budgetEntity = new Budget(
-                dto.quota(),
-                category,
-                frequency
-        );
+        Budget budgetEntity = new Budget();
+        budgetEntity.setQuota(dto.quota());
+        budgetEntity.setCategory(category);
+        budgetEntity.setFrequency(frequency);
         budgetEntity.setNote(dto.note());
         budgetEntity.setQuota(dto.quota());
         return budgetEntity;

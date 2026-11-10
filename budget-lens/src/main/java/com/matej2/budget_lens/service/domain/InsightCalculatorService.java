@@ -23,11 +23,11 @@ public class InsightCalculatorService {
     private final BudgetRepository budgetRepository;
     private final ExpenseRepository expenseRepository;
 
-    private double getConfidenceBasedOnCount(double expenseCount) {
+    private double getConfidenceBasedOnCount(Long expenseCount) {
         byte optimalExpenseCount = 30;
         double expenseCountConfidence;
 
-        if (expenseCount < 2) {
+        if (expenseCount == null || expenseCount < 2) {
             return 0d;
         }
 
