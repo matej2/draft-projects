@@ -53,6 +53,8 @@ public class WebModelProvider {
         this.pageUrlMapping.put("dashboard", new WebPageContext("Dashboard", DASHBOARD_PATH, true));
         this.pageUrlMapping.put("budget", new WebPageContext("Budget", BUDGET_PATH, false));
         this.pageUrlMapping.put("index", new WebPageContext("About", ABOUT_PATH, true));
+        this.pageUrlMapping.put("login", new WebPageContext("Login", "/login", false));
+        this.pageUrlMapping.put("logout", new WebPageContext("Logout", "/logout", false));
 
     }
 

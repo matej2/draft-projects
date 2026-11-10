@@ -6,8 +6,7 @@
                     <h1 class="display-4 fw-bold mb-3">See where your money goes. Decide where it should go next.</h1>
                     <p class="lead text-body-secondary mb-4">Budget Lens is a simple way to understand your spending, stay within your limits, and save for the things that matter to you.</p>
                     <div class="d-flex flex-wrap gap-3">
-                        <a class="btn btn-primary btn-lg" href="#">Create your free account</a>
-                        <a class="btn btn-outline-primary btn-lg" href="#">Log in</a>
+                        <a class="btn btn-outline-primary btn-lg" href="#" th:href="${pageUrlMapping.get('dashboard').path()}">Dashboard</a>
                     </div>
                 </div>
                 <div class="col-lg-5">
@@ -43,7 +42,7 @@
                         <p class="text-body-secondary">Saving for a trip, a new laptop, or a rainy day? Set a savings goal and watch your progress.</p>
                     </div>
                     <div class="col">
-                        <h3 class="h4 border-start border-4 border-warning ps-3">Get smart, friendly advice</h3>
+                        <h3 class="h4 border-start border-4 border-primary ps-3">Get smart, friendly advice</h3>
                         <p class="text-body-secondary">Every week, Budget Lens looks for anything unusual in your spending, like a category that suddenly costs much more than normal. If it finds something, it explains what happened in plain language and suggests practical ways to cut back.</p>
                     </div>
                     <div class="col">
@@ -62,8 +61,7 @@
         <section class="container text-center py-5 my-4">
             <h2 class="fw-bold mb-4">Ready to take a closer look at your money?</h2>
             <div class="d-flex flex-wrap justify-content-center gap-3">
-                <a class="btn btn-primary btn-lg" href="#">Create your free account</a>
-                <a class="btn btn-outline-primary btn-lg" href="#">Log in</a>
+                <a class="btn btn-outline-primary btn-lg" href="#" th:href="${pageUrlMapping.get('dashboard').path()}">Dashboard</a>
             </div>
         </section>
     </div>
