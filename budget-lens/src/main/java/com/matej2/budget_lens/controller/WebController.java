@@ -44,7 +44,7 @@ public class WebController {
     private final DateTimeFormatter dateTimeFormatter;
 
 
-    @GetMapping(WebModelProvider.INDEX_PATH)
+    @GetMapping(WebModelProvider.DASHBOARD_PATH)
     public String home(Model model, Integer pageNumber) {
         if (pageNumber == null || pageNumber < 1) {
             pageNumber = 0;
@@ -58,7 +58,7 @@ public class WebController {
         Map<String, Object> attributes = webModelProvider.getAttributesForExpenses(pageNumber, expenses);
         model.addAllAttributes(attributes);
 
-        return "index";
+        return "dashboard";
     }
 
     @GetMapping(WebModelProvider.BUDGET_PATH)
@@ -84,7 +84,7 @@ public class WebController {
 
     @GetMapping(WebModelProvider.ABOUT_PATH)
     public String about() {
-        return "about";
+        return "index";
     }
 
     @PostMapping("/submitExpense")

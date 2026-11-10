@@ -31,8 +31,8 @@ public class WebModelProvider {
 
     private final InsightMapper insightMapper;
 
-    public static final String INDEX_PATH = "/";
-    public static final String ABOUT_PATH = "/about";
+    public static final String DASHBOARD_PATH = "/dashboard";
+    public static final String ABOUT_PATH = "/";
     public static final String BUDGET_PATH = "/budget";
 
 
@@ -50,9 +50,9 @@ public class WebModelProvider {
         this.budgetService = budgetService;
         this.insightMapper = insightMapper;
 
-        this.pageUrlMapping.put("index", new WebPageContext("Home", INDEX_PATH, true));
-        this.pageUrlMapping.put("budget", new WebPageContext("Budget", BUDGET_PATH, true));
-        this.pageUrlMapping.put("about", new WebPageContext("About", ABOUT_PATH, true));
+        this.pageUrlMapping.put("dashboard", new WebPageContext("Dashboard", DASHBOARD_PATH, true));
+        this.pageUrlMapping.put("budget", new WebPageContext("Budget", BUDGET_PATH, false));
+        this.pageUrlMapping.put("index", new WebPageContext("About", ABOUT_PATH, true));
 
     }
 
