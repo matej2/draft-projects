@@ -1,0 +1,70 @@
+<th:block th:insert="~{layout/main :: index(~{ :: .content})}">
+    <div class="content">
+        <section class="container py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <h1 class="display-4 fw-bold mb-3">See where your money goes. Decide where it should go next.</h1>
+                    <p class="lead text-body-secondary mb-4">Budget Lens is a simple way to understand your spending, stay within your limits, and save for the things that matter to you.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a class="btn btn-primary btn-lg" href="#">Create your free account</a>
+                        <a class="btn btn-outline-primary btn-lg" href="#">Log in</a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card shadow-sm" role="img" aria-label="Example of category budgets showing how much has been spent">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between small fw-semibold"><span>Groceries</span><span class="text-body-secondary">$240 of $400</span></div>
+                            <div class="progress mb-3" style="height: 12px"><div class="progress-bar" style="width: 60%"></div></div>
+                            <div class="d-flex justify-content-between small fw-semibold"><span>Utilities</span><span class="text-body-secondary">$135 of $180</span></div>
+                            <div class="progress mb-3" style="height: 12px"><div class="progress-bar" style="width: 75%"></div></div>
+                            <div class="d-flex justify-content-between small fw-semibold"><span>Leisure</span><span class="text-body-secondary">$190 of $200</span></div>
+                            <div class="progress" style="height: 12px"><div class="progress-bar bg-warning" style="width: 95%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="bg-body py-5 border-top border-bottom" id="features">
+            <div class="container py-4">
+                <h2 class="fw-bold mb-5">Everything you need to feel in control of your money</h2>
+                <div class="row row-cols-1 row-cols-md-2 g-5">
+                    <div class="col">
+                        <h3 class="h4 border-start border-4 border-primary ps-3">Know your spending</h3>
+                        <p class="text-body-secondary">Add your expenses in seconds, or bring in your past ones all at once from a spreadsheet. Each expense is sorted into categories like Groceries, Leisure, Health, or Utilities, so you can see at a glance what you spend and where. Whether you pay daily, weekly, monthly, or once a year, Budget Lens keeps track and shows you the full picture.</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="h4 border-start border-4 border-primary ps-3">Stay in control</h3>
+                        <p class="text-body-secondary">Set a budget for any category and always know how much you’ve used and how much you have left. Look back over the past week, month, or three months, or pick your own dates.</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="h4 border-start border-4 border-primary ps-3">Reach your goals</h3>
+                        <p class="text-body-secondary">Saving for a trip, a new laptop, or a rainy day? Set a savings goal and watch your progress.</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="h4 border-start border-4 border-warning ps-3">Get smart, friendly advice</h3>
+                        <p class="text-body-secondary">Every week, Budget Lens looks for anything unusual in your spending, like a category that suddenly costs much more than normal. If it finds something, it explains what happened in plain language and suggests practical ways to cut back.</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="h4 border-start border-4 border-primary ps-3">Look ahead</h3>
+                        <p class="text-body-secondary">See which costs repeat and which are one-off. Budget Lens estimates what’s coming next, so there are fewer surprises at the end of the month. It also helps you spot purchases you could trim or drop.</p>
+                    </div>
+                    <div class="col">
+                        <h3 class="h4 border-start border-4 border-primary ps-3">Private and secure</h3>
+                        <p class="text-body-secondary">Your account is protected, and your financial details stay yours.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing call to action -->
+        <section class="container text-center py-5 my-4">
+            <h2 class="fw-bold mb-4">Ready to take a closer look at your money?</h2>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a class="btn btn-primary btn-lg" href="#">Create your free account</a>
+                <a class="btn btn-outline-primary btn-lg" href="#">Log in</a>
+            </div>
+        </section>
+    </div>
+</th:block>

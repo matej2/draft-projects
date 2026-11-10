@@ -44,7 +44,7 @@ public class WebController {
     private final DateTimeFormatter dateTimeFormatter;
 
 
-    @GetMapping
+    @GetMapping(WebModelProvider.INDEX_PATH)
     public String home(Model model, Integer pageNumber) {
         if (pageNumber == null || pageNumber < 1) {
             pageNumber = 0;
@@ -61,7 +61,7 @@ public class WebController {
         return "index";
     }
 
-    @GetMapping("/budget")
+    @GetMapping(WebModelProvider.BUDGET_PATH)
     public String budget(Model model, @NonNull String yearMonth, @NonNull Integer categoryId) {
         YearMonth expenseYearMonth = YearMonth.parse(yearMonth, dateTimeFormatter);
         CategoryResponse categoryResponse = categoryService.getCategory(categoryId);
@@ -80,6 +80,11 @@ public class WebController {
         ));
 
         return "budget";
+    }
+
+    @GetMapping(WebModelProvider.ABOUT_PATH)
+    public String about() {
+        return "about";
     }
 
     @PostMapping("/submitExpense")

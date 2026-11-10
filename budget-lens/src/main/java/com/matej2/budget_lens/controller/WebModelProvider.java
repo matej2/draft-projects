@@ -1,13 +1,13 @@
 package com.matej2.budget_lens.controller;
 
 import com.matej2.budget_lens.mapper.InsightMapper;
+import com.matej2.budget_lens.model.helper.WebPageContext;
 import com.matej2.budget_lens.model.request.BudgetRequest;
 import com.matej2.budget_lens.model.response.*;
 import com.matej2.budget_lens.service.domain.BudgetService;
 import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.FrequencyService;
 import com.matej2.budget_lens.service.domain.InsightService;
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class WebModelProvider {
     private final FrequencyService frequencyService;
     private final CategoryService categoryService;
@@ -32,23 +31,45 @@ public class WebModelProvider {
 
     private final InsightMapper insightMapper;
 
+    public static final String INDEX_PATH = "/";
+    public static final String ABOUT_PATH = "/about";
+    public static final String BUDGET_PATH = "/budget";
+
+
+    private LinkedHashMap<String, WebPageContext> pageUrlMapping = new LinkedHashMap<>();
+
+    public WebModelProvider(
+            FrequencyService frequencyService,
+            CategoryService categoryService,
+            InsightService insightService,
+            BudgetService budgetService,
+            InsightMapper insightMapper) {
+        this.frequencyService = frequencyService;
+        this.categoryService = categoryService;
+        this.insightService = insightService;
+        this.budgetService = budgetService;
+        this.insightMapper = insightMapper;
+
+        this.pageUrlMapping.put("index", new WebPageContext("Home", INDEX_PATH, true));
+        this.pageUrlMapping.put("budget", new WebPageContext("Budget", BUDGET_PATH, true));
+        this.pageUrlMapping.put("about", new WebPageContext("About", ABOUT_PATH, true));
+
+    }
+
+    public LinkedHashMap<String, WebPageContext> getPageContext() {
+        return this.pageUrlMapping;
+    }
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return !(authentication instanceof AnonymousAuthenticationToken);
     }
 
-    private Map<String, Object> getPageUrlMapping() {
-        return Map.of(
-                "Home", "/"
-        );
-    }
-
     private Map<String, Object> getInitialAttributes(String pageTitle) {
         return Map.of(
                 "isAuthenticated", isAuthenticated(),
-                "pageTitle", pageTitle,
-                "pageUrlMapping",  getPageUrlMapping()
+                "pageTitle", pageTitle
         );
     }
 
