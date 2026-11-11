@@ -96,6 +96,11 @@ public class WebModelProvider {
                 ));
     }
 
+    public String getPageLinkUrl(Integer pageNumber) {
+        String dashboardUrl = this.pageUrlMapping.get("dashboard").path();
+        return String.format("%s?pageNumber=%d", dashboardUrl, pageNumber);
+    }
+
     public @NonNull Map<String, Object> getAttributesForExpenses(Integer pageNumber, List<ExpenseResponse> expenses) {
         Map<YearMonth, List<InsightsResponse>> groupedAndFormattedInsights = groupInsightsByDate(
                 mapToInsightResponseList(insightService.getAllInsights())
@@ -109,6 +114,8 @@ public class WebModelProvider {
                 "insights", groupedAndFormattedInsights,
                 "budgets", budgetService.getAll(),
                 "pageNumber", pageNumber,
+                "nextPageUrl", getPageLinkUrl(pageNumber+1),
+                "previousPageUrl", getPageLinkUrl(pageNumber-1),
                 "budgetRequest", new BudgetRequest(null, null, null, null)
         ));
 
