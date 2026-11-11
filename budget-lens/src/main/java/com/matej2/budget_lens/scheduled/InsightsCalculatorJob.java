@@ -2,7 +2,6 @@ package com.matej2.budget_lens.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.matej2.budget_lens.mapper.AICategorizationMapper;
-import com.matej2.budget_lens.mapper.ExpenseMapper;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.entity.RecordLimit;
 import com.matej2.budget_lens.model.integration.AiCategorizationRequest;
@@ -16,6 +15,7 @@ import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;
 import com.matej2.budget_lens.service.domain.InsightService;
+import com.matej2.budget_lens.service.integration.GeminiService;
 import com.matej2.budget_lens.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +45,7 @@ public class InsightsCalculatorJob {
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
     private final AICategorizationMapper aicategorizationMapper;
-    private final ExpenseMapper expenseMapper;
+    private final GeminiService geminiService;
 
     @Value("${spring.ai.enabled}")
     private boolean isAiEnabled;
@@ -82,9 +82,16 @@ public class InsightsCalculatorJob {
                     30);
             expensePage = this.expenseRepository.findByExpenseDateBetween(firstLocalDate, lastLocalDate, sortedByDate);
 
+            if (expensePage.getContent().isEmpty()) {
+                return List.of();
+            }
+
             List<AiCategorizationRequest> mappedExpenseList =  expensePage.getContent().stream()
                     .map(aicategorizationMapper::mapToRequest)
                     .toList();
+
+            List<AiCategorizationResponse> aiResponses = geminiService.getAnswer(mappedExpenseList);
+            categorizationResponses.addAll(aiResponses);
 
         } while(expensePage.hasNext());
 
@@ -93,9 +100,12 @@ public class InsightsCalculatorJob {
 
     private void saveCategorization(List<AiCategorizationResponse> categorizationResponses) {
         expenseRepository.saveAll(
-                categorizationResponses.stream().map(
-                        this.expenseService::applyAiCategorization
-                ).toList()
+                categorizationResponses
+                        .stream()
+                        .distinct()
+                        .filter(res -> res.expenseId() != null || res.categoryId() != null)
+                        .map(this.expenseService::applyAiCategorization)
+                        .toList()
         );
     }
 
@@ -105,13 +115,15 @@ public class InsightsCalculatorJob {
             return;
         }
         List<Calendar> treeMonths = DateUtils.generateCalendarInstancesForLastTreeMonths();
+        List<AiCategorizationResponse> categorizationResponses = new ArrayList<>(List.of());
+
         for (Calendar calendar : treeMonths) {
             LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
             LocalDate lastLocalDate = getLastDayOfTheMonth(calendar);
-            List<AiCategorizationResponse> categorizationResponses = getExpenseCategorizationForDateRange(firstLocalDate, lastLocalDate);
-
-            saveCategorization(categorizationResponses);
+            categorizationResponses.addAll(getExpenseCategorizationForDateRange(firstLocalDate, lastLocalDate));
         }
+        saveCategorization(categorizationResponses);
+
     }
 
     @Scheduled(fixedDelayString = "15m")

@@ -2,6 +2,7 @@ package com.matej2.budget_lens.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.victools.jsonschema.generator.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,6 +55,13 @@ public class ApplicationConfig {
         objectMapper.registerModule(new JavaTimeModule());
 
         return objectMapper;
+    }
+
+    @Bean
+    public SchemaGenerator schemaGenerator() {
+        SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.PLAIN_JSON);
+        SchemaGeneratorConfig config = configBuilder.build();
+        return new SchemaGenerator(config);
     }
 
 

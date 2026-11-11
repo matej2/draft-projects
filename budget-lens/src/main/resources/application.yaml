@@ -19,6 +19,9 @@ spring:
         enabled: true
   ai:
     enabled: ${AI_ENABLED:false}
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
 server:
   port: ${APP_PORT}
 
