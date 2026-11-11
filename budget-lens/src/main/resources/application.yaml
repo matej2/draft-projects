@@ -19,8 +19,6 @@ spring:
         enabled: true
   ai:
     enabled: ${AI_ENABLED:false}
-    openai:
-      api-key: <apikey>
 server:
   port: ${APP_PORT}
 

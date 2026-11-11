@@ -16,7 +16,6 @@ import com.matej2.budget_lens.service.domain.CategoryService;
 import com.matej2.budget_lens.service.domain.ExpenseTrackingService;
 import com.matej2.budget_lens.service.domain.InsightCalculatorService;
 import com.matej2.budget_lens.service.domain.InsightService;
-import com.matej2.budget_lens.service.integration.ChatGPTService;
 import com.matej2.budget_lens.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +44,6 @@ public class InsightsCalculatorJob {
     private final ExpenseRepository expenseRepository;
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
-    private final ChatGPTService chatService;
     private final AICategorizationMapper aicategorizationMapper;
     private final ExpenseMapper expenseMapper;
 
@@ -88,7 +86,6 @@ public class InsightsCalculatorJob {
                     .map(aicategorizationMapper::mapToRequest)
                     .toList();
 
-            categorizationResponses.add(chatService.getResponse(mappedExpenseList));
         } while(expensePage.hasNext());
 
         return categorizationResponses;

@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +54,7 @@ public class ExpenseTrackingServiceTest {
     void testAddExpense() {
         ExpenseRequest expense = new ExpenseRequest(
             "test",
-            12.0f,
+                BigDecimal.valueOf(12.0f),
             LocalDate.now(),
             0,
             0,
