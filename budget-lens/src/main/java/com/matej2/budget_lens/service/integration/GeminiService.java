@@ -2,10 +2,12 @@ package com.matej2.budget_lens.service.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
+import com.google.genai.errors.ApiException;
 import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.integration.AiCategorizationRequest;
 import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
@@ -19,6 +21,7 @@ import tools.jackson.databind.node.ObjectNode;
 import java.util.List;
 
 @Service
+@Slf4j
 public class GeminiService {
     private final ChatClient chatClient;
     private final ObjectMapper objectMapper;
@@ -70,15 +73,27 @@ public class GeminiService {
     }
 
 
-    public List<AiCategorizationResponse> getAnswer(List<AiCategorizationRequest> requests) throws JsonProcessingException {
+    public List<AiCategorizationResponse> getAnswer(List<AiCategorizationRequest> requests) {
+        if (requests.isEmpty()) {
+            return List.of();
+        }
         String requestText = objectMapper.writer().writeValueAsString(requests);
+        List<AiCategorizationResponse> chatResponse = List.of();
+        try {
+            chatResponse = chatClient
+                    .prompt(INSTRUCTIONS)
+                    .user(requestText)
+                    .options(this.options)
+                    .call()
+                    .entity(new ParameterizedTypeReference<>() {
+                    });
+        } catch (RuntimeException ex) {
+            if (ex.getCause() instanceof ApiException  apiEx && apiEx.code() == 429) {
+                log.error("Api rate limit error");
+            }
+        }
 
-        return chatClient
-                .prompt(INSTRUCTIONS)
-                .user(requestText)
-                .options(this.options)
-                .call()
-                .entity(new ParameterizedTypeReference<>() {
-                });
+        return chatResponse;
+
     }
 }

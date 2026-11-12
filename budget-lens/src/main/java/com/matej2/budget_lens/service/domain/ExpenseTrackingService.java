@@ -5,7 +5,6 @@ import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.integration.AiCategorizationResponse;
 import com.matej2.budget_lens.model.request.ExpenseRequest;
-import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.model.response.ExpenseResponse;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.ExpenseRepository;
@@ -71,10 +70,9 @@ public class ExpenseTrackingService {
     }
 
     public Expense applyAiCategorization(AiCategorizationResponse expenseRequest) {
-        CategoryResponse category = categoryService.getCategory(expenseRequest.categoryId());
-        ExpenseResponse existingExpense = this.getExpenseById(expenseRequest.expenseId())
-                .withCategory(category.id());
+        Category category = categoryRepository.findById(expenseRequest.categoryId()).stream().findFirst().orElseThrow();
+        ExpenseResponse updatedExpense = this.getExpenseById(expenseRequest.expenseId()).withCategory(category.getId());
 
-        return this.expenseMapper.toEntity(existingExpense);
+        return this.expenseMapper.toEntity(updatedExpense, category);
     }
 }

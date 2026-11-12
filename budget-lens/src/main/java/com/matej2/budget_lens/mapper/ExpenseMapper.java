@@ -24,8 +24,10 @@ public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Ex
         return expense;
     }
 
-    public Expense toEntity(ExpenseResponse expenseResponse) {
+    public Expense toEntity(ExpenseResponse expenseResponse, Category category) {
         Expense expense = new Expense();
+        expense.setId(expenseResponse.id());
+        expense.setCategory(category);
         expense.setCost(expenseResponse.cost());
         expense.setNote(expenseResponse.note());
         expense.setExpenseDate(expenseResponse.expenseDate());

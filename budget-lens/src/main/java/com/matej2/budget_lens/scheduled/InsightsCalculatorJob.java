@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -76,15 +77,13 @@ public class InsightsCalculatorJob {
         Page<Expense> expensePage;
         List<AiCategorizationResponse> categorizationResponses = new ArrayList<>();
 
-        do {
-            Pageable sortedByDate = PageRequest.of(
-                    0,
-                    30);
-            expensePage = this.expenseRepository.findByExpenseDateBetween(firstLocalDate, lastLocalDate, sortedByDate);
+        Pageable sortedByDate = PageRequest.of(
+                0,
+                50,
+                Sort.by("expenseDate").descending());
 
-            if (expensePage.getContent().isEmpty()) {
-                return List.of();
-            }
+        do {
+            expensePage = this.expenseRepository.findByExpenseDateBetween(firstLocalDate, lastLocalDate, sortedByDate);
 
             List<AiCategorizationRequest> mappedExpenseList =  expensePage.getContent().stream()
                     .map(aicategorizationMapper::mapToRequest)
@@ -92,6 +91,7 @@ public class InsightsCalculatorJob {
 
             List<AiCategorizationResponse> aiResponses = geminiService.getAnswer(mappedExpenseList);
             categorizationResponses.addAll(aiResponses);
+            sortedByDate = sortedByDate.next();
 
         } while(expensePage.hasNext());
 
@@ -99,14 +99,13 @@ public class InsightsCalculatorJob {
     }
 
     private void saveCategorization(List<AiCategorizationResponse> categorizationResponses) {
-        expenseRepository.saveAll(
-                categorizationResponses
-                        .stream()
-                        .distinct()
-                        .filter(res -> res.expenseId() != null || res.categoryId() != null)
-                        .map(this.expenseService::applyAiCategorization)
-                        .toList()
-        );
+        List<Expense> mappedCategorizationResponses = categorizationResponses
+                .stream()
+                .distinct()
+                .filter(res -> res.expenseId() != null && res.categoryId() != null)
+                .map(this.expenseService::applyAiCategorization)
+                .toList();
+        expenseRepository.saveAll(mappedCategorizationResponses);
     }
 
     @Scheduled(fixedDelayString = "1h")
@@ -117,11 +116,10 @@ public class InsightsCalculatorJob {
         List<Calendar> treeMonths = DateUtils.generateCalendarInstancesForLastTreeMonths();
         List<AiCategorizationResponse> categorizationResponses = new ArrayList<>(List.of());
 
-        for (Calendar calendar : treeMonths) {
-            LocalDate firstLocalDate = getFirstDayOfTheMonth(calendar);
-            LocalDate lastLocalDate = getLastDayOfTheMonth(calendar);
-            categorizationResponses.addAll(getExpenseCategorizationForDateRange(firstLocalDate, lastLocalDate));
-        }
+        LocalDate firstLocalDate = getFirstDayOfTheMonth(treeMonths.get(3));
+        LocalDate lastLocalDate = getLastDayOfTheMonth(treeMonths.get(3));
+        categorizationResponses.addAll(getExpenseCategorizationForDateRange(firstLocalDate, lastLocalDate));
+
         saveCategorization(categorizationResponses);
 
     }
