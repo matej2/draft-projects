@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
-        name = "sourcecategorization",
+        name = "source",
         uniqueConstraints = @UniqueConstraint(
-                name = "sourcecategorization_source_category_key",
+                name = "source_source_category_key",
                 columnNames = {"source", "category"}))
 @Data
 @NoArgsConstructor
