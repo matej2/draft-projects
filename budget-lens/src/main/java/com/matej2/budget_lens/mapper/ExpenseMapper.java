@@ -25,4 +25,7 @@ public interface ExpenseMapper {
     @Mapping(source = "category.id", target = "category")
     ExpenseResponse expenseToExpenseResponse(Expense expense);
 
+    @Mapping(source = "category.id", target = "category")
+    @Mapping(target = "cost", qualifiedByName = "toTwoDecimals")
+    ExpenseResponse expenseToExpenseResponseDisplay(Expense expense);
 }

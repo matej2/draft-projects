@@ -19,6 +19,8 @@ public interface InsightMapper {
     @Mapping(source = "standardDeviationPercent", target = "standardDeviationPercent", qualifiedByName = "toPercent")
     @Mapping(source = "safeBudgetConfidence", target = "safeBudgetConfidence", qualifiedByName = "toPercent")
     @Mapping(source = "budgetUtilization", target = "budgetUtilization", qualifiedByName = "toPercent")
+    @Mapping(target = "median", qualifiedByName = "toTwoDecimals")
+    @Mapping(target = "percentile90", qualifiedByName = "toTwoDecimals")
     InsightsResponse categoryInsightResponseToInsightResponse(CategoryInsightsResponse categoryInsightsResponse);
 
     @Mapping(target = "budgetUtilization", qualifiedByName = "toPercent")

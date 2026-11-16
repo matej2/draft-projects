@@ -42,6 +42,12 @@ public class ExpenseTrackingService {
                 .toList();
     }
 
+    public List<ExpenseResponse> getExpenseListDisplay(Pageable pageable) {
+        return this.expenseRepository.findAll(pageable).stream()
+                .map(expenseMapper::expenseToExpenseResponseDisplay)
+                .toList();
+    }
+
     // In real world scenario I would use mapper that would update only defined properties
     // For simplicity purposes I override whole record
     public synchronized void updateExpense(Integer expenseId, ExpenseRequest expenseRequest) {

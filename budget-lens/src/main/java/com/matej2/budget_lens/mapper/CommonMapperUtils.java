@@ -5,7 +5,6 @@ import org.mapstruct.Named;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Mapper
@@ -21,19 +20,22 @@ public interface CommonMapperUtils {
     }
 
     @Named("toPercent")
-    static Integer toPercent(Double input) {
+    static Double toPercent(Double input) {
         if (input == null) {
             return null;
         }
-        return CommonMapperUtils.toTwoDecimals(input * 100);
+        BigDecimal decimalInput = BigDecimal.valueOf(input * 100);
+        return CommonMapperUtils.round(0, decimalInput);
     }
 
     @Named("toTwoDecimals")
-    static Integer toTwoDecimals(double number) {
-        DecimalFormat df = new DecimalFormat("#");
-        df.setRoundingMode(RoundingMode.HALF_UP);
+    static Double toTwoDecimals(BigDecimal number) {
+        return CommonMapperUtils.round(2, number);
+    }
 
-        return Integer.valueOf(df.format(number));
+    private static Double round(Integer places, BigDecimal number) {
+        BigDecimal rounded = number.setScale(places, RoundingMode.HALF_UP);
+        return rounded.doubleValue();
     }
 
 }

@@ -53,7 +53,7 @@ public class WebController {
                 pageNumber,
                 15,
                 Sort.by("expenseDate").descending());
-        List<ExpenseResponse> expenses = expenseTrackingService.getExpenseList(sortedByDate);
+        List<ExpenseResponse> expenses = expenseTrackingService.getExpenseListDisplay(sortedByDate);
 
         Map<String, Object> attributes = webModelProvider.getAttributesForExpenses(pageNumber, expenses);
         model.addAllAttributes(attributes);
