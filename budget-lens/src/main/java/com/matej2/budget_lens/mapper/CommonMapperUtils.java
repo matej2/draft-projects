@@ -1,10 +1,11 @@
 package com.matej2.budget_lens.mapper;
 
-import com.matej2.budget_lens.utils.MathUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Mapper
@@ -24,7 +25,15 @@ public interface CommonMapperUtils {
         if (input == null) {
             return null;
         }
-        return MathUtils.toPercentage(input);
+        return CommonMapperUtils.toTwoDecimals(input * 100);
+    }
+
+    @Named("toTwoDecimals")
+    static Integer toTwoDecimals(double number) {
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+
+        return Integer.valueOf(df.format(number));
     }
 
 }
