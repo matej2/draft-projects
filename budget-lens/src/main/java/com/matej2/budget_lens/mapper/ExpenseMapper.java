@@ -1,69 +1,28 @@
 package com.matej2.budget_lens.mapper;
 
 import com.matej2.budget_lens.model.csv.CSVImportRow;
-import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.model.entity.Expense;
-import com.matej2.budget_lens.model.entity.Frequency;
 import com.matej2.budget_lens.model.request.ExpenseRequest;
 import com.matej2.budget_lens.model.response.ExpenseResponse;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+@Mapper(uses = CommonMapperUtils.class)
+public interface ExpenseMapper {
+    ExpenseMapper INSTANCE = Mappers.getMapper(ExpenseMapper.class);
 
-@Component
-public class ExpenseMapper implements Mapper<ExpenseRequest, ExpenseResponse, Expense>{
+    @Mapping(source = "categoryId", target = "category.id")
+    Expense expenseRequestToExpense(ExpenseRequest expenseRequest);
 
-    @Override
-    public Expense toEntity(ExpenseRequest expenseRequest) {
-        Expense expense = new Expense();
-        expense.setCost(expenseRequest.cost());
-        expense.setNote(expenseRequest.note());
-        expense.setExpenseDate(expenseRequest.expenseDate());
+    @Mapping(source = "category", target = "category.id")
+    Expense expenseResponseToExpense(ExpenseResponse expenseResponse);
 
-        return expense;
-    }
+    @Mapping(source = "negativeTraffic", target = "cost", qualifiedByName = "toBigDecimal")
+    @Mapping(source = "date", target = "expenseDate", qualifiedByName = "toLocalDate")
+    Expense csvImportRowToExpense(CSVImportRow csvImportRow);
 
-    public Expense toEntity(ExpenseResponse expenseResponse, Category category) {
-        Expense expense = new Expense();
-        expense.setId(expenseResponse.id());
-        expense.setCategory(category);
-        expense.setCost(expenseResponse.cost());
-        expense.setNote(expenseResponse.note());
-        expense.setExpenseDate(expenseResponse.expenseDate());
+    @Mapping(source = "category.id", target = "category")
+    ExpenseResponse expenseToExpenseResponse(Expense expense);
 
-        return expense;
-    }
-
-    @Override
-    public ExpenseResponse toResponse(Expense expense) {
-        Frequency frequency = new Frequency();
-        // Calculate total cost in a year
-
-        return new ExpenseResponse(
-                expense.getId(),
-                expense.getNote(),
-                expense.getCost(),
-                expense.getExpenseDate(),
-                frequency.getId(),
-                expense.getCategory() == null ? null: expense.getCategory().getId(),
-                1
-        );
-    }
-
-    public Expense add(Expense expense, Category category) {
-        expense.setCategory(category);
-        return expense;
-    }
-
-    public Expense toExpense(CSVImportRow row, Category uncategorized) {
-        Expense expense = new Expense();
-        expense.setCost(new BigDecimal(row.getNegativeTraffic()));
-        LocalDate date = LocalDate.parse(row.getDate());
-        expense.setExpenseDate(date);
-        expense.setNote(String.format("%s: %s",row.getRefNum(), row.getDescription()));
-        expense.setCategory(uncategorized);
-
-        return expense;
-    }
 }

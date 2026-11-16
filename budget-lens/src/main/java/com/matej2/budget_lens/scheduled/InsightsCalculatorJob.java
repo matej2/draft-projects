@@ -45,7 +45,6 @@ public class InsightsCalculatorJob {
     private final ExpenseRepository expenseRepository;
     private final RecordLimiter recordLimiter;
     private final InsightCalculatorService insightCalculatorService;
-    private final AICategorizationMapper aicategorizationMapper;
     private final GeminiService geminiService;
 
     @Value("${spring.ai.enabled}")
@@ -86,7 +85,7 @@ public class InsightsCalculatorJob {
             expensePage = this.expenseRepository.findByExpenseDateBetween(firstLocalDate, lastLocalDate, sortedByDate);
 
             List<AiCategorizationRequest> mappedExpenseList =  expensePage.getContent().stream()
-                    .map(aicategorizationMapper::mapToRequest)
+                    .map(AICategorizationMapper.INSTANCE::expenseToAiCategorizationRequest)
                     .toList();
 
             List<AiCategorizationResponse> aiResponses = geminiService.getAnswer(mappedExpenseList);

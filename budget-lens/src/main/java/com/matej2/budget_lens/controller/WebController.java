@@ -69,7 +69,8 @@ public class WebController {
 
         Map<FrequencyResponse, BigDecimal> frequencyToBudget = new HashMap<>();
         for (CategoryInsightsResponse categoryInsight : insightsByDateAndCategory) {
-            frequencyToBudget.putAll(frequencyService.generateFrequencyToBudgetMapping(categoryInsight));
+            Map<FrequencyResponse, BigDecimal> frequencyToBudgetMapping = frequencyService.generateFrequencyToBudgetMapping(categoryInsight);
+            categoryInsight.setFrequencyToBudget(frequencyToBudgetMapping);
         }
 
         model.addAllAttributes(webModelProvider.getAttributesForBudget(

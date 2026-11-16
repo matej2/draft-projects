@@ -29,7 +29,7 @@ public class WebModelProvider {
     private final InsightService insightService;
     private final BudgetService budgetService;
 
-    private final InsightMapper insightMapper;
+    private final InsightMapper insightMapper = InsightMapper.INSTANCE;
 
     public static final String DASHBOARD_PATH = "/dashboard";
     public static final String ABOUT_PATH = "/";
@@ -42,13 +42,11 @@ public class WebModelProvider {
             FrequencyService frequencyService,
             CategoryService categoryService,
             InsightService insightService,
-            BudgetService budgetService,
-            InsightMapper insightMapper) {
+            BudgetService budgetService) {
         this.frequencyService = frequencyService;
         this.categoryService = categoryService;
         this.insightService = insightService;
         this.budgetService = budgetService;
-        this.insightMapper = insightMapper;
 
         this.pageUrlMapping.put("dashboard", new WebPageContext("Dashboard", DASHBOARD_PATH, true));
         this.pageUrlMapping.put("budget", new WebPageContext("Budget", BUDGET_PATH, false));
@@ -77,13 +75,13 @@ public class WebModelProvider {
 
     private List<InsightsResponse> mapToInsightResponseList(List<CategoryInsightsResponse> categoryInsightsResponses) {
         return categoryInsightsResponses.stream()
-                .map(insightMapper::toResponse)
+                .map(insightMapper::categoryInsightResponseToInsightResponse)
                 .toList();
     }
 
     private List<InsightBudgetResponse> mapToInsightBudgetResponse(List<CategoryInsightsResponse> categoryInsights, Map<FrequencyResponse, BigDecimal> frequencyToBudget) {
         return categoryInsights.stream().map(
-                insight -> InsightMapper.toResponse(insight, frequencyToBudget)
+                insightMapper::categoryInsightResponseToInsightBudgetResponse
         ).toList();
     }
 

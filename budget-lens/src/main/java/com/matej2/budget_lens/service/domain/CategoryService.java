@@ -1,8 +1,8 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.model.response.CategoryResponse;
-import com.matej2.budget_lens.model.entity.Category;
 import com.matej2.budget_lens.mapper.CategoryMapper;
+import com.matej2.budget_lens.model.entity.Category;
+import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
+    private final CategoryMapper categoryMapper = CategoryMapper.INSTANCE;
 
     public CategoryResponse getCategory(Integer id) {
-        return categoryMapper.toResponse(categoryRepository.findById(id).orElseThrow());
+        return categoryMapper.categoryToCategoryResponse(
+                categoryRepository.findById(id).orElseThrow()
+        );
     }
     public List<CategoryResponse> getAllCategories() {
         List<Category> allCategories = categoryRepository.findAll();
         return allCategories.stream()
-                .map(categoryMapper::toResponse)
+                .map(categoryMapper::categoryToCategoryResponse)
                 .toList();
     }
     public Category getUncategorizedCategory() {

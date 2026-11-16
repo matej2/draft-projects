@@ -1,12 +1,11 @@
 package com.matej2.budget_lens.service.domain;
 
-import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
-import com.matej2.budget_lens.model.response.CategoryResponse;
-import com.matej2.budget_lens.model.entity.Category;
-import com.matej2.budget_lens.model.entity.Insight;
 import com.matej2.budget_lens.mapper.CategoryMapper;
 import com.matej2.budget_lens.mapper.InsightMapper;
-import com.matej2.budget_lens.repository.domain.CategoryRepository;
+import com.matej2.budget_lens.model.entity.Category;
+import com.matej2.budget_lens.model.entity.Insight;
+import com.matej2.budget_lens.model.response.CategoryInsightsResponse;
+import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.repository.domain.InsightRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +21,13 @@ import java.util.List;
 @Slf4j
 public class InsightService {
     private final InsightRepository insightRepository;
-    private final CategoryRepository categoryRepository;
 
-    private final InsightMapper insightMapper;
-    private final CategoryMapper categoryMapper;
+    private final InsightMapper insightMapper = InsightMapper.INSTANCE;
+    private final CategoryMapper categoryMapper = CategoryMapper.INSTANCE;
 
     public void saveInsightList(List<CategoryInsightsResponse> insight, YearMonth yearMonth) {
         List<Insight> insightEntities = insight.stream()
-                .map(i ->  insightMapper.toEntity(
-                        i,
-                        categoryRepository.getReferenceById(i.id()),
-                        yearMonth))
+                .map(insightMapper::categoryInsightResponseToInsight)
                 .toList();
 
         insightRepository.upsertAll(insightEntities);
@@ -47,14 +42,14 @@ public class InsightService {
         List<Sort.Order> orders = List.of(yearMonthOrder, categoryOrder);
 
         return insightRepository.findAll(Sort.by(orders)).stream()
-                .map(insightMapper::toResponse)
+                .map(insightMapper::insightToCategoryInsightResponse)
                 .toList();
     }
 
     public List<CategoryInsightsResponse> getInsightByYearMonthAndCategory(YearMonth yearMonth, CategoryResponse categoryResponse) {
-        Category category = categoryMapper.toEntity(categoryResponse);
+        Category category = categoryMapper.categoryResponseToCategory(categoryResponse);
         return insightRepository.findByYearMonthAndCategory(yearMonth, category).stream()
-                .map(insightMapper::toResponse)
+                .map(insightMapper::insightToCategoryInsightResponse)
                 .toList();
     }
 }

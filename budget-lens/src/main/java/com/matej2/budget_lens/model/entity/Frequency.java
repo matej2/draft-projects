@@ -5,11 +5,13 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "frequency")
-@Getter
+@Data
+@NoArgsConstructor
 public class Frequency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

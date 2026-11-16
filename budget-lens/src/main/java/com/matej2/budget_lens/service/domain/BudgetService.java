@@ -1,11 +1,9 @@
 package com.matej2.budget_lens.service.domain;
 
+import com.matej2.budget_lens.mapper.BudgetMapper;
+import com.matej2.budget_lens.model.entity.Budget;
 import com.matej2.budget_lens.model.request.BudgetRequest;
 import com.matej2.budget_lens.model.response.BudgetResponse;
-import com.matej2.budget_lens.model.entity.Budget;
-import com.matej2.budget_lens.model.entity.Category;
-import com.matej2.budget_lens.model.entity.Frequency;
-import com.matej2.budget_lens.mapper.BudgetMapper;
 import com.matej2.budget_lens.repository.domain.BudgetRepository;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import com.matej2.budget_lens.repository.domain.FrequencyRepository;
@@ -20,17 +18,15 @@ import java.util.List;
 @Slf4j
 public class BudgetService {
     private final BudgetRepository budgetRepository;
-    private final BudgetMapper budgetMapper;
+    private final BudgetMapper budgetMapper = BudgetMapper.INSTANCE;
     private final CategoryRepository categoryRepository;
     private final FrequencyRepository frequencyRepository;
 
     public void save(BudgetRequest budget) {
-        Category categoryEntity = categoryRepository.findById(budget.categoryId()).orElseThrow();
-        Frequency frequencyEntity = frequencyRepository.findById(budget.frequencyId()).orElseThrow();
+        categoryRepository.findById(budget.categoryId()).orElseThrow();
+        frequencyRepository.findById(budget.frequencyId()).orElseThrow();
 
-        Budget existingBudgetEntity = budgetMapper.toEntity(budget, categoryEntity, frequencyEntity);
-        existingBudgetEntity.setCategory(categoryEntity);
-        existingBudgetEntity.setFrequency(frequencyEntity);
+        Budget existingBudgetEntity = budgetMapper.budgetRequestToBudget(budget);
 
         this.budgetRepository.save(existingBudgetEntity);
         log.info("Saved budget {} for category {}", budget.note(), budget.categoryId());
@@ -38,7 +34,7 @@ public class BudgetService {
 
     public List<BudgetResponse> getAll() {
         return this.budgetRepository.findAll().stream()
-                .map(budgetMapper::toResponse)
+                .map(BudgetMapper.INSTANCE::budgetToBudgetResponse)
                 .toList();
     }
 

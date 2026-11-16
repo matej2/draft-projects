@@ -120,7 +120,8 @@ public class InsightCalculatorService {
                 insightResponse.getExpenseCount(),
                 LocalDate.now(),
                 safeBudgetConfidence,
-                budgetUtilization
+                budgetUtilization,
+                null
         );
     }
 }

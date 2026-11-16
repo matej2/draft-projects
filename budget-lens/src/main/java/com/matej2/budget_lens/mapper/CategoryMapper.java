@@ -1,21 +1,15 @@
 package com.matej2.budget_lens.mapper;
 
-import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.model.entity.Category;
-import org.springframework.stereotype.Component;
+import com.matej2.budget_lens.model.response.CategoryResponse;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-@Component
-public class CategoryMapper implements Mapper<CategoryResponse, CategoryResponse, Category> {
-    @Override
-    public Category toEntity(CategoryResponse requestDto) {
-        Category category = new Category();
-        category.setName(requestDto.name());
-        category.setId(requestDto.id());
+@Mapper
+public interface CategoryMapper  {
+    CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-        return category;
-    }
 
-    public CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getName());
-    }
+    Category categoryResponseToCategory(CategoryResponse categoryResponse);
+    CategoryResponse categoryToCategoryResponse(Category category);
 }

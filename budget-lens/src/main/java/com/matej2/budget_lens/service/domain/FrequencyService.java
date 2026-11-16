@@ -18,10 +18,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FrequencyService {
     private final FrequencyRepository frequencyRepository;
-    private final FrequencyMapper frequencyMapper;
+    private final FrequencyMapper frequencyMapper = FrequencyMapper.INSTANCE;
 
     public synchronized List<FrequencyResponse> getAllFrequencies() {
-        return this.frequencyRepository.findAll().stream().map(frequencyMapper::toResponse).toList();
+        return this.frequencyRepository.findAll().stream().map(frequencyMapper::frequencyToFrequencyResponse).toList();
     }
 
     public Map<FrequencyResponse, BigDecimal> generateFrequencyToBudgetMapping(CategoryInsightsResponse insight) {
@@ -30,13 +30,13 @@ public class FrequencyService {
         Map<FrequencyResponse, BigDecimal> frequencyToBudget = new HashMap<>();
 
         BigDecimal frequencyValue = BigDecimal.valueOf(monthlyFrequency.getNumber());
-        BigDecimal budgetYearlyValue = insight.percentile90().multiply(frequencyValue);
+        BigDecimal budgetYearlyValue = insight.getPercentile90().multiply(frequencyValue);
 
         for (Frequency frequency : allFrequencies) {
             BigDecimal frequencyNumber = BigDecimal.valueOf(frequency.getNumber());
             BigDecimal relativeBudget = budgetYearlyValue.divide(frequencyNumber, RoundingMode.HALF_UP);
             frequencyToBudget.put(
-                    this.frequencyMapper.toResponse(frequency),
+                    this.frequencyMapper.frequencyToFrequencyResponse(frequency),
                     relativeBudget.setScale(0, RoundingMode.HALF_UP)
             );
         }

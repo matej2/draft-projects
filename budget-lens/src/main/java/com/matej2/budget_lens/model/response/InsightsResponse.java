@@ -8,7 +8,7 @@ public record InsightsResponse(
         Integer id,
         YearMonth yearMonth,
         CategoryResponse category,
-        Integer stddevPercent,
+        Integer standardDeviationPercent,
         BigDecimal median,
         BigDecimal percentile90,
         Long expenseCount,

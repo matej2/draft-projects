@@ -23,7 +23,7 @@ import static com.matej2.budget_lens.utils.CsvUtils.getCsvReader;
 @Slf4j
 public class FileProcessorService {
     private final CategoryService categoryService;
-    private final ExpenseMapper expenseMapper;
+    private final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
     private final ExpenseRepository expenseRepository;
 
     public void saveExpenseListFromFile(MultipartFile file) throws IOException {
@@ -40,7 +40,13 @@ public class FileProcessorService {
 
             Category uncategorizedCategory = this.categoryService.getUncategorizedCategory();
 
-            List<Expense> expenseList = result.stream().map(r-> expenseMapper.toExpense(r, uncategorizedCategory)).toList();
+            List<Expense> expenseList = result.stream()
+                    .map(r-> {
+                        Expense mappedExpense = expenseMapper.csvImportRowToExpense(r);
+                        mappedExpense.setCategory(uncategorizedCategory);
+                        return mappedExpense;
+                    })
+                    .toList();
 
             this.expenseRepository.saveAll(expenseList);
         }

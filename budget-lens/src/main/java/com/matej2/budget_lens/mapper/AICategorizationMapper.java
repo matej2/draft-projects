@@ -2,18 +2,18 @@ package com.matej2.budget_lens.mapper;
 
 import com.matej2.budget_lens.model.entity.Expense;
 import com.matej2.budget_lens.model.integration.AiCategorizationRequest;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-@Component
-public class AICategorizationMapper {
-    public AiCategorizationRequest mapToRequest(Expense expense) {
-        return new AiCategorizationRequest(
-                expense.getId(),
-                expense.getNote(),
-                expense.getSource(),
-                expense.getExpenseDate()
-        ) ;
-    }
+@Mapper
+public interface AICategorizationMapper {
 
+    AICategorizationMapper INSTANCE = Mappers.getMapper(AICategorizationMapper.class);
 
+    @Mapping(source = "id", target = "expenseId")
+    @Mapping(source = "note", target = "description")
+    @Mapping(source = "source", target = "merchant")
+    @Mapping(source = "expenseDate", target = "date")
+    AiCategorizationRequest expenseToAiCategorizationRequest(Expense expense);
 }
