@@ -2,6 +2,7 @@ package com.matej2.budget_lens.model.entity;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class Budget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Nonnull
+    @NotBlank
     private String note;
     @Nonnull
     @PositiveOrZero

@@ -20,5 +20,6 @@ public class Frequency {
     @Min(0)
     @Max(365)
     private Short number;
+    @Nonnull
     private String description;
 }

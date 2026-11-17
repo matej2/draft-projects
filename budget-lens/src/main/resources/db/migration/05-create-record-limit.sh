@@ -13,9 +13,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     );
 
     INSERT INTO
-        recordlimit (class_name, record_limit)
+        recordlimit (class_name, record_limit, current_count)
     VALUES
-        ('Expense', 10);
+        ('Expense', 10, 0);
 
     -- Permission grants
     GRANT SELECT, INSERT, UPDATE, DELETE ON recordlimit TO $APP_USERNAME;

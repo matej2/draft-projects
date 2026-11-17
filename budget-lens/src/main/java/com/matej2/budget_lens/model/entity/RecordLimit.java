@@ -2,6 +2,7 @@ package com.matej2.budget_lens.model.entity;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,9 @@ public class RecordLimit {
     private Integer id;
     @Nonnull
     private String className;
+    @PositiveOrZero
     private Long currentCount;
     @Nonnull
+    @PositiveOrZero
     private Long recordLimit;
 }
