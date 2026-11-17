@@ -7,6 +7,7 @@ import com.matej2.budget_lens.model.response.FrequencyResponse;
 import com.matej2.budget_lens.repository.domain.FrequencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FrequencyService {
     private final FrequencyRepository frequencyRepository;
     private final FrequencyMapper frequencyMapper = FrequencyMapper.INSTANCE;

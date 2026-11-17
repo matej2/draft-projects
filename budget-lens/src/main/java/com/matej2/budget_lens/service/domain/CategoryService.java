@@ -6,11 +6,13 @@ import com.matej2.budget_lens.model.response.CategoryResponse;
 import com.matej2.budget_lens.repository.domain.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper = CategoryMapper.INSTANCE;

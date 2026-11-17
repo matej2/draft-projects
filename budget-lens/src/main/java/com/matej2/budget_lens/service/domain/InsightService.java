@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
 import java.util.List;
@@ -19,12 +20,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class InsightService {
     private final InsightRepository insightRepository;
 
     private final InsightMapper insightMapper = InsightMapper.INSTANCE;
     private final CategoryMapper categoryMapper = CategoryMapper.INSTANCE;
 
+    @Transactional
     public void saveInsightList(List<CategoryInsightsResponse> insight, YearMonth yearMonth) {
         List<Insight> insightEntities = insight.stream()
                 .map(insightMapper::categoryInsightResponseToInsight)

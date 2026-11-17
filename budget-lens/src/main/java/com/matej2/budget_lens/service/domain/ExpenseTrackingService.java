@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,12 +20,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class ExpenseTrackingService {
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
 
     private final CategoryRepository  categoryRepository;
 
+    @Transactional
     public synchronized void addExpense(ExpenseRequest expense){
         Category categoryEntity = categoryRepository.findById(expense.categoryId()).orElseThrow();
 
@@ -48,8 +51,7 @@ public class ExpenseTrackingService {
                 .toList();
     }
 
-    // In real world scenario I would use mapper that would update only defined properties
-    // For simplicity purposes I override whole record
+    @Transactional
     public synchronized void updateExpense(Integer expenseId, ExpenseRequest expenseRequest) {
         Expense mappedExpense = expenseMapper.expenseRequestToExpense(expenseRequest);
 
@@ -69,6 +71,7 @@ public class ExpenseTrackingService {
         return this.expenseRepository.findById(id).stream().map(expenseMapper::expenseToExpenseResponse).findFirst().orElseThrow();
     }
 
+    @Transactional
     public synchronized void deleteExpense(Integer id) {
         expenseRepository.deleteById(id);
         log.info("Delete expense with id: {}", id);

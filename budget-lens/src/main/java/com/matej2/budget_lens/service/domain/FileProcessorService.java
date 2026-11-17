@@ -11,6 +11,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import static com.matej2.budget_lens.utils.CsvUtils.getCsvReader;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class FileProcessorService {
     private final CategoryService categoryService;
     private final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
