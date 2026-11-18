@@ -13,7 +13,7 @@ public interface AICategorizationMapper {
 
     @Mapping(source = "id", target = "expenseId")
     @Mapping(source = "note", target = "description")
-    @Mapping(source = "source", target = "merchant")
+    @Mapping(source = "source.source", target = "merchant")
     @Mapping(source = "expenseDate", target = "date")
     AiCategorizationRequest expenseToAiCategorizationRequest(Expense expense);
 }

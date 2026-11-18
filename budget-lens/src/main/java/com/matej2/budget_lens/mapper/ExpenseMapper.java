@@ -20,6 +20,7 @@ public interface ExpenseMapper {
 
     @Mapping(source = "negativeTraffic", target = "cost", qualifiedByName = "toBigDecimal")
     @Mapping(source = "date", target = "expenseDate", qualifiedByName = "toLocalDate")
+    @Mapping(source = "source", target = "source.source")
     Expense csvImportRowToExpense(CSVImportRow csvImportRow);
 
     @Mapping(source = "category.id", target = "category")

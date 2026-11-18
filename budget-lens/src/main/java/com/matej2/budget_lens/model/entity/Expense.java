@@ -2,7 +2,6 @@ package com.matej2.budget_lens.model.entity;
 
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
@@ -31,6 +30,7 @@ public class Expense {
     @JoinColumn(name = "category", nullable = false)
     private Category category;
     @Nonnull
-    @NotBlank
-    private String source;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "source", nullable = false)
+    private Source source;
 }
