@@ -79,9 +79,9 @@ public class ExpenseTrackingService {
 
     public Expense applyAiCategorization(AiCategorizationResponse expenseRequest) {
         Category category = categoryRepository.findById(expenseRequest.categoryId()).stream().findFirst().orElseThrow();
-        ExpenseResponse existingExpense = this.getExpenseById(expenseRequest.expenseId()).withCategory(category.getId());
-        ExpenseResponse updatedExpense = existingExpense.withCategory(category.getId());
+        Expense expense = expenseRepository.findById(expenseRequest.expenseId()).orElseThrow();
+        expense.setCategory(category);
 
-        return this.expenseMapper.expenseResponseToExpense(updatedExpense);
+        return expense;
     }
 }
