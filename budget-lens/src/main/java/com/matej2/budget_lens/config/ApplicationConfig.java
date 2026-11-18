@@ -56,14 +56,4 @@ public class ApplicationConfig {
 
         return objectMapper;
     }
-
-    @Bean
-    public SchemaGenerator schemaGenerator() {
-        SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.PLAIN_JSON);
-        SchemaGeneratorConfig config = configBuilder.build();
-        return new SchemaGenerator(config);
-    }
-
-
-
 }
